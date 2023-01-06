@@ -1,7 +1,5 @@
 <template>
   <main>
-    landingpage
-    <Carousels />
+    my account
   </main>
-
 </template>
