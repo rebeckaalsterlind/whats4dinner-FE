@@ -1,0 +1,3 @@
+<template>
+  Advanced search
+</template>
