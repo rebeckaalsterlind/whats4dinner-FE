@@ -1,6 +1,10 @@
 <template>
   <main>
-    <SearchBar />
+    <SearchBar v-model="max" />
     <AdvancedSearch />
   </main>
 </template>
+
+<script>
+const max = ref('');
+</script>
