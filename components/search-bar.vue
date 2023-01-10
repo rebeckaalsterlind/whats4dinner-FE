@@ -1,22 +1,19 @@
 <template>
-  <div class="flex border">
-    <section>
-      <input type="text" :value="''" placeholder="Search.." @input="handleInput">
-      <ul v-if="result" v-for="option in result" :key="option" class="cursor-pointer border">
-        <li @click="handleClick" :value="option" :id="option">{{ option }}</li>
-      </ul>
-    </section>
-    <section>
-      <p v-if="selectedOption">{{ selectedOption }}</p>
-    </section>
-  </div>
-
+  <Input :placeholder="label" @input="handleInput" />
+  <!-- <input type="text" :value="''" :placeholder="label" @input="handleInput"> -->
+  <ul v-if="result" v-for="option in result" :key="option" class="cursor-pointer border">
+    <li @click="handleClick" :value="option" :id="option">{{ option }}</li>
+  </ul>
+  <p v-if="selectedOption">{{ selectedOption }}</p>
 </template>
 
 <script setup lang="ts">
 import { Ref } from '@vue/runtime-core';
+
 const result: Ref<string[]> = ref([]);
 const selectedOption = ref();
+
+const { label } = defineProps<{ label: string }>()
 
 const handleInput = async (e: Event): Promise<void> => {
   const searchIngredient = (e.target as HTMLInputElement).value;
@@ -29,12 +26,9 @@ const handleInput = async (e: Event): Promise<void> => {
     // for (let i = 0; i < 10; i++) {
     //   suggestions.push(ingredient[i]);
     // }
-
   }
   result.value = suggestions;
-
 };
-
 
 const handleClick = (e: Event) => {
   selectedOption.value = (e.target as HTMLInputElement).id;

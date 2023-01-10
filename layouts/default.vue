@@ -1,6 +1,6 @@
 <template>
-  <Header class="h-16 min-w-full bg-slate-200" />
-  <main class="grow grid grid-cols-5 gap-2 bg-slate-100">
+  <Header class="h-16 min-w-full flex justify-between p-3 items-end drop-shadow-md bg-white shadow-slate-600" />
+  <main class="grow flex flex-col mx-10 pt-10">
     <slot />
   </main>
   <Footer class="h-16 min-w-full bg-slate-300" />
