@@ -14,6 +14,6 @@
 
 <script setup lang="ts">
 import { MagnifyingGlassIcon, HomeIcon } from '@heroicons/vue/24/solid'
-import { PlusIcon, PlusCircleIcon } from '@heroicons/vue/24/outline'
+import { PlusCircleIcon } from '@heroicons/vue/24/outline'
 
 </script>

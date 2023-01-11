@@ -1,13 +1,13 @@
 <template>
-  <h4 class="border m-0">{{ label }}</h4>
+  <h4 class="ml-1 ">{{ label }}</h4>
   <Carousel :items-to-scroll="1" :wrap-around="true" :settings="settings"
-    class="flex flex-col justify-items-stretch mx-[-8px] my-2">
-    <Slide v-for="slide of category" :key="slide.id" class="h-40 py-2 px-1">
-      <article class="w-full h-full flex flex-col items-start rounded overflow-hidden  bg-white drop-shadow-md ">
+    class="flex flex-col justify-items-stretch  mb-8">
+    <Slide v-for="slide of category" :key="slide.id" class="h-36 pb-2 px-1">
+      <article class="w-full h-full flex flex-col items-start rounded overflow-hidden bg-white drop-shadow-md ">
         <img src="@/assets/img/bolognese.jpg" :alt="slide.name" class="grow object-cover w-[154px]" />
-        <h5 class="px-2 h-[15%]">
+        <h6 class="px-2 text-sm h-[18%]">
           {{ slide.name }}
-        </h5>
+        </h6>
       </article>
     </Slide>
   </Carousel>
@@ -36,17 +36,6 @@ interface ICarousel {
 defineProps<ICarousel>();
 
 </script>
-
-<style>
-.carousel__pagination-button::after {
-  @apply bg-neutral-500
-}
-
-.carousel__pagination-button:hover::after,
-.carousel__pagination-button--active::after {
-  @apply bg-neutral-900
-}
-</style>
 
   <!-- <NuxtLink :to="`/routeName/${recipe.id}`">
      picture 

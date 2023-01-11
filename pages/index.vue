@@ -14,7 +14,7 @@
 const favourites = [
   { name: 'Pasta bolognese', id: 1, img: '@/assets/img/bolognese.jpg' },
   { name: 'Pizza', id: 2, img: '@/assets/img/pizza.jpg' },
-  { name: 'Fish & ships', id: 3 },
+  { name: 'Fish & chips', id: 3 },
   { name: 'Chicken', id: 4 },
   { name: 'Stirfry', id: 5 },
   { name: 'Taco', id: 6 },
@@ -25,7 +25,7 @@ const favourites = [
 const comfort = [
   { name: 'Pasta bolognese', id: 1, img: '@/assets/img/bolognese.jpg' },
   { name: 'Pizza', id: 2, img: '@/assets/img/pizza.jpg' },
-  { name: 'Fish & ships', id: 3 },
+  { name: 'Fish & chips', id: 3 },
   { name: 'Chicken', id: 4 },
   { name: 'Stirfry', id: 5 },
   { name: 'Taco', id: 6 },
@@ -36,7 +36,7 @@ const comfort = [
 const quick = [
   { name: 'Pasta bolognese', id: 1, img: '@/assets/img/bolognese.jpg' },
   { name: 'Pizza', id: 2, img: '@/assets/img/pizza.jpg' },
-  { name: 'Fish & ships', id: 3 },
+  { name: 'Fish & chips', id: 3 },
   { name: 'Chicken', id: 4 },
   { name: 'Stirfry', id: 5 },
   { name: 'Taco', id: 6 },
