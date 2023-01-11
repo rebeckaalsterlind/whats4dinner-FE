@@ -8,6 +8,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@nuxtjs/google-fonts": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.0",
     "autoprefixer": "^10.4.13",
@@ -21,6 +22,7 @@
     "@headlessui/vue": "^1.7.7",
     "@heroicons/vue": "^2.0.13",
     "@vue-hero-icons/outline": "^1.7.2",
-    "@vue-hero-icons/solid": "^1.7.2"
+    "@vue-hero-icons/solid": "^1.7.2",
+    "vue3-carousel": "^0.2.9"
   }
 }
