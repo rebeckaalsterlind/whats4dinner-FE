@@ -8,7 +8,7 @@
       <PlusIcon class="w-4 h-4" />
     </div>
   </BaseComponent>
-  <Dropdown :categories="categories" label="Add categories.." v-model="selectedOption" />
+  <Dropdown :categories="categories" label="Add categories.." @update="updateCategories" v-model="selectedCategories" />
   <Disclosure class="mt-10" label="Add recipe?">
     <DisclosureContent label="Recipe goes here!" />
   </Disclosure>
@@ -17,19 +17,24 @@
 
 <script setup lang="ts">
 import { PhotoIcon, PlusIcon } from '@heroicons/vue/24/outline';
-import categories from '~~/assets/data/categories.vue';
+//import categories from '~~/assets/data/categories.vue';
 
-const selectedOption = reactive([]);
-const selectedCategories = reactive([]);
+interface ISelectedCategories {
+  id: number,
+  name: string,
+}
+
+const selectedCategories = ref([] as ISelectedCategories[]);
+
 const saving = ref(false);
 const addPhoto = (): void => {
   console.log('add photo');
 }
 
-
-const checkModelvalue = () => {
-  console.log('selectedOption in add-recipe', selectedOption);
+const updateCategories = (value: any) => {
+  console.log('in add meal', value);
 }
+
 
 const handleSave = () => {
   saving.value = true;
@@ -38,9 +43,21 @@ const handleSave = () => {
     saving.value = false;
     navigateTo('/')
   }, 1000);
-
-
 }
-watch(selectedOption, checkModelvalue);
+
+//watch(selectedCategories, updateSelected);
+const categories = [
+  { id: 1, name: 'Vegetarian' },
+  { id: 2, name: 'Vegan' },
+  { id: 3, name: 'Healthy' },
+  { id: 4, name: 'Spicy' },
+  { id: 5, name: 'Soup' },
+  { id: 6, name: 'Salad' },
+  { id: 7, name: 'Comfort' },
+  { id: 8, name: 'Quick' },
+  { id: 9, name: 'Special' },
+  { id: 10, name: 'Slow cook' }
+];
+
 
 </script>
