@@ -35,8 +35,6 @@
   </section>
 </template>
 
-//todo : select multiple options
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import {

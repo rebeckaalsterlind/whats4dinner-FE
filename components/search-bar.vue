@@ -1,54 +1,61 @@
 <template>
-  <Input :placeholder="label" @input="handleInput" />
-  <!-- <input type="text" :value="''" :placeholder="label" @input="handleInput"> -->
-  <ul v-if="result" v-for="option in result" :key="option" class="cursor-pointer border">
-    <li @click="handleClick" :value="option" :id="option">{{ option }}</li>
+  <ul v-if="selectedIngredients" v-for="(option, key) in selectedIngredients" :key="key">
+    <li>{{ option }}
+      <XMarkIcon @click="deleteIngredient(option)" class="inline h-4 w-4" />
+    </li>
   </ul>
-  <p v-if="selectedOption">{{ selectedOption }}</p>
+  <input id="inputField" type="search" :placeholder="label" @input="handleInput" @click="clearSearchHelp">
+  <ul v-if="result && showOptions" v-for="(option, key) in result" :key="key">
+    <li @click="handleClick" :value="option">{{ option }}</li>
+  </ul>
 </template>
 
 <script setup lang="ts">
+import { XMarkIcon } from '@heroicons/vue/20/solid'
 import { Ref } from '@vue/runtime-core';
 
-const result: Ref<string[]> = ref([]);
-const selectedOption = ref();
-
+const emit = defineEmits(['update'])
 const { label } = defineProps<{ label: string }>()
 
+const showOptions = ref(false)
+const result = reactive([]);
+const selectedIngredients: Ref<string[]> = ref([]);
+
+const getSuggestions = async (url: string) => {
+  return await fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      return data
+    })
+    .catch(error => console.warn(error));
+}
+
+const clearSearchHelp = () => {
+  const searchInput = document.getElementById('inputField');
+  (searchInput! as HTMLInputElement).value = '';
+  showOptions.value = false;
+}
+
 const handleInput = async (e: Event): Promise<void> => {
+  showOptions.value = true;
   const searchIngredient = (e.target as HTMLInputElement).value;
   const url = `https://api.edamam.com/auto-complete?app_id=739442be&app_key=b461bdd737f87ed7fb994cef55b6423d&q=%22${searchIngredient}%22&limit=5`;
-  const { data } = await useFetch(url);
 
-  const suggestions: string[] = [];
-  for (const ingredient of [data.value]) {
-    console.log('ingredient', ingredient);
-    // for (let i = 0; i < 10; i++) {
-    //   suggestions.push(ingredient[i]);
-    // }
-  }
-  result.value = suggestions;
+  getSuggestions(url).then(response => Object.assign(result, response));
+
 };
 
 const handleClick = (e: Event) => {
-  selectedOption.value = (e.target as HTMLInputElement).id;
+  let ingredient: string = (e.target as HTMLInputElement).innerText
+  selectedIngredients.value.push(ingredient);
+  emit('update', selectedIngredients.value);
+  clearSearchHelp();
 }
 
-
-// https://nuxt.com/docs/getting-started/data-fetching
-// const page = ref(1);
-// const { data: users, pending, refresh, error } = await useFetch(() => `users?page=${page.value}&take=6`, { baseURL: config.API_BASE_URL }
-// );
-// function previous() {
-//   page.value--;
-//   refresh();
-// }
-// function next() {
-//   page.value++;
-//   refresh();
-// }
-
-
+const deleteIngredient = (deleted: string) => {
+  selectedIngredients.value = selectedIngredients.value.filter(ingredient => ingredient !== deleted);
+  emit('update', selectedIngredients.value);
+}
 
 // GET https://api.spoonacular.com/recipes/1003464/ingredientWidget.json
 </script>
