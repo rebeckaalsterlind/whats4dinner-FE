@@ -2,7 +2,8 @@
   <h2 class="mx-auto">Add new meal:</h2>
   <BaseComponent>
     <Input placeholder="Meal.." />
-    <SearchBar class="drop-shadow-sm" label="Add key ingredients.." />
+    <SearchBar class="drop-shadow-sm" label="Add key ingredients.." @update="updateIngredients"
+      v-model="selectedIngredients" />
     <div class="flex items-center" @click="addPhoto">
       <PhotoIcon class="w-6 h-6 cursor-pointer" />
       <PlusIcon class="w-4 h-4" />
@@ -25,16 +26,20 @@ interface ISelectedCategories {
 }
 
 const selectedCategories = ref([] as ISelectedCategories[]);
+const selectedIngredients = ref([]);
 
 const saving = ref(false);
 const addPhoto = (): void => {
   console.log('add photo');
 }
 
-const updateCategories = (value: any) => {
-  console.log('in add meal', value);
+const updateIngredients = (updatedSelections: any) => {
+  selectedIngredients.value = updatedSelections;
 }
 
+const updateCategories = (updatedSelections: any) => {
+  selectedCategories.value = updatedSelections;
+}
 
 const handleSave = () => {
   saving.value = true;
@@ -45,7 +50,6 @@ const handleSave = () => {
   }, 1000);
 }
 
-//watch(selectedCategories, updateSelected);
 const categories = [
   { id: 1, name: 'Vegetarian' },
   { id: 2, name: 'Vegan' },
