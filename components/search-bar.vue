@@ -1,13 +1,17 @@
 <template>
-  <ul v-if="selectedIngredients" v-for="(option, key) in selectedIngredients" :key="key">
-    <li>{{ option }}
-      <XMarkIcon @click="deleteIngredient(option)" class="inline h-4 w-4" />
-    </li>
-  </ul>
-  <input id="inputField" type="search" :placeholder="label" @input="handleInput" @click="clearSearchHelp">
-  <ul v-if="result && showOptions" v-for="(option, key) in result" :key="key">
-    <li @click="handleClick" :value="option">{{ option }}</li>
-  </ul>
+  <BaseComponent>
+    <ul class="list-none w-full min-h-[40px] flex flex-wrap">
+      <li v-if="selectedIngredients" v-for="(option, key) in selectedIngredients" :key="key"
+        class="mr-2 my-1 px-2 flex items-center rounded-full min-w-fit bg-slate-500">{{ option }}
+        <XMarkIcon @click="deleteIngredient(option)" class="inline ml-2 h-4 w-4 cursor-pointer" />
+      </li>
+    </ul>
+    <Input id="inputField" :placeholder="label" @input="handleInput" @click="clearSearchHelp" />
+    <ul v-if="result && showOptions" v-for="(option, key) in result" :key="key">
+      <li @click="handleClick" :value="option">{{ option }}</li>
+    </ul>
+  </BaseComponent>
+
 </template>
 
 <script setup lang="ts">
