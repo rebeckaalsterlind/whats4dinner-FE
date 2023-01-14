@@ -1,52 +1,63 @@
 <template>
+
   <h2 class="mx-auto">Add new meal:</h2>
-  <BaseComponent>
-    <Input placeholder="Meal.." />
-    <SearchBar class="drop-shadow-sm" label="Add key ingredients.." @update="updateIngredients"
-      v-model="selectedIngredients" />
-    <div class="flex items-center" @click="addPhoto">
-      <PhotoIcon class="w-6 h-6 cursor-pointer" />
-      <PlusIcon class="w-4 h-4" />
-    </div>
-  </BaseComponent>
-  <Dropdown :categories="categories" label="Add categories.." @update="updateCategories" v-model="selectedCategories" />
-  <Disclosure class="mt-10" label="Add recipe?">
-    <DisclosureContent label="Recipe goes here!" />
-  </Disclosure>
+
+  <Input placeholder="Name.." @input="updateName" />
+  <SearchBar class="drop-shadow-sm" label="Add key ingredients.." @update="updateIngredients" />
+
+  <Dropdown :categories="categories" label="Select categories.." @update="updateCategories" />
+  <div class="mt-4 flex items-center" @click="addPhoto">
+    <PhotoIcon class="w-6 h-6 cursor-pointer" />
+    <PlusIcon class="w-4 h-4" />
+  </div>
+
+  <Disclosure class="mt-10" @addRecipe="addRecipe" />
   <Button :label="saving ? 'Saving...' : 'Save'" @click="handleSave" />
 </template>
 
 <script setup lang="ts">
 import { PhotoIcon, PlusIcon } from '@heroicons/vue/24/outline';
-//import categories from '~~/assets/data/categories.vue';
-
-interface ISelectedCategories {
-  id: number,
-  name: string,
-}
-
-const selectedCategories = ref([] as ISelectedCategories[]);
-const selectedIngredients = ref([]);
 
 const saving = ref(false);
+const addMeal = reactive({
+  title: '',
+  ingredients: [],
+  categories: [],
+  recipe: []
+})
+
+
 const addPhoto = (): void => {
   console.log('add photo');
 }
 
+const updateName = (e: Event) => {
+  const inputValue: string = (e.target as HTMLInputElement).value
+  addMeal.title = inputValue;
+}
+
+
 const updateIngredients = (updatedSelections: any) => {
-  selectedIngredients.value = updatedSelections;
+  addMeal.ingredients = updatedSelections
 }
 
 const updateCategories = (updatedSelections: any) => {
-  selectedCategories.value = updatedSelections;
+  addMeal.categories = updatedSelections
+}
+
+const addRecipe = (recipe: any) => {
+  addMeal.recipe = recipe;
 }
 
 const handleSave = () => {
+  console.log('save', addMeal);
+
   saving.value = true;
   //await post
+  console.log('object',);
   setTimeout(function () {
     saving.value = false;
-    navigateTo('/')
+    navigateTo('/show-meal')
   }, 1000);
 }
 
