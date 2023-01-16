@@ -1,16 +1,21 @@
 <template>
-  <BaseComponent>
-    <ul class="list-none w-full min-h-[40px] flex flex-wrap">
+  <!-- <ul class="list-none w-full min-h-[40px] flex flex-wrap">
+      <h5 v-if="selectedIngredients.length > 0">Selected ingredients:</h5>
       <li v-if="selectedIngredients" v-for="(option, key) in selectedIngredients" :key="key"
         class="mr-2 my-1 px-2 flex items-center rounded-full min-w-fit bg-slate-500">{{ option }}
         <XMarkIcon @click="deleteIngredient(option)" class="inline ml-2 h-4 w-4 cursor-pointer" />
       </li>
+    </ul> -->
+  <Input id="inputField" :placeholder="label" @input="handleInput" @click="clearSearchHelp" />
+  <div v-if="result && showOptions" class="bg-white bg-opacity-10 py-1 mt-1 rounded-lg h-fit w-full">
+    <ul v-for="(option, key) in result" :key="key" class="h-10 m-1 flex justify-center items-center ">
+      <li @click="handleClick" :value="option"
+        class="h-full w-full rounded-lg p-2 bg-prime-normal bg-opacity-10 hover:bg-prime-normal my-2 hover:text-accent-normal active:text-white">
+        {{
+  option
+        }}</li>
     </ul>
-    <Input id="inputField" :placeholder="label" @input="handleInput" @click="clearSearchHelp" />
-    <ul v-if="result && showOptions" v-for="(option, key) in result" :key="key">
-      <li @click="handleClick" :value="option">{{ option }}</li>
-    </ul>
-  </BaseComponent>
+  </div>
 
 </template>
 
