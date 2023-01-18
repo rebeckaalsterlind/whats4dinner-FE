@@ -1,11 +1,14 @@
 <template>
-  <button class=" bg-slate-600 text-white rounded-full drop-shadow-md w-fit px-6 py-1 my-4 mx-auto">
-    {{ label }}</button>
+  <button
+    :class="[disabled && 'bg-opacity-40 text-opacity-20', 'bg-white text-prime-normal rounded-full drop-shadow-md w-fit h-10 px-4 py-1 mx-2']">
+    {{ label }}
+  </button>
 </template>
 
 <script setup lang="ts">
 interface IButton {
-  label: string
+  label: string,
+  disabled?: boolean
 }
 
 defineProps<IButton>()

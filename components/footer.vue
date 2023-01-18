@@ -1,13 +1,13 @@
 <template>
   <footer class="flex justify-between items-center p-3">
     <div @click="() => { navigateTo('/') }">
-      <HomeIcon class="h-6 w-6 text-slate-500" />
+      <HomeIcon class="h-6 w-6 text-pink-500" />
     </div>
     <div @click="() => { navigateTo('/add-meal') }" class="cursor-pointer">
-      <PlusCircleIcon class="h-10 w-10 text-slate-500" />
+      <PlusCircleIcon class="h-10 w-10 text-pink-500" />
     </div>
     <div @click="() => { navigateTo('/search') }">
-      <MagnifyingGlassIcon class="h-6 w-6 text-slate-500" />
+      <MagnifyingGlassIcon class="h-6 w-6 text-['rgb(199, 103, 0)']" />
     </div>
   </footer>
 </template>
@@ -17,3 +17,9 @@ import { MagnifyingGlassIcon, HomeIcon } from '@heroicons/vue/24/solid'
 import { PlusCircleIcon } from '@heroicons/vue/24/outline'
 
 </script>
+
+<style>
+footer {
+  color: rgb(199, 103, 0)
+}
+</style>

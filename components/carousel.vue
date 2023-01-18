@@ -1,11 +1,12 @@
 <template>
-  <h4 class="ml-1 ">{{ label }}</h4>
+  <h4 class="ml-1 text-white font-semibold">{{ label }}</h4>
   <Carousel :items-to-scroll="1" :wrap-around="true" :settings="settings"
-    class="flex flex-col justify-items-stretch  mb-8">
-    <Slide v-for="slide of category" :key="slide.id" class="h-36 pb-2 px-1">
-      <article class="w-full h-full flex flex-col items-start rounded overflow-hidden bg-white drop-shadow-md ">
-        <img src="@/assets/img/bolognese.jpg" :alt="slide.name" class="grow object-cover w-[154px]" />
-        <h6 class="px-2 text-sm h-[18%]">
+    class="flex flex-col justify-items-stretch mb-8">
+    <Slide v-for="slide of category" :key="slide.id" class="h-36 pb-2 px-1 cursor-pointer">
+      <article class="w-full h-full flex rounded-lg overflow-hidden drop-shadow-lg ">
+        <img src="@/assets/img/bolognese.jpg" :alt="slide.name" class="grow object-cover " />
+        <h6
+          class="absolute flex items-center px-2 overflow-hidden break-all bottom-0 w-full text-xs font-light text-white h-[18%] bg-prime-normal bg-opacity-80">
           {{ slide.name }}
         </h6>
       </article>

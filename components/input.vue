@@ -1,5 +1,5 @@
 <template>
-  <input type="search" class="border px-2 rounded bg-white my-4 w-60 block" :placeholder="placeholder">
+  <input type="search" class="p-2 rounded-lg bg-white text-prime-normal w-full h-10" :placeholder="placeholder">
 </template>
 
 <script setup lang="ts">
