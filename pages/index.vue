@@ -1,8 +1,11 @@
 <template>
-  <Carousel :category="favourites" label="Favourites" />
-  <Carousel :category="quick" label="Quick" />
-  <Carousel :category="comfort" label="Comfort" />
-  <Carousel :category="favourites" label="Favourites" />
+  <article>
+    <Carousel :category="favourites" label="Favourites" />
+    <Carousel :category="quick" label="Quick" />
+    <Carousel :category="comfort" label="Comfort" />
+    <Carousel :category="favourites" label="Favourites" />
+  </article>
+
 </template>
 
 <script setup lang="ts">

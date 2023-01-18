@@ -34,7 +34,7 @@
         </section>
 
         <section class="flex flex-col justify-evenly gap-2 p-2">
-          <textarea v-if="!savedRecipe" :rows="5" placeholder="Description.." v-model="description"
+          <textarea v-if="!savedRecipe" :rows="4" placeholder="Description.." v-model="description"
             class="rounded-lg p-2 bg-white text-white bg-opacity-10" />
           <button v-if="!savedRecipe" @click="saveRecipe"
             class="bg-white rounded-full w-fit px-2 h-8 text-prime-normal">Save recipe

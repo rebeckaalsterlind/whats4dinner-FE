@@ -1,5 +1,5 @@
 <template>
-  <Listbox class="w-full border border-white">
+  <Listbox class="w-full">
     <div>
       <ListboxButton
         class="relative w-full cursor-default rounded-lg bg-white text-prime-normal py-2 pl-3 pr-10 text-left">
