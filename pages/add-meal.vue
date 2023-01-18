@@ -1,28 +1,28 @@
 <template>
-  <article class="fit-content min-h-[250px] border-white mb-2 mx-10">
-    <h2 class="mt-0 font-bold text-xl">Add new meal: {{ helpers.capitalize(addMeal.title) || '' }}</h2>
+  <article class="fit-content min-h-[250px]">
+    <div class="w-full flex justify-center">
+      <h2 class="mt-0 items-center font-bold mx-auto fit-content inline-block text-xl">{{
+        helpers.capitalize(addMeal.title) || ''
+      }}
+      </h2>
+    </div>
+
     <section class="my-4">
       <h5 v-if="addMeal.ingredients.length > 0">Key ingredients:</h5>
       <ul class="list-none w-full min-h-[40px] flex flex-wrap">
-        <li v-if="addMeal.ingredients" v-for="(option, key) in addMeal.ingredients" :key="key"
-          class="mr-2 my-1 px-2 flex items-center justify-center rounded-full min-w-fit bg-accent-normal text-prime-normal">
-          {{
-            helpers.capitalize(option)
-          }}
+        <Pill v-if="addMeal.ingredients" v-for="option in addMeal.ingredients" :key="option.id"
+          :label="helpers.capitalize(option.name)">
           <XMarkIcon class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
-        </li>
+        </Pill>
       </ul>
     </section>
     <section>
       <h5 v-if="addMeal.categories.length > 0">Categories:</h5>
       <ul class="list-none w-full min-h-[40px] flex flex-wrap">
-        <li v-if="addMeal.categories" v-for="(option, key) in addMeal.categories" :key="key"
-          class="mr-2 my-1 px-2 flex items-center justify-center rounded-full min-w-fit bg-accent-normal text-prime-normal">
-          {{
-            helpers.capitalize(option.name)
-          }}
-          <XMarkIcon class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" @click="deleteCategory(option)" />
-        </li>
+        <Pill v-if="addMeal.categories" v-for="(option, key) in addMeal.categories" :key="key"
+          :label="helpers.capitalize(option.name)">
+          <XMarkIcon class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
+        </Pill>
       </ul>
     </section>
     <section v-if="addMeal.picture">
@@ -30,19 +30,19 @@
     </section>
   </article>
 
-  <article class="mx-10">
+  <article class="mb-20">
     <BaseComponent v-if="showName">
       <Input placeholder="Name.." @input="updateName" />
       <AddMealBtn :disabled="mealName.length === 0" label="Next.." @click="goToNext('ingredients')" />
     </BaseComponent>
 
     <BaseComponent v-if="showIngredients">
-      <SearchBar label="Add key ingredients.." @update="updateIngredients" />
+      <Ingredients label="Add key ingredients.." @update="updateIngredients" />
       <AddMealBtn :disabled="addMeal.ingredients.length === 0" label="Next.." @click="goToNext('categories')" />
     </BaseComponent>
 
     <BaseComponent v-if="showCategories">
-      <Dropdown :key="componentKey" :categories="categoriesFromFetch" :deleted="deletedCategory"
+      <Categories :key="componentKey" :categories="categoriesFromFetch" :deleted="deletedCategory"
         label="Select categories.." @update="updateCategories" />
       <AddMealBtn :disabled="addMeal.categories.length === 0" label="Next.." @click="goToNext('picture')" />
     </BaseComponent>
@@ -59,8 +59,6 @@
       <AddRecipe @addRecipe="addRecipe" @click="toggleBtn" />
       <Button v-if="!showAll && showBtn" label="Skip?" @click="goToNext('done')" />
     </BaseComponent>
-
-
 
     <div v-if="showAll" class="w-full flex justify-center">
       <Button :label="saving ? 'Saving...' : 'Save meal'" @click="handleSave"
@@ -85,19 +83,25 @@ const categories = [
   { id: 7, name: 'Comfort' },
   { id: 8, name: 'Quick' },
   { id: 9, name: 'Special' },
-  { id: 10, name: 'Slow cook' }
+  { id: 10, name: 'Slow cook' },
+  { id: 11, name: 'Favourites' }
 ];
+
+interface IOptions {
+  name: string,
+  id: number
+}
 
 const saving = ref(false);
 const addMeal = reactive({
   title: '',
-  ingredients: [],
+  ingredients: [] as IOptions[],
   categories: [] as IOptions[],
   picture: false,
   recipe: []
 })
 
-const deletedCategory = reactive({ id: 0, name: '' });
+const deletedCategory = reactive({ name: '', id: 0 });
 const categoriesFromFetch = reactive(categories as IOptions[]);
 const showName = ref(true);
 const showPicture = ref(false);
@@ -106,13 +110,8 @@ const showCategories = ref(false);
 const showRecipe = ref(false);
 const showAll = ref(false);
 const showBtn = ref(true);
-
 const mealName = ref('');
 const componentKey = ref(0)
-interface IOptions {
-  id: number,
-  name: string,
-}
 
 const toggleBtn = (evt: Event): void => {
   if ((evt.target as HTMLInputElement).id.includes('headlessui-disclosure-button')) {
@@ -163,13 +162,6 @@ const deleteCategory = (category: IOptions) => {
   componentKey.value += 1
 }
 
-
-
-
-
-
-
-
 const addPhoto = (): void => {
   console.log('add photo');
   addMeal.picture = true;
@@ -181,13 +173,11 @@ const updateName = (e: Event) => {
 
 
 const updateIngredients = (updatedSelections: any) => {
+  console.log('with id?', updatedSelections);
   addMeal.ingredients = updatedSelections;
   if (addMeal.ingredients.length > 0) {
-
   }
 }
-
-
 
 const addRecipe = (recipe: any) => {
   addMeal.recipe = recipe;
