@@ -1,16 +1,4 @@
-<template>
-  <article>
-    <Carousel v-for="category in user.categories" :key="category.categoryId" :category="category"
-      :label="category.name" />
-  </article>
-
-</template>
-
-<script setup lang="ts">
-
-// var testUser = require('@/assets/data/testUser.vue');
-// console.log('testUser', testUser);
-
+<script lang="ts">
 const user = {
   userName: 'Kalle',
   userEmail: 'kalle@gmail.com',
@@ -76,73 +64,10 @@ const user = {
         ],
         description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
       }
-    },
-    {
-      title: 'chicken',
-      id: 27232425674695,
-      keywords: [{ name: 'chicken', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
-      categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
-      picture: false,
-      recipe: {
-        ingredients: [
-          { name: 'eggs', amount: '2' },
-          { name: 'butter', amount: '150g' },
-          { name: 'tomato sauce', amount: '1dl' },
-          { name: 'onions', amount: '2' },
-        ],
-        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-      }
-    },
-    ,
-    {
-      title: 'Stirfry',
-      id: 27287654676,
-      keywords: [{ name: 'noodles', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
-      categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
-      picture: false,
-      recipe: {
-        ingredients: [
-          { name: 'eggs', amount: '2' },
-          { name: 'butter', amount: '150g' },
-          { name: 'tomato sauce', amount: '1dl' },
-          { name: 'onions', amount: '2' },
-        ],
-        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-      }
     }
   ]
 };
 
-const favourites = [
-  { name: 'Pasta bolognese', id: 1, img: '@/assets/img/bolognese.jpg' },
-  { name: 'Pizza', id: 2, img: '@/assets/img/pizza.jpg' },
-  { name: 'Fish & chips', id: 3 },
-  { name: 'Chicken', id: 4 },
-  { name: 'Stirfry', id: 5 },
-  { name: 'Taco', id: 6 },
-  { name: 'Sunday roast', id: 7 },
-  { name: 'Pancakes', id: 8 },
-];
 
-const comfort = [
-  { name: 'Pasta bolognese', id: 1, img: '@/assets/img/bolognese.jpg' },
-  { name: 'Pizza', id: 2, img: '@/assets/img/pizza.jpg' },
-  { name: 'Fish & chips', id: 3 },
-  { name: 'Chicken', id: 4 },
-  { name: 'Stirfry', id: 5 },
-  { name: 'Taco', id: 6 },
-  { name: 'Sunday roast', id: 7 },
-  { name: 'Pancakes', id: 8 },
-]
-
-const quick = [
-  { name: 'Pasta bolognese', id: 1, img: '@/assets/img/bolognese.jpg' },
-  { name: 'Pizza', id: 2, img: '@/assets/img/pizza.jpg' },
-  { name: 'Fish & chips', id: 3 },
-  { name: 'Chicken', id: 4 },
-  { name: 'Stirfry', id: 5 },
-  { name: 'Taco', id: 6 },
-  { name: 'Sunday roast', id: 7 },
-  { name: 'Pancakes', id: 8 },
-]
+export default user
 </script>

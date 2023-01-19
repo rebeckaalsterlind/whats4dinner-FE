@@ -1,6 +1,9 @@
 <template>
   <article class="p-4 bg-white rounded-lg bg-opacity-10" v-for="item in recipe" :key="item.id">
     <h2 class="font-bold text-lg  text-accent-normal">{{ helpers.capitalize(item.title) }}</h2>
+    <section class="my-4" v-if="item.picture">
+      <PhotoIcon class="w-40 h-40 text-white" />
+    </section>
     <section class="my-4">
       <h5 class="font-semibold">Key ingredients: </h5>
       <ul class="flex">
@@ -30,6 +33,7 @@
 
 <script setup lang="ts">
 import { helpers } from '@/helpers.vue'
+import { PhotoIcon } from '@heroicons/vue/24/outline';
 const route = useRoute();
 
 //fetch recipe from params, id
@@ -40,7 +44,7 @@ const recipe = [{
   id: 9873654274693,
   ingredients: [{ name: 'pasta', id: 3 }, { name: 'pork mince', id: 1 }],
   categories: [{ name: 'favourites', id: 11 }, { name: 'comfort food', id: 7 }],
-  picture: false,
+  picture: true,
   recipe: {
     ingredients: [
       { name: 'eggs', amount: '2' },
