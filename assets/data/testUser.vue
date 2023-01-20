@@ -1,5 +1,5 @@
 <script lang="ts">
-const user = {
+const testUser = {
   userName: 'Kalle',
   userEmail: 'kalle@gmail.com',
   password: 'jf948yf980w34fh',
@@ -68,6 +68,5 @@ const user = {
   ]
 };
 
-
-export default user
+module.exports = testUser;
 </script>

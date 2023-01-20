@@ -19,6 +19,9 @@ module.exports = {
       accent: {
         normal: 'rgb(199, 103, 0)',
         hover: 'rgb(199, 103, 0)'
+      },
+      success: {
+        500: 'rgb(34 197 94)'
       }
     }
   }
