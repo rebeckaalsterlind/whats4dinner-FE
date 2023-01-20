@@ -29,42 +29,24 @@
           </ComboboxOptions>
         </Combobox>
       </div>
-
-
     </section>
-
   </article>
 
   <article class="p-4 bg-white rounded-lg bg-opacity-10 text-prime-normal">
-
-    <section>
-      <Disclosure v-slot="{ open }">
-        <DisclosureButton class="py-2">
-          <h2 class="text-white inline">Generate suggestions</h2>
-          <ChevronDownIcon :class="[open && 'rotate-180 transform', 'w-6 h-6 inline text-white']" />
-        </DisclosureButton>
-        <DisclosurePanel class="text-gray-500">
-          <label for="no-of-meals">Number of meal</label>
-          <select id="no-of-meals">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-          </select>
-          from categories
-        </DisclosurePanel>
-      </Disclosure>
-    </section>
-
+    <Disclosure v-slot="{ open }">
+      <DisclosureButton class="py-2">
+        <h2 class="text-white inline">Generate meal suggestions</h2>
+        <ChevronDownIcon :class="[open && 'rotate-180 transform', 'w-6 h-6 inline text-white']" />
+      </DisclosureButton>
+      <DisclosurePanel class="flex flex-col text-gray-500">
+        <MealGenerator />
+      </DisclosurePanel>
+    </Disclosure>
   </article>
-
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import {
   Combobox,
@@ -74,10 +56,12 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
+  Listbox,
+  ListboxLabel,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
 } from '@headlessui/vue';
-import { DiagnosticCategory } from 'typescript';
-
-
 
 const recipes = [
   {
@@ -167,20 +151,6 @@ const filterSearch = () => {
     }
   }
 }
-
-
-//generate meals:  until length is 3 (number of meals) for each 2 recipe
-const meals = 7;
-const categories = 2;
-const result = meals % categories;
-console.log('result', result);
-// for (let i = 0; i < 3; i++) {
-//   //find 
-// }
-//get length of Category
-// find random index from length
-//divide meals/categories = number from each
-
 
 watch(query, filterSearch)
 </script>
