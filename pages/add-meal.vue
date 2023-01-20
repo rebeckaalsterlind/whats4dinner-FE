@@ -10,8 +10,8 @@
     <section class="my-4">
       <h5 v-if="addMeal.ingredients.length > 0">Key ingredients:</h5>
       <ul class="list-none w-full min-h-[40px] flex flex-wrap">
-        <Pill v-if="addMeal.ingredients" v-for="option in addMeal.ingredients" :key="option.id"
-          :label="helpers.capitalize(option.name)">
+        <Pill v-if="addMeal.ingredients" v-for="option in addMeal.ingredients" :key="option"
+          :label="helpers.capitalize(option)">
           <XMarkIcon class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
         </Pill>
       </ul>
@@ -95,7 +95,8 @@ interface IOptions {
 const saving = ref(false);
 const addMeal = reactive({
   title: '',
-  ingredients: [] as IOptions[],
+  id: 0,
+  ingredients: [],
   categories: [] as IOptions[],
   picture: false,
   recipe: []
@@ -126,12 +127,14 @@ const goToNext = (nextStep: string) => {
         addMeal.title = mealName.value;
         showIngredients.value = true;
         showName.value = false;
+
       }
       break;
     case 'categories':
       if (addMeal.ingredients.length !== 0) {
         showIngredients.value = false;
         showCategories.value = true
+        addMeal.id = helpers.generateId();
       }
       break;
     case 'picture':
@@ -193,7 +196,7 @@ const handleSave = () => {
   console.log('object',);
   setTimeout(function () {
     saving.value = false;
-    navigateTo('/show-meal')
+    navigateTo('/show-meal/7654321')
   }, 1000);
 }
 
