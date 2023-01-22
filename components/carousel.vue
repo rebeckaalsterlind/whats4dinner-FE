@@ -5,7 +5,7 @@
     <Slide v-for="slide of filteredCategories" :key="slide.id" class="h-36 pb-2 px-1 cursor-pointer"
       @click="navigateTo(`/show-meal/${slide.id}`)">
       <article class="w-full h-full flex rounded-lg overflow-hidden drop-shadow-lg">
-        <img src="@/assets/img/bolognese.jpg" :alt="slide.title" class="grow object-cover " />
+        <img src="@/assets/img/pizza.jpg" :alt="slide.title" class="grow object-cover " />
         <h6
           class="absolute flex items-center px-2 overflow-hidden break-all bottom-0 w-full text-xs font-light text-white h-[18%] bg-prime-normal bg-opacity-80">
           {{ slide.title }}
@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide } from 'vue3-carousel';
+import { reactive, ref } from '@vue/runtime-core';
 
 const settings = {
   itemsToShow: 3,
@@ -36,7 +37,7 @@ interface ICarousel {
 }
 
 const { category } = defineProps<ICarousel>();
-const filteredCategories = reactive([{ title: '', id: 0, picture: false }]);
+const filteredCategories = reactive([{ title: '', id: 0, picture: 'pizza' }]);
 
 interface IUser {
   userName: string,
@@ -49,7 +50,7 @@ interface IUser {
       id: number,
       keywords: [],
       categories: [{ name: string, categoryId: number }]
-      picture: boolean,
+      picture: string,
       recipe: [{ ingredients: [], description: string }]
     }
   ]
@@ -76,9 +77,9 @@ const user = {
     {
       title: 'pizza',
       id: 987533454647,
-      keywords: [{ name: 'pizza', keywordId: 3 }, { name: 'pancake', keywordId: 1 }],
+      keywords: ['pizza', 'pancake'],
       categories: [{ name: 'soup', categoryId: 5 }, { name: 'slow cook', categoryId: 10 }],
-      picture: false,
+      picture: 'bolognese',
       recipe: {
         ingredients: [
           { name: 'water', amount: '2' },
@@ -92,9 +93,9 @@ const user = {
     {
       title: 'pasta bolognese',
       id: 9873654274693,
-      keywords: [{ name: 'pasta', keywordId: 3 }, { name: 'pork mince', keywordId: 1 }],
+      keywords: ['pasta', 'pork mince'],
       categories: [{ name: 'favourites', categoryId: 11 }, { name: 'comfort food', categoryId: 7 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'eggs', amount: '2' },
@@ -108,9 +109,9 @@ const user = {
     {
       title: 'fish & chips',
       id: 2765425674695,
-      keywords: [{ name: 'fish', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
+      keywords: ['fish', 'potato'],
       categories: [{ name: 'favourites', categoryId: 11 }, { name: 'healty', categoryId: 3 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'eggs', amount: '2' },
@@ -124,9 +125,9 @@ const user = {
     {
       title: 'chicken',
       id: 27232425674695,
-      keywords: [{ name: 'chicken', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
+      keywords: ['chicken', 'potato'],
       categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }, { name: 'vegan', categoryId: 2 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'eggs', amount: '2' },
@@ -140,9 +141,9 @@ const user = {
     {
       title: 'curry',
       id: 27232425674695,
-      keywords: [{ name: 'spicy', keywordId: 3 }, { name: 'chili', keywordId: 1 }],
+      keywords: ['spicy', 'chili'],
       categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'quick', categoryId: 8 }, { name: 'special', categoryId: 9 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'eggs', amount: '2' },
@@ -156,9 +157,9 @@ const user = {
     {
       title: 'Stirfry',
       id: 27287654676,
-      keywords: [{ name: 'noodles', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
+      keywords: ['noodles', 'potato'],
       categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'eggs', amount: '2' },
@@ -172,9 +173,9 @@ const user = {
     {
       title: 'broccoli soup',
       id: 2728548746,
-      keywords: [{ name: 'noodles', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
+      keywords: ['noodles', 'potato'],
       categories: [{ name: 'vegan', categoryId: 2 }, { name: 'healty', categoryId: 3 }, { name: 'soup', categoryId: 5 }, { name: 'vegetarian', categoryId: 1 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'eggs', amount: '2' },
@@ -188,9 +189,9 @@ const user = {
     {
       title: 'pea soup',
       id: 3527554889846,
-      keywords: [{ name: 'peas', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
+      keywords: ['peas', 'potato'],
       categories: [{ name: 'vegan', categoryId: 2 }, { name: 'healty', categoryId: 3 }, { name: 'soup', categoryId: 5 }, { name: 'vegetarian', categoryId: 1 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'eggs', amount: '2' },
@@ -213,10 +214,8 @@ const filterCategories = () => {
   for (const recipe of setUser.value) {
     const found = recipe.categories.filter(arr => arr.categoryId === category.categoryId)
     if (found.length > 0) mealsInCategory.push({ title: recipe.title, id: recipe.id, picture: recipe.picture })
-  }
-
+  };
   Object.assign(filteredCategories, mealsInCategory);
-  console.log('filteredCat', filteredCategories);
 }
 
 filterCategories();

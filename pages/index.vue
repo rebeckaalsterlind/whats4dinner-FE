@@ -34,7 +34,7 @@ const user = {
       id: 987533454647,
       keywords: [{ name: 'pizza', keywordId: 3 }, { name: 'pancake', keywordId: 1 }],
       categories: [{ name: 'soup', categoryId: 5 }, { name: 'slow cook', categoryId: 10 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'water', amount: '2' },
@@ -50,7 +50,7 @@ const user = {
       id: 9873654274693,
       keywords: [{ name: 'pasta', keywordId: 3 }, { name: 'pork mince', keywordId: 1 }],
       categories: [{ name: 'favourites', categoryId: 11 }, { name: 'comfort food', categoryId: 7 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'eggs', amount: '2' },
@@ -66,7 +66,7 @@ const user = {
       id: 2765425674695,
       keywords: [{ name: 'fish', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
       categories: [{ name: 'favourites', categoryId: 11 }, { name: 'healty', categoryId: 3 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'eggs', amount: '2' },
@@ -82,7 +82,7 @@ const user = {
       id: 27232425674695,
       keywords: [{ name: 'chicken', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
       categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'eggs', amount: '2' },
@@ -99,7 +99,7 @@ const user = {
       id: 27287654676,
       keywords: [{ name: 'noodles', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
       categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
-      picture: false,
+      picture: 'pizza',
       recipe: {
         ingredients: [
           { name: 'eggs', amount: '2' },
