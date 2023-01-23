@@ -22,9 +22,10 @@
     <section v-if="!createUser" class="flex flex-col gap-4 items-center text-prime-normal">
       <p class="text-white">Render user data here ()</p>
       <ul class="text-white">
-        <li>Username: Kalle</li>
-        <li>Email: Kalle@gmail.com </li>
-        <li>Password: *******</li><br />
+        <li>Username: {{ user.userName }}</li>
+        <li>Email: {{ user.userEmail }}</li>
+        <li>Password: {{ user.password }}
+        </li><br />
       </ul>
       <Button label="Sign out?" @click="signOut" />
     </section>
@@ -33,6 +34,11 @@
 </template>
 
 <script setup lang="ts">
+import { useCounterStore } from '~~/stores/counter';
+const store = useCounterStore();
+const { user } = store;
+
+
 const isLoggedIn = ref(false);
 const createUser = ref(false)
 const passwordOne = ref();

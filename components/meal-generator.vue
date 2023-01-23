@@ -37,6 +37,33 @@ import {
 
 const numberOfMeals = [1, 2, 3, 4, 5, 6, 7];
 
+interface ICategory {
+  name: string,
+  categoryId: number
+}
+
+interface IUser {
+  userName: string,
+  userEmail: string,
+  password: string,
+  categories: [{ categoryId: number, name: string }],
+  recipes: [
+    {
+      title: string,
+      id: number,
+      keywords: [],
+      categories: [{ name: string, categoryId: number }]
+      picture: boolean,
+      recipe: [{ ingredients: [], description: string }]
+    }
+  ]
+}
+
+
+const { recipes } = defineProps<IUser>()
+const selectedCategory = ref([] as ICategory[])
+const selectedNumber = ref(0)
+
 const categories = [
   { categoryId: 1, name: 'vegetarian' },
   { categoryId: 2, name: 'vegan' },
@@ -50,14 +77,13 @@ const categories = [
   { categoryId: 10, name: 'slow cook' },
   { categoryId: 11, name: 'favourites' }
 ]
-interface ICategory {
-  name: string,
-  categoryId: number
-}
-const selectedCategory = ref([] as ICategory[])
-const selectedNumber = ref(0)
+
 
 const getMealInCategory = (index: number) => {
+
+  for (const recipe of recipes) {
+    console.log('recipe', recipe);
+  }
   // selectedCategory[index].name = 'favourites';
   //find number of recipes that is category
   //get length of number
@@ -81,5 +107,6 @@ const generateMeals = () => {
       getMealInCategory(index);
     }
   }
+}
 
 </script>

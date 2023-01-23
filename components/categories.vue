@@ -35,7 +35,7 @@ import {
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 interface IOptions {
-  id: number,
+  categoryId: number,
   name: string,
 }
 
@@ -51,13 +51,13 @@ const allCategories = reactive(categories as IOptions[]);
 const componentKey = ref(0)
 
 const updateSelected = (category: IOptions) => {
-  const remainingCategories = allCategories.findIndex(item => item.id === category.id);
+  const remainingCategories = allCategories.findIndex(item => item.categoryId === category.categoryId);
   allCategories.splice(remainingCategories, 1)
   emit('update', category);
 }
 
 const deleteCategory = () => {
-  const findDouble = allCategories.find(item => item.id === deleted.id);
+  const findDouble = allCategories.find(item => item.categoryId === deleted.categoryId);
   if (!findDouble) allCategories.push(deleted)
   componentKey.value += 1
 }

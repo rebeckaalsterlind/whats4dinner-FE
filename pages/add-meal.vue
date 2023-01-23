@@ -8,11 +8,11 @@
     </div>
 
     <section class="my-4">
-      <h5 v-if="addMeal.ingredients.length > 0">Key ingredients:</h5>
+      <h5 v-if="addMeal.keywords.length > 0">Key ingredients:</h5>
       <ul class="list-none w-full min-h-[40px] flex flex-wrap">
-        <Pill v-if="addMeal.ingredients" v-for="option in addMeal.ingredients" :key="option"
+        <Pill v-if="addMeal.keywords" v-for="option in addMeal.keywords" :key="option"
           :label="helpers.capitalize(option)">
-          <XMarkIcon class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
+          <XMarkIcon @click="deleteKeyword(option)" class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
         </Pill>
       </ul>
     </section>
@@ -21,7 +21,7 @@
       <ul class="list-none w-full min-h-[40px] flex flex-wrap">
         <Pill v-if="addMeal.categories" v-for="(option, key) in addMeal.categories" :key="key"
           :label="helpers.capitalize(option.name)">
-          <XMarkIcon class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
+          <XMarkIcon @click="deleteCategory(option)" class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
         </Pill>
       </ul>
     </section>
@@ -33,12 +33,12 @@
   <article class="mb-20">
     <BaseComponent v-if="showName">
       <Input placeholder="Name.." @input="updateName" />
-      <AddMealBtn :disabled="mealName.length === 0" label="Next.." @click="goToNext('ingredients')" />
+      <AddMealBtn :disabled="mealName.length === 0" label="Next.." @click="goToNext('Keywords')" />
     </BaseComponent>
 
-    <BaseComponent v-if="showIngredients">
-      <Ingredients label="Add key ingredients.." @update="updateIngredients" />
-      <AddMealBtn :disabled="addMeal.ingredients.length === 0" label="Next.." @click="goToNext('categories')" />
+    <BaseComponent v-if="showKeywords">
+      <Keywords label="Add key Keywords.." @update="updateKeywords" />
+      <AddMealBtn :disabled="addMeal.keywords.length === 0" label="Next.." @click="goToNext('categories')" />
     </BaseComponent>
 
     <BaseComponent v-if="showCategories">
@@ -72,41 +72,30 @@
 import { PhotoIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { XMarkIcon } from '@heroicons/vue/20/solid';
 import { helpers } from '@/helpers.vue';
-
-const categories = [
-  { id: 1, name: 'Vegetarian' },
-  { id: 2, name: 'Vegan' },
-  { id: 3, name: 'Healthy' },
-  { id: 4, name: 'Spicy' },
-  { id: 5, name: 'Soup' },
-  { id: 6, name: 'Salad' },
-  { id: 7, name: 'Comfort' },
-  { id: 8, name: 'Quick' },
-  { id: 9, name: 'Special' },
-  { id: 10, name: 'Slow cook' },
-  { id: 11, name: 'Favourites' }
-];
+import { useCounterStore } from '~~/stores/counter';
+const store = useCounterStore();
+const { user } = store;
 
 interface IOptions {
   name: string,
-  id: number
+  categoryId: number
 }
 
 const saving = ref(false);
 const addMeal = reactive({
   title: '',
   id: 0,
-  ingredients: [],
+  keywords: [] as string[],
   categories: [] as IOptions[],
   picture: false,
   recipe: []
 })
 
-const deletedCategory = reactive({ name: '', id: 0 });
-const categoriesFromFetch = reactive(categories as IOptions[]);
+const deletedCategory = reactive({ name: '', categoryId: 0 });
+const categoriesFromFetch = reactive(user.categories);
 const showName = ref(true);
 const showPicture = ref(false);
-const showIngredients = ref(false);
+const showKeywords = ref(false);
 const showCategories = ref(false);
 const showRecipe = ref(false);
 const showAll = ref(false);
@@ -122,25 +111,25 @@ const toggleBtn = (evt: Event): void => {
 
 const goToNext = (nextStep: string) => {
   switch (nextStep) {
-    case 'ingredients':
+    case 'Keywords':
       if (mealName.value !== '') {
         addMeal.title = mealName.value;
-        showIngredients.value = true;
+        showKeywords.value = true;
         showName.value = false;
-
       }
       break;
     case 'categories':
-      if (addMeal.ingredients.length !== 0) {
-        showIngredients.value = false;
+      if (addMeal.keywords.length !== 0) {
+        showKeywords.value = false;
         showCategories.value = true
         addMeal.id = helpers.generateId();
       }
       break;
     case 'picture':
-      if (addMeal.categories.length !== 0) {
-        showCategories.value = false
-        showPicture.value = true
+      if (addMeal.keywords.length !== 0) {
+        showKeywords.value = false;
+        showCategories.value = false;
+        showPicture.value = true;
       }
       break;
     case 'recipe':
@@ -154,15 +143,22 @@ const goToNext = (nextStep: string) => {
   }
 }
 
-
 const updateCategories = (updatedSelections: IOptions) => {
   addMeal.categories.push(updatedSelections);
 }
 
 const deleteCategory = (category: IOptions) => {
-  addMeal.categories = addMeal.categories.filter(item => item.id !== category.id);
+  addMeal.categories = addMeal.categories.filter(item => item.categoryId !== category.categoryId);
   Object.assign(deletedCategory, category)
   componentKey.value += 1
+}
+
+const updateKeywords = (updatedSelections: string) => {
+  addMeal.keywords.push(updatedSelections);
+}
+
+const deleteKeyword = (deleted: string) => {
+  addMeal.keywords = addMeal.keywords.filter(item => item !== deleted);
 }
 
 const addPhoto = (): void => {
@@ -172,14 +168,6 @@ const addPhoto = (): void => {
 
 const updateName = (e: Event) => {
   mealName.value = (e.target as HTMLInputElement).value
-}
-
-
-const updateIngredients = (updatedSelections: any) => {
-  console.log('with id?', updatedSelections);
-  addMeal.ingredients = updatedSelections;
-  if (addMeal.ingredients.length > 0) {
-  }
 }
 
 const addRecipe = (recipe: any) => {
@@ -196,10 +184,9 @@ const handleSave = () => {
   console.log('object',);
   setTimeout(function () {
     saving.value = false;
-    navigateTo('/show-meal/7654321')
+    const id = 2765425675;
+    navigateTo(`/show-meal/${id}`)
   }, 1000);
 }
-
-
 
 </script>
