@@ -6,7 +6,7 @@
     <div @click="() => { navigateTo('/add-meal') }" class="cursor-pointer">
       <PlusCircleIcon class="h-10 w-10 text-pink-500" />
     </div>
-    <div @click="() => { navigateTo('/search') }">
+    <div @click="() => { navigateTo('/search') }" class="cursor-pointer">
       <MagnifyingGlassIcon class="h-6 w-6 text-['rgb(199, 103, 0)']" />
     </div>
   </footer>

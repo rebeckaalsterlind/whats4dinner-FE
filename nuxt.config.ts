@@ -18,11 +18,26 @@ export default defineNuxtConfig({
     }
   },
   css: ['~/assets/css/main.css', '@/assets/css/poppins.css'],
-      postcss: {
-      plugins: {
-        tailwindcss: {},
-        autoprefixer: {},
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+  modules: [
+    // ...
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: [
+          // automatically imports `defineStore`
+          'defineStore', // import { defineStore } from 'pinia'
+          // automatically imports `defineStore` as `definePiniaStore`
+          ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
+        ],
       },
-    }
+    ],
+  ],
+  pages: true
 })
 
