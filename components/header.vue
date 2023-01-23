@@ -4,7 +4,7 @@
     <aside @click="() => { navigateTo('/my-account') }" class="cursor-pointer">
       <UserCircleIcon class="h-10 w-10 text-white" />
       <div class="text-white font-bold text-xl">
-        {{ store.count }}
+        {{ user.userName }}
       </div>
     </aside>
   </header>
@@ -15,5 +15,6 @@ import { UserCircleIcon } from '@heroicons/vue/20/solid';
 import Logo from '@/assets/img/logo.vue';
 import { useCounterStore } from '~~/stores/counter';
 const store = useCounterStore();
-
+const { user } = store;
+console.log('user from pinia', user);
 </script>

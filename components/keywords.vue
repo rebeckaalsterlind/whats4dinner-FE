@@ -10,7 +10,7 @@
     <Input id="inputField" :placeholder="label" @input="handleInput" @click="clearSearchHelp" />
     <div v-if="result && showOptions" class="bg-white flex flex-col gap-1 px-1 bg-opacity-10 rounded-lg h-fit w-full">
       <ul v-for="(option, key) in result" :key="key" class="h-10">
-        <li @click="handleClick" :value="option"
+        <li @click="handleClick(option)" :value="option"
           class="h-full w-full rounded-lg p-2 bg-white bg-opacity-10 hover:bg-prime-normal my-1 hover:text-accent-normal active:text-white">
           {{ option }}</li>
       </ul>
@@ -20,18 +20,13 @@
 
 <script setup lang="ts">
 import { Ref } from '@vue/runtime-core';
-import { helpers } from '@/helpers.vue';
 
 const emit = defineEmits(['update'])
 const { label } = defineProps<{ label: string }>()
 
-interface IIngredient {
-  name: string,
-  id: number
-}
 const showOptions = ref(false)
 const result = reactive([]);
-const selectedIngredients = ref([] as IIngredient[]);
+const selectedIngredients = ref([] as string[]);
 
 const getSuggestions = async (url: string) => {
   return await fetch(url)
@@ -57,19 +52,9 @@ const handleInput = async (e: Event): Promise<void> => {
 
 };
 
-const handleClick = (e: Event) => {
-  let ingredient: string = (e.target as HTMLInputElement).innerText
-  const id = helpers.generateId();
-
-  selectedIngredients.value.push({ name: ingredient, id: id });
-  emit('update', selectedIngredients.value);
-
+const handleClick = (option: string) => {
+  emit('update', option);
   clearSearchHelp();
-}
-
-const deleteIngredient = (deleted: string) => {
-  selectedIngredients.value = selectedIngredients.value.filter(ingredient => ingredient.name !== deleted);
-  emit('update', selectedIngredients.value);
 }
 
 // GET https://api.spoonacular.com/recipes/1003464/ingredientWidget.json
