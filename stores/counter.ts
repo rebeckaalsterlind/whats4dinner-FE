@@ -22,7 +22,7 @@ export const useCounterStore = defineStore('counter', {
       recipes: [
         {
           title: 'pizza',
-          id: 987533454647,
+          id: 9875334647,
           keywords: [{ name: 'pizza', keywordId: 3 }, { name: 'pancake', keywordId: 1 }],
           categories: [{ name: 'soup', categoryId: 5 }, { name: 'slow cook', categoryId: 10 }],
           picture: 'pizza',
@@ -38,7 +38,7 @@ export const useCounterStore = defineStore('counter', {
         },
         {
           title: 'pasta bolognese',
-          id: 9873654274693,
+          id: 987365493,
           keywords: [{ name: 'pasta', keywordId: 3 }, { name: 'pork mince', keywordId: 1 }],
           categories: [{ name: 'favourites', categoryId: 11 }, { name: 'comfort food', categoryId: 7 }],
           picture: 'pizza',
@@ -54,7 +54,7 @@ export const useCounterStore = defineStore('counter', {
         },
         {
           title: 'fish & chips',
-          id: 2765425674695,
+          id: 2765425675,
           keywords: [{ name: 'fish', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
           categories: [{ name: 'favourites', categoryId: 11 }, { name: 'healty', categoryId: 3 }],
           picture: 'pizza',
@@ -70,7 +70,7 @@ export const useCounterStore = defineStore('counter', {
         },
         {
           title: 'chicken',
-          id: 27232425674695,
+          id: 2723242565,
           keywords: [{ name: 'chicken', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
           categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
           picture: 'pizza',
@@ -84,10 +84,9 @@ export const useCounterStore = defineStore('counter', {
             description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
           }
         },
-        ,
         {
           title: 'Stirfry',
-          id: 27287654676,
+          id: 27287676,
           keywords: [{ name: 'noodles', keywordId: 3 }, { name: 'potato', keywordId: 1 }],
           categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
           picture: 'pizza',

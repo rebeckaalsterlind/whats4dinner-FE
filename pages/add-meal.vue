@@ -127,8 +127,9 @@ const goToNext = (nextStep: string) => {
       break;
     case 'picture':
       if (addMeal.keywords.length !== 0) {
-        showKeywords.value = false
-        showPicture.value = true
+        showKeywords.value = false;
+        showCategories.value = false;
+        showPicture.value = true;
       }
       break;
     case 'recipe':
@@ -183,7 +184,8 @@ const handleSave = () => {
   console.log('object',);
   setTimeout(function () {
     saving.value = false;
-    navigateTo('/show-meal/7654321')
+    const id = 2765425675;
+    navigateTo(`/show-meal/${id}`)
   }, 1000);
 }
 

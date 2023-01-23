@@ -2,15 +2,16 @@
   <h4 class="ml-1 text-white font-semibold">{{ category.name }}</h4>
   <Carousel :items-to-scroll="1" :wrap-around="true" :settings="settings"
     class="flex flex-col justify-items-stretch mb-8">
-    <Slide v-for="slide of filteredCategories" :key="slide.id" class="h-36 pb-2 px-1 cursor-pointer"
-      @click="navigateTo(`/show-meal/${slide.id}`)">
-      <article class="w-full h-full flex rounded-lg overflow-hidden drop-shadow-lg">
-        <img src="@/assets/img/pizza.jpg" :alt="slide.title" class="grow object-cover " />
-        <h6
-          class="absolute flex items-center px-2 overflow-hidden break-all bottom-0 w-full text-xs font-light text-white h-[18%] bg-prime-normal bg-opacity-80">
-          {{ slide.title }}
-        </h6>
-      </article>
+    <Slide v-for="slide of filteredCategories" :key="slide.id" class="h-36 pb-2 px-1 cursor-pointer">
+      <NuxtLink :to="`/show-meal/${slide.id}`">
+        <article class="w-full h-full flex rounded-lg overflow-hidden drop-shadow-lg">
+          <img src="@/assets/img/pizza.jpg" :alt="slide.title" class="grow object-cover " />
+          <h6
+            class="absolute flex items-center px-2 overflow-hidden break-all bottom-0 w-full text-xs font-light text-white h-[18%] bg-prime-normal bg-opacity-80">
+            {{ slide.title }}
+          </h6>
+        </article>
+      </NuxtLink>
     </Slide>
   </Carousel>
 </template>
@@ -50,6 +51,5 @@ const filterCategories = () => {
 }
 
 filterCategories();
-
 
 </script>
