@@ -1,12 +1,11 @@
 <template>
-  <article>
-    <Carousel v-for="category in user.categories" :key="category.categoryId" :category="category" />
-  </article>
-
+  <Carousel v-for="category in defaultCategories" :key="category.categoryId" :category="category" />
 </template>
 
 <script setup lang="ts">
 import { useCounterStore } from '~~/stores/counter';
+import { storeToRefs } from 'pinia';
 const store = useCounterStore();
-const { user } = store;
+const { userCategories, defaultCategories } = storeToRefs(store);
+
 </script>

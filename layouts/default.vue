@@ -6,3 +6,4 @@
   </main>
   <Footer class="h-16 min-w-full bg-prime-normal bg-opacity-95 fixed bottom-0" />
 </template>
+
