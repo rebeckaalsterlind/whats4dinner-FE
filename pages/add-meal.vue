@@ -33,17 +33,17 @@
   <article class="mb-20">
     <BaseComponent v-if="showName">
       <Input placeholder="Name.." @input="updateName" />
-      <AddMealBtn :disabled="mealName.length === 0" label="Next.." @click="goToNext('Keywords')" />
+      <AddMealBtn :disabled="mealName.length === 0" label="Next.." @click="goToNext('keywords')" />
     </BaseComponent>
 
     <BaseComponent v-if="showKeywords">
-      <Keywords label="Add key Keywords.." @update="updateKeywords" />
+      <Keywords label="Add key ingredients.." @update="updateKeywords" />
       <AddMealBtn :disabled="addMeal.keywords.length === 0" label="Next.." @click="goToNext('categories')" />
     </BaseComponent>
 
     <BaseComponent v-if="showCategories">
-      <Categories :key="componentKey" :categories="categoriesFromFetch" :deleted="deletedCategory"
-        label="Select categories.." @update="updateCategories" />
+      <Categories :key="componentKey" :deleted="deletedCategory" label="Select categories.."
+        @update="updateCategories" />
       <AddMealBtn :disabled="addMeal.categories.length === 0" label="Next.." @click="goToNext('picture')" />
     </BaseComponent>
 
@@ -72,13 +72,18 @@
 import { PhotoIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { XMarkIcon } from '@heroicons/vue/20/solid';
 import { helpers } from '@/helpers.vue';
+import { storeToRefs } from 'pinia';
 import { useCounterStore } from '~~/stores/counter';
 const store = useCounterStore();
-const { user } = store;
+const { userCategories, selectedMeal } = storeToRefs(store);
 
 interface IOptions {
   name: string,
   categoryId: number
+}
+interface IRecipe {
+  ingredients: { name: string; amount: string; }[];
+  description: string;
 }
 
 const saving = ref(false);
@@ -87,12 +92,14 @@ const addMeal = reactive({
   id: 0,
   keywords: [] as string[],
   categories: [] as IOptions[],
-  picture: false,
-  recipe: []
+  picture: '',
+  recipe: {
+    ingredients: [{ name: '', amount: '' }],
+    description: ''
+  }
 })
 
 const deletedCategory = reactive({ name: '', categoryId: 0 });
-const categoriesFromFetch = reactive(user.categories);
 const showName = ref(true);
 const showPicture = ref(false);
 const showKeywords = ref(false);
@@ -111,7 +118,7 @@ const toggleBtn = (evt: Event): void => {
 
 const goToNext = (nextStep: string) => {
   switch (nextStep) {
-    case 'Keywords':
+    case 'keywords':
       if (mealName.value !== '') {
         addMeal.title = mealName.value;
         showKeywords.value = true;
@@ -163,7 +170,7 @@ const deleteKeyword = (deleted: string) => {
 
 const addPhoto = (): void => {
   console.log('add photo');
-  addMeal.picture = true;
+  addMeal.picture = 'true';
 }
 
 const updateName = (e: Event) => {
@@ -176,17 +183,20 @@ const addRecipe = (recipe: any) => {
   console.log('recipe saved', addMeal.recipe);
 }
 
-const handleSave = () => {
-  console.log('save', addMeal);
+const handleSave = async () => {
 
-  saving.value = true;
-  //await post
-  console.log('object',);
-  setTimeout(function () {
-    saving.value = false;
-    const id = 2765425675;
-    navigateTo(`/show-meal/${id}`)
-  }, 1000);
+  //get from localstorage??
+  const userId = '63d12842b040322d0e25bfb2';
+  const saveMeal = await $fetch('http://localhost:3030/meals/addMeal', {
+    method: 'POST',
+    body: { id: userId, meal: addMeal }
+  });
+
+  selectedMeal.value = addMeal;
+  saving.value = false;
+  console.log('savemeal', saveMeal);
+  // push to state and selectedmeal. navigate to showmeal with selected meal.
+  navigateTo('/show-meal')
 }
 
 </script>

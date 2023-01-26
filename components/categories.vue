@@ -25,7 +25,6 @@
 </template>
 
 <script setup lang="ts">
-
 import {
   Listbox,
   ListboxButton,
@@ -34,23 +33,27 @@ import {
 } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
-interface IOptions {
+import { storeToRefs } from 'pinia';
+import { useCounterStore } from '~~/stores/counter';
+const store = useCounterStore();
+const { defaultCategories } = storeToRefs(store);
+
+interface ICategory {
   categoryId: number,
   name: string,
 }
 
 interface ICategories {
-  categories: IOptions[],
   label: string,
-  deleted: IOptions
+  deleted: ICategory
 }
 
-const { categories, deleted, label } = defineProps<ICategories>()
+const { deleted, label } = defineProps<ICategories>()
 const emit = defineEmits(['update'])
-const allCategories = reactive(categories as IOptions[]);
+const allCategories = reactive(defaultCategories.value);
 const componentKey = ref(0)
 
-const updateSelected = (category: IOptions) => {
+const updateSelected = (category: ICategory) => {
   const remainingCategories = allCategories.findIndex(item => item.categoryId === category.categoryId);
   allCategories.splice(remainingCategories, 1)
   emit('update', category);
