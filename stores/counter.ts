@@ -15,7 +15,7 @@ export const useCounterStore = defineStore('counter', {
       selectedMeal: {
         title: '',
         id: 0,
-        keywords: [],
+        keywords: [] as string[],
         categories: [{ name: '', categoryId: 0 }],
         picture: '',
         recipe: {
