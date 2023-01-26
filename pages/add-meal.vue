@@ -80,6 +80,10 @@ interface IOptions {
   name: string,
   categoryId: number
 }
+interface IRecipe {
+  ingredients: { name: string; amount: string; }[];
+  description: string;
+}
 
 const saving = ref(false);
 const addMeal = reactive({
@@ -87,8 +91,8 @@ const addMeal = reactive({
   id: 0,
   keywords: [] as string[],
   categories: [] as IOptions[],
-  picture: false,
-  recipe: []
+  picture: '',
+  recipe: {}
 })
 
 const deletedCategory = reactive({ name: '', categoryId: 0 });
@@ -163,7 +167,7 @@ const deleteKeyword = (deleted: string) => {
 
 const addPhoto = (): void => {
   console.log('add photo');
-  addMeal.picture = true;
+  addMeal.picture = 'true';
 }
 
 const updateName = (e: Event) => {
@@ -177,11 +181,15 @@ const addRecipe = (recipe: any) => {
 }
 
 const handleSave = () => {
-  console.log('save', addMeal);
-
-  saving.value = true;
-  //await post
-  console.log('object',);
+  const test = {
+    title: 'sushi',
+    id: 0,
+    keywords: ['salmon', 'rice'],
+    categories: [{ name: 'healthy', categoryId: 3 }],
+    picture: 'nope',
+    recipe: { ingredients: [{ name: 'rice', amount: 'a lot' }], description: 'roll em up!' }
+  }
+  // store.updateRecipes(test);
   setTimeout(function () {
     saving.value = false;
     const id = 2765425675;
