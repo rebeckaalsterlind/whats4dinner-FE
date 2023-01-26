@@ -1,6 +1,6 @@
 <template>
   <footer class="flex justify-between items-center p-3">
-    <div @click="() => { navigateTo('/') }">
+    <div @click="() => { navigateTo('/') }" class="cursor-pointer">
       <HomeIcon class="h-6 w-6 text-pink-500" />
     </div>
     <div @click="() => { navigateTo('/add-meal') }" class="cursor-pointer">
