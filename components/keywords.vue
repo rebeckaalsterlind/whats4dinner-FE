@@ -1,11 +1,4 @@
 <template>
-  <!-- <ul class="list-none w-full min-h-[40px] flex flex-wrap">
-      <h5 v-if="selectedIngredients.length > 0">Selected ingredients:</h5>
-      <li v-if="selectedIngredients" v-for="(option, key) in selectedIngredients" :key="key"
-        class="mr-2 my-1 px-2 flex items-center rounded-full min-w-fit bg-slate-500">{{ option }}
-        <XMarkIcon @click="deleteIngredient(option)" class="inline ml-2 h-4 w-4 cursor-pointer" />
-      </li>
-    </ul> -->
   <section class="w-full">
     <Input id="inputField" :placeholder="label" @input="handleInput" @click="clearSearchHelp" />
     <div v-if="result && showOptions" class="bg-white flex flex-col gap-1 px-1 bg-opacity-10 rounded-lg h-fit w-full">

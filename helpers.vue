@@ -2,7 +2,7 @@
 import { useCounterStore } from '~/stores/counter';
 import { storeToRefs } from 'pinia';
 const store = useCounterStore();
-const { isLoggedIn } = storeToRefs(store);
+const { isLoggedIn, userName, userCategories, userRecipes } = storeToRefs(store);
 
 
 export const capitalize = (string: string) => {
@@ -18,7 +18,21 @@ export const helpers = {
   generateId
 }
 
-export const checkUser = () => {
-  if (localStorage.getItem('user')) isLoggedIn.value = true;
+export const checkLogin = () => {
+  const userInLS = localStorage.getItem('user')
+  if (userInLS) {
+    console.log('in helper, ls true');
+    const user = JSON.parse(userInLS)
+    userName.value = user.userName;
+    userCategories.value = user.categories;
+    userRecipes.value = user.recipes
+    isLoggedIn.value = true;
+  }
+  if (!userInLS) {
+    console.log('in helper. no ls');
+    isLoggedIn.value = false;
+    navigateTo("/my-account")
+  }
 }
+
 </script>

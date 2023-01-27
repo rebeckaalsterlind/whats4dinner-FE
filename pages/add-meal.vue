@@ -71,7 +71,7 @@
 <script setup lang="ts">
 import { PhotoIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { XMarkIcon } from '@heroicons/vue/20/solid';
-import { helpers } from '@/helpers.vue';
+import { checkLogin, helpers } from '@/helpers.vue';
 import { storeToRefs } from 'pinia';
 import { useCounterStore } from '~~/stores/counter';
 const store = useCounterStore();
@@ -169,7 +169,6 @@ const deleteKeyword = (deleted: string) => {
 }
 
 const addPhoto = (): void => {
-  console.log('add photo');
   addMeal.picture = 'true';
 }
 
@@ -180,7 +179,6 @@ const updateName = (e: Event) => {
 const addRecipe = (recipe: any) => {
   addMeal.recipe = recipe;
   showAll.value = true;
-  console.log('recipe saved', addMeal.recipe);
 }
 
 const handleSave = async () => {
@@ -199,4 +197,5 @@ const handleSave = async () => {
   navigateTo('/show-meal')
 }
 
+onMounted(() => checkLogin());
 </script>

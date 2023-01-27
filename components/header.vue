@@ -1,11 +1,15 @@
 <template>
   <header>
     <Logo @click="() => { navigateTo('/') }" class="cursor-pointer w-20 h-auto" />
-    <aside @click="() => { navigateTo('/my-account') }" class="cursor-pointer">
-      <UserCircleIcon class="h-10 w-10 text-white" />
-      <div v-if="isLoggedIn" class="text-white font-bold text-xl">
-        {{ user.userName }}
+    <aside v-if="isLoggedIn" class="flex flex-col absolute">
+      <UserCircleIcon @click="showOptions" class="h-10 w-10 text-white cursor-pointer" />
+      <div class="text-white font-bold text-xl">
+        {{ userName }}
       </div>
+      <article v-if="showLogOut" class="pt-40 flex justify-center text-white">
+        <p>My account</p>
+        <p @click="signOut" class="cursor-pointer">Sign out?</p>
+      </article>
     </aside>
   </header>
 </template>
@@ -15,11 +19,32 @@ import { UserCircleIcon } from '@heroicons/vue/20/solid';
 import Logo from '@/assets/img/logo.vue';
 import { storeToRefs } from 'pinia';
 import { useCounterStore } from '~~/stores/counter';
+//import { checkUser } from '~~/helpers.vue';
 const store = useCounterStore();
-const { user, isLoggedIn } = storeToRefs(store);
+const { userName, isLoggedIn } = storeToRefs(store);
+const showLogOut = ref(false);
 
-const check = () => {
-  console.log('is logged in', isLoggedIn, user);
+const signOut = () => {
+  localStorage.clear();
+  isLoggedIn.value = false;
+  userName.value = '';
+  showLogOut.value = false;
+  navigateTo("/my-account")
+};
+
+const showOptions = () => {
+  showLogOut.value = true
 }
-watch(isLoggedIn, check)
+
+
+// onMounted(() => {
+//   var getUser = localStorage.getItem('user')
+//   if (getUser) {
+//     console.log('get user in  header', getUser);
+//     const user = JSON.parse(getUser)
+//     isLoggedIn.value = true;
+//     userName.value = user.userName;
+//   }
+// });
+
 </script>

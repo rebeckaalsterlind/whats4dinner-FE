@@ -57,7 +57,7 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from '@headlessui/vue';
-
+import { checkLogin } from '~~/helpers.vue';
 // interface IUser {
 //   userName: string,
 //   userEmail: string,
@@ -264,5 +264,6 @@ const filterSearch = () => {
   }
 }
 
-watch(query, filterSearch)
+watch(query, filterSearch);
+onMounted(() => checkLogin());
 </script>
