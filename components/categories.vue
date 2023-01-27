@@ -1,4 +1,5 @@
 <template>
+  <AddCategory v-if="showAddCategory" v-model="addCategory" />
   <Listbox class="w-full">
     <div>
       <ListboxButton
@@ -34,6 +35,7 @@ import {
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 import { storeToRefs } from 'pinia';
+import { generateId } from '~~/helpers.vue';
 import { useCounterStore } from '~~/stores/counter';
 const store = useCounterStore();
 const { defaultCategories } = storeToRefs(store);
@@ -50,13 +52,20 @@ interface ICategories {
 
 const { deleted, label } = defineProps<ICategories>()
 const emit = defineEmits(['update'])
-const allCategories = reactive(defaultCategories.value);
+const allCategories = reactive([...defaultCategories.value, { categoryId: 0, name: 'Add new category?' }]);
+const showAddCategory = ref(false);
+const addCategory = ref();
 const componentKey = ref(0)
 
 const updateSelected = (category: ICategory) => {
-  const remainingCategories = allCategories.findIndex(item => item.categoryId === category.categoryId);
-  allCategories.splice(remainingCategories, 1)
-  emit('update', category);
+  if (category.categoryId === 0) {
+    showAddCategory.value = true;
+
+  } else {
+    const remainingCategories = allCategories.findIndex(item => item.categoryId === category.categoryId);
+    allCategories.splice(remainingCategories, 1)
+    emit('update', category);
+  }
 }
 
 const deleteCategory = () => {
@@ -65,6 +74,21 @@ const deleteCategory = () => {
   componentKey.value += 1
 }
 
+const addCategoryToList = () => {
+  showAddCategory.value = false;
+  if (addCategory.value.length > 0) {
+    console.log('length', addCategory.value.length);
+    const newCategory = { categoryId: generateId(), name: addCategory.value };
+    //filter categories first. id 0 should be last.
+    allCategories.push(newCategory);
+    //push category to state and save to db
+  } else {
+    console.log('nothing');
+  }
+
+}
+
 watch(deleted, deleteCategory)
+watch(addCategory, addCategoryToList)
 </script>
 

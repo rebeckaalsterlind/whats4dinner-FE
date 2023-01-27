@@ -13,10 +13,10 @@ export const generateId = (): number => {
   return Math.floor(Math.random() * 100000);
 }
 
-export const helpers = {
-  capitalize,
-  generateId
-}
+// export const helpers = {
+//   capitalize,
+//   generateId
+// }
 
 export const checkLogin = () => {
   const userInLS = localStorage.getItem('user')

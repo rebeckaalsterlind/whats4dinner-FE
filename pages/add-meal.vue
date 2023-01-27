@@ -2,7 +2,7 @@
   <article class="fit-content min-h-[250px]">
     <div class="w-full flex justify-center">
       <h2 class="mt-0 items-center font-bold mx-auto fit-content inline-block text-xl">{{
-        helpers.capitalize(addMeal.title) || ''
+        capitalize(addMeal.title) || ''
       }}
       </h2>
     </div>
@@ -10,8 +10,7 @@
     <section class="my-4">
       <h5 v-if="addMeal.keywords.length > 0">Key ingredients:</h5>
       <ul class="list-none w-full min-h-[40px] flex flex-wrap">
-        <Pill v-if="addMeal.keywords" v-for="option in addMeal.keywords" :key="option"
-          :label="helpers.capitalize(option)">
+        <Pill v-if="addMeal.keywords" v-for="option in addMeal.keywords" :key="option" :label="capitalize(option)">
           <XMarkIcon @click="deleteKeyword(option)" class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
         </Pill>
       </ul>
@@ -20,7 +19,7 @@
       <h5 v-if="addMeal.categories.length > 0">Categories:</h5>
       <ul class="list-none w-full min-h-[40px] flex flex-wrap">
         <Pill v-if="addMeal.categories" v-for="(option, key) in addMeal.categories" :key="key"
-          :label="helpers.capitalize(option.name)">
+          :label="capitalize(option.name)">
           <XMarkIcon @click="deleteCategory(option)" class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
         </Pill>
       </ul>
@@ -71,7 +70,7 @@
 <script setup lang="ts">
 import { PhotoIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { XMarkIcon } from '@heroicons/vue/20/solid';
-import { checkLogin, helpers } from '@/helpers.vue';
+import { checkLogin, capitalize, generateId } from '@/helpers.vue';
 import { storeToRefs } from 'pinia';
 import { useCounterStore } from '~~/stores/counter';
 const store = useCounterStore();
@@ -129,7 +128,7 @@ const goToNext = (nextStep: string) => {
       if (addMeal.keywords.length !== 0) {
         showKeywords.value = false;
         showCategories.value = true
-        addMeal.id = helpers.generateId();
+        addMeal.id = generateId();
       }
       break;
     case 'picture':
