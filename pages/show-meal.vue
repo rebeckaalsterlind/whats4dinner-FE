@@ -40,5 +40,4 @@ const store = useCounterStore();
 const { selectedMeal } = storeToRefs(store);
 const meal = ref(selectedMeal.value)
 watch(selectedMeal, (val) => console.log('value changes', val))
-console.log('meal', meal.value);
 </script>

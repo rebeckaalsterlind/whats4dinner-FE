@@ -18,6 +18,7 @@ export interface IResponse {
 
 export interface IUser {
   userName: string;
+  _id: string;
   password: string;
   categories: [];
   recipes: []
