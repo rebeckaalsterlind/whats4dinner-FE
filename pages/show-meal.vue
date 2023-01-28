@@ -37,5 +37,6 @@ import { PhotoIcon } from '@heroicons/vue/24/outline';
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
 const store = userStore();
+
 const { selectedMeal } = storeToRefs(store);
 </script>

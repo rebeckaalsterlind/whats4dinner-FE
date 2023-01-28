@@ -92,7 +92,10 @@ const addMeal = reactive({
   keywords: [] as string[],
   categories: [] as IOptions[],
   picture: '',
-  recipe: [] as IRecipe[]
+  recipe: {
+    ingredients: [{ name: '', amount: '' }],
+    description: ''
+  }
 })
 
 const deletedCategory = reactive({ name: '', categoryId: 0 });
@@ -172,14 +175,12 @@ const updateName = (e: Event) => {
   mealName.value = (e.target as HTMLInputElement).value
 }
 
-const addRecipe = (recipe: IRecipe[]) => {
+const addRecipe = (recipe: IRecipe) => {
   addMeal.recipe = recipe;
   showAll.value = true;
 }
 
 const handleSave = async () => {
-  //save to db
-
   const userInLS = localStorage.getItem('user');
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
@@ -188,20 +189,18 @@ const handleSave = async () => {
       method: 'POST',
       body: { id: LSuser.id, meal: addMeal }
     });
-    console.log('saveMeal', saveMeal);
-    //save to ls
-    localStorage.setItem('recipes', JSON.stringify(saveMeal));
-    store.$patch((state) => {
-      state.userRecipes.push(addMeal)
-    })
 
+    localStorage.setItem('recipes', JSON.stringify(saveMeal));
+    //subscribe to ls instead?
+    store.$patch((state) => state.userRecipes.push(addMeal))
     selectedMeal.value = addMeal
     saving.value = false;
+
+    navigateTo('/show-meal')
+  } else {
+    navigateTo('/my-account')
   }
 
-
-  // push to state and selectedmeal. navigate to showmeal with selected meal.
-  navigateTo('/show-meal')
 }
 
 onMounted(() => checkLogin());

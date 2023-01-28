@@ -5,7 +5,7 @@ export const userStore = defineStore('user', () => {
     const user = ref({userName: '', id: ''})
     const isLoggedIn = ref(false)
     const userCategories = ref([] as ICategories[])
-    const userRecipes = ref([] as IRecipes[]);
+    const userRecipes = ref([] as IRecipe[]);
     const defaultCategories = ref([
       { categoryId: 1, name: 'vegetarian' },
       { categoryId: 2, name: 'vegan' },
@@ -19,7 +19,18 @@ export const userStore = defineStore('user', () => {
       { categoryId: 10, name: 'slow cook' },
       { categoryId: 11, name: 'favourites' }
     ])
-    const selectedMeal = ref ({})
+    const selectedMeal = ref ( {
+      title: '',
+      id: 0,
+      keywords: [] as string[],
+      categories: [{ name: '', categoryId: 0 }],
+      picture: '',
+      recipe: {
+        ingredients:
+          [{ name: '', amount: '' }],
+        description: ''
+      }
+    })
 
     return {
       isLoggedIn, 
@@ -36,8 +47,7 @@ interface ICategories {
   categoryId: number, 
   name: string
 }
-
-interface IRecipes {
+interface IRecipe {
   title: string;
   id: number;
   keywords: string[];
@@ -47,6 +57,7 @@ interface IRecipes {
     ingredients:
       { name: string, amount: string }[];
     description: string;
-  }[]
+  }
 }
+
 
