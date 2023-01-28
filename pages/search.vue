@@ -22,7 +22,7 @@
             <ComboboxOption v-for="recipe in filteredRecipes" :key="recipe.id" :value="recipe">
               <div
                 class="cursor-pointer my-2 rounded-lg px-2 bg-white bg-opacity-10 text-white hover:text-accent-normal"
-                @click="navigateTo(`/show-meal/${recipe.id}`)">{{
+                @click="selectedMeal = recipe, navigateTo('/show-meal')">{{
                   recipe.title || ''
                 }}</div>
             </ComboboxOption>
@@ -58,24 +58,6 @@ import {
   DisclosurePanel,
 } from '@headlessui/vue';
 import { checkLogin } from '~~/helpers.vue';
-// interface IUser {
-//   userName: string,
-//   userEmail: string,
-//   password: string,
-//   categories: [{ categoryId: number, name: string }],
-//   recipes: [
-//     {
-//       title: string,
-//       id: number,
-//       keywords: [],
-//       categories: [{ name: string, categoryId: number }]
-//       picture: boolean,
-//       recipe: [{ ingredients: [], description: string }]
-//     }
-//   ]
-// }
-
-
 
 const user = {
   userName: 'Kalle',

@@ -25,11 +25,10 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useCounterStore } from '~/stores/counter';
+import { userStore } from '~~/stores/userStore';
 import { IResponse, IUser } from '~~/domain/types';
 import { checkLogin } from '~~/helpers.vue';
-//import { checkLogin } from '~~/helpers.vue';
-const store = useCounterStore();
+const store = userStore();
 const { userName, userCategories, userRecipes, defaultCategories, isLoggedIn } = storeToRefs(store);
 
 const loginFail = ref(false);
@@ -51,28 +50,10 @@ const handleInput = (e: Event): void => {
   if (userLogin.value.password === confirmPassword.value) isMatching.value = true;
 };
 
-const checkLogin = () => {
-  const userInLS = localStorage.getItem('user')
-  if (userInLS) {
-    const user = JSON.parse(userInLS)
-    userName.value = user.userName;
-    userCategories.value = user.categories;
-    userRecipes.value = user.recipes
-    isLoggedIn.value = true;
-  }
-  if (!userInLS) {
-    isLoggedIn.value = false;
-    navigateTo("/my-account")
-  }
-}
-
 //set user from fetch response
 const setUser = (response: IUser) => {
   errorMsg.value = '';
-  // userName.value = response.userName;
-  // userCategories.value = response.categories;
-  // userRecipes.value = response.recipes;
-  localStorage.setItem('user', JSON.stringify(response));
+  localStorage.setItem('user', JSON.stringify({ userName: response.userName, id: response._id }));
   localStorage.setItem('recipes', JSON.stringify(response.recipes));
   localStorage.setItem('categories', JSON.stringify(response.categories));
   checkLogin();

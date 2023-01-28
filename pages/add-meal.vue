@@ -71,18 +71,18 @@
 import { PhotoIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { XMarkIcon } from '@heroicons/vue/20/solid';
 import { checkLogin, capitalize, generateId } from '@/helpers.vue';
+import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
-import { useCounterStore } from '~~/stores/counter';
-const store = useCounterStore();
-const { userCategories, selectedMeal } = storeToRefs(store);
+const store = userStore();
+const { user, userCategories, userRecipes, selectedMeal } = storeToRefs(store);
 
 interface IOptions {
   name: string,
   categoryId: number
 }
 interface IRecipe {
-  ingredients: { name: string; amount: string; }[];
-  description: string;
+  ingredients: [{ name: string, amount: string }],
+  description: string
 }
 
 const saving = ref(false);
@@ -92,10 +92,7 @@ const addMeal = reactive({
   keywords: [] as string[],
   categories: [] as IOptions[],
   picture: '',
-  recipe: {
-    ingredients: [{ name: '', amount: '' }],
-    description: ''
-  }
+  recipe: [] as IRecipe[]
 })
 
 const deletedCategory = reactive({ name: '', categoryId: 0 });
@@ -175,23 +172,34 @@ const updateName = (e: Event) => {
   mealName.value = (e.target as HTMLInputElement).value
 }
 
-const addRecipe = (recipe: any) => {
+const addRecipe = (recipe: IRecipe[]) => {
   addMeal.recipe = recipe;
   showAll.value = true;
 }
 
 const handleSave = async () => {
+  //save to db
 
-  //get from localstorage??
-  const userId = '63d12842b040322d0e25bfb2';
-  const saveMeal = await $fetch('http://localhost:3030/meals/addMeal', {
-    method: 'POST',
-    body: { id: userId, meal: addMeal }
-  });
+  const userInLS = localStorage.getItem('user');
+  if (userInLS) {
+    const LSuser = JSON.parse(userInLS)
 
-  selectedMeal.value = addMeal;
-  saving.value = false;
-  console.log('savemeal', saveMeal);
+    const saveMeal = await $fetch('http://localhost:3030/meals/addMeal', {
+      method: 'POST',
+      body: { id: LSuser.id, meal: addMeal }
+    });
+    console.log('saveMeal', saveMeal);
+    //save to ls
+    localStorage.setItem('recipes', JSON.stringify(saveMeal));
+    store.$patch((state) => {
+      state.userRecipes.push(addMeal)
+    })
+
+    selectedMeal.value = addMeal
+    saving.value = false;
+  }
+
+
   // push to state and selectedmeal. navigate to showmeal with selected meal.
   navigateTo('/show-meal')
 }

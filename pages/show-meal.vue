@@ -14,18 +14,19 @@
     <section class="my-4">
       <h5 class="font-semibold">Categories:</h5>
       <ul class="flex">
-        <Pill v-for="category in meal.categories" :key="category.categoryId" :label="capitalize(category.name)" />
+        <Pill v-for="category in selectedMeal.categories" :key="category.categoryId"
+          :label="capitalize(category.name)" />
       </ul>
     </section>
 
     <section class="mt-4">
       <h5 class="font-semibold">Recipe: </h5>
       <ul>
-        <li v-for="(ingredient, key) in meal.recipe.ingredients" :key="key">
+        <li v-for="(ingredient, key) in selectedMeal.recipe.ingredients" :key="key">
           {{ ingredient.amount }} {{ ingredient.name }}
         </li>
       </ul>
-      <p class="mt-4">{{ meal.recipe.description }}</p>
+      <p class="mt-4">{{ selectedMeal.recipe.description }}</p>
     </section>
   </article>
 </template>
@@ -33,10 +34,8 @@
 <script setup lang="ts">
 import { capitalize } from '@/helpers.vue'
 import { PhotoIcon } from '@heroicons/vue/24/outline';
-import { useCounterStore } from '~~/stores/counter';
+import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
-const store = useCounterStore();
+const store = userStore();
 const { selectedMeal } = storeToRefs(store);
-const meal = ref(selectedMeal.value)
-watch(selectedMeal, (val) => console.log('value changes', val))
 </script>

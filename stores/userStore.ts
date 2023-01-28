@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
 
-export const useCounterStore = defineStore('counter', () => {
+export const userStore = defineStore('user', () => {
     const userName = ref('')
+    const user = ref({userName: '', id: ''})
     const isLoggedIn = ref(false)
     const userCategories = ref([] as ICategories[])
     const userRecipes = ref([] as IRecipes[]);
@@ -18,32 +19,11 @@ export const useCounterStore = defineStore('counter', () => {
       { categoryId: 10, name: 'slow cook' },
       { categoryId: 11, name: 'favourites' }
     ])
-    const selectedMeal = ref ({
-      title: '',
-      id: 0,
-      keywords: [] as string[],
-      categories: [{ name: '', categoryId: 0 }],
-      picture: '',
-      recipe: {
-        ingredients: [{ name: '', amount: '' }],
-        description: ''
-      }
-    })
-    if (typeof window !== 'undefined') {
-      console.log('You are on the browser')
-      // 👉️ can use localStorage here
-      const userInLS = localStorage.getItem('user')
-      if (userInLS) {
-        const user = JSON.parse(userInLS)
-        userName.value = user.userName;
-        userCategories.value = user.categories;
-        userRecipes.value = user.recipes
-        isLoggedIn.value = true;
-      }
-    }
+    const selectedMeal = ref ({})
 
     return {
       isLoggedIn, 
+      user,
       userName, 
       defaultCategories,
       userCategories,
@@ -62,11 +42,11 @@ interface IRecipes {
   id: number;
   keywords: string[];
   categories: { name: string, categoryId: number }[];
-  picture: string | undefined;
+  picture: string;
   recipe: {
     ingredients:
-      { name: string, amount: number }[];
+      { name: string, amount: string }[];
     description: string;
-  }[] | []
+  }[]
 }
 

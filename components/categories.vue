@@ -36,9 +36,9 @@ import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 import { storeToRefs } from 'pinia';
 import { generateId } from '~~/helpers.vue';
-import { useCounterStore } from '~~/stores/counter';
-const store = useCounterStore();
-const { defaultCategories } = storeToRefs(store);
+import { userStore } from '~~/stores/userStore';
+const store = userStore();
+const { defaultCategories, userCategories, user } = storeToRefs(store);
 
 interface ICategory {
   categoryId: number,
@@ -77,15 +77,28 @@ const deleteCategory = () => {
 const addCategoryToList = () => {
   showAddCategory.value = false;
   if (addCategory.value.length > 0) {
-    console.log('length', addCategory.value.length);
     const newCategory = { categoryId: generateId(), name: addCategory.value };
     //filter categories first. id 0 should be last.
     allCategories.push(newCategory);
     //push category to state and save to db
-  } else {
-    console.log('nothing');
-  }
+    store.$patch((state) => {
+      state.userCategories.push(newCategory)
+    });
+    console.log('usercategories state', userCategories.value);
+    // save to ls
+    localStorage.setItem('categories', JSON.stringify(userCategories.value));
+    //add to db
 
+    const userInLS = localStorage.getItem('user');
+    if (userInLS) {
+      const LSuser = JSON.parse(userInLS)
+      $fetch('http://localhost:3030/meals/addCategory', {
+        method: 'POST',
+        body: { id: LSuser.id, category: newCategory }
+      });
+    }
+    console.log('updated state', userCategories.value);
+  }
 }
 
 watch(deleted, deleteCategory)
