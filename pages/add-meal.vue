@@ -2,7 +2,7 @@
   <article class="fit-content min-h-[250px]">
     <div class="w-full flex justify-center">
       <h2 class="mt-0 items-center font-bold mx-auto fit-content inline-block text-xl">{{
-        helpers.capitalize(addMeal.title) || ''
+        capitalize(addMeal.title) || ''
       }}
       </h2>
     </div>
@@ -10,8 +10,7 @@
     <section class="my-4">
       <h5 v-if="addMeal.keywords.length > 0">Key ingredients:</h5>
       <ul class="list-none w-full min-h-[40px] flex flex-wrap">
-        <Pill v-if="addMeal.keywords" v-for="option in addMeal.keywords" :key="option"
-          :label="helpers.capitalize(option)">
+        <Pill v-if="addMeal.keywords" v-for="option in addMeal.keywords" :key="option" :label="capitalize(option)">
           <XMarkIcon @click="deleteKeyword(option)" class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
         </Pill>
       </ul>
@@ -20,7 +19,7 @@
       <h5 v-if="addMeal.categories.length > 0">Categories:</h5>
       <ul class="list-none w-full min-h-[40px] flex flex-wrap">
         <Pill v-if="addMeal.categories" v-for="(option, key) in addMeal.categories" :key="key"
-          :label="helpers.capitalize(option.name)">
+          :label="capitalize(option.name)">
           <XMarkIcon @click="deleteCategory(option)" class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
         </Pill>
       </ul>
@@ -71,19 +70,19 @@
 <script setup lang="ts">
 import { PhotoIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { XMarkIcon } from '@heroicons/vue/20/solid';
-import { helpers } from '@/helpers.vue';
+import { checkLogin, capitalize, generateId } from '@/helpers.vue';
+import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
-import { useCounterStore } from '~~/stores/counter';
-const store = useCounterStore();
-const { userCategories, selectedMeal } = storeToRefs(store);
+const store = userStore();
+const { user, userCategories, userRecipes, selectedMeal } = storeToRefs(store);
 
 interface IOptions {
   name: string,
   categoryId: number
 }
 interface IRecipe {
-  ingredients: { name: string; amount: string; }[];
-  description: string;
+  ingredients: [{ name: string, amount: string }],
+  description: string
 }
 
 const saving = ref(false);
@@ -129,7 +128,7 @@ const goToNext = (nextStep: string) => {
       if (addMeal.keywords.length !== 0) {
         showKeywords.value = false;
         showCategories.value = true
-        addMeal.id = helpers.generateId();
+        addMeal.id = generateId();
       }
       break;
     case 'picture':
@@ -169,7 +168,6 @@ const deleteKeyword = (deleted: string) => {
 }
 
 const addPhoto = (): void => {
-  console.log('add photo');
   addMeal.picture = 'true';
 }
 
@@ -177,26 +175,33 @@ const updateName = (e: Event) => {
   mealName.value = (e.target as HTMLInputElement).value
 }
 
-const addRecipe = (recipe: any) => {
+const addRecipe = (recipe: IRecipe) => {
   addMeal.recipe = recipe;
   showAll.value = true;
-  console.log('recipe saved', addMeal.recipe);
 }
 
 const handleSave = async () => {
+  const userInLS = localStorage.getItem('user');
+  if (userInLS) {
+    const LSuser = JSON.parse(userInLS)
 
-  //get from localstorage??
-  const userId = '63d12842b040322d0e25bfb2';
-  const saveMeal = await $fetch('http://localhost:3030/meals/addMeal', {
-    method: 'POST',
-    body: { id: userId, meal: addMeal }
-  });
+    const saveMeal = await $fetch('http://localhost:3030/meals/addMeal', {
+      method: 'POST',
+      body: { id: LSuser.id, meal: addMeal }
+    });
 
-  selectedMeal.value = addMeal;
-  saving.value = false;
-  console.log('savemeal', saveMeal);
-  // push to state and selectedmeal. navigate to showmeal with selected meal.
-  navigateTo('/show-meal')
+    localStorage.setItem('recipes', JSON.stringify(saveMeal));
+    //subscribe to ls instead?
+    store.$patch((state) => state.userRecipes.push(addMeal))
+    selectedMeal.value = addMeal
+    saving.value = false;
+
+    navigateTo('/show-meal')
+  } else {
+    navigateTo('/my-account')
+  }
+
 }
 
+onMounted(() => checkLogin());
 </script>

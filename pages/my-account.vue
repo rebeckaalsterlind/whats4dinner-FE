@@ -1,44 +1,35 @@
 <template>
-  <article v-if="!isLoggedIn" class="pt-40 flex justify-center text-white">
-    <section v-if="!createUser" class="flex flex-col gap-4 items-center text-prime-normal">
-      <p v-if="loginFail" class="text-white">{{ errorMsg }}</p>
-      <Input id="username" type="text" placeholder="Username.." @input="handleInput" />
-      <Input id="password" type="password" placeholder="Password.." @input="handleInput" />
-      <Button label="Log in" @click="logIn" />
-      <p @click="createUser = true, userTaken = false" class="text-white">Create account?</p>
-    </section>
-    <section v-if="createUser" class="flex flex-col gap-4 items-center text-prime-normal">
-      <p class="text-white">{{ errorMsg }}</p>
-      <Input id="username" type="text" placeholder="Username.." @input="handleInput" />
-      <Input id="password" type="password" placeholder="Password" @input="handleInput"
-        :class="isMatching && 'border border-success-500'" />
-      <Input id="confirm" type="password" placeholder="Confirm password" @input="handleInput"
-        :class="isMatching && 'border border-success-500'" />
-      <Button label="Register" @click="register" />
-      <p @click="createUser = false, loginFail = false" class="text-white">Or log in?</p>
-    </section>
-  </article>
-
-  <article v-if="isLoggedIn" class="pt-40 flex justify-center text-white">
-    <section v-if="!createUser" class="flex flex-col gap-4 items-center text-prime-normal">
-      <ul class="text-white">
-        <li>Username: {{ user.userName }}</li>
-        <li>Password: {{ user.password }}
-        </li><br />
-      </ul>
-      <Button label="Sign out?" @click="signOut" />
-    </section>
-  </article>
-
+  <div>
+    <article v-if="!isLoggedIn" class="pt-40 flex justify-center text-white">
+      <section v-if="!createUser" class="flex flex-col gap-4 items-center text-prime-normal">
+        <p v-if="loginFail" class="text-white">{{ errorMsg }}</p>
+        <Input id="username" type="text" placeholder="Username.." @input="handleInput" />
+        <Input id="password" type="password" placeholder="Password.." @input="handleInput" />
+        <Button label="Log in" @click="logIn" />
+        <p @click="createUser = true, userTaken = false" class="text-white">Create account?</p>
+      </section>
+      <section v-if="createUser" class="flex flex-col gap-4 items-center text-prime-normal">
+        <p class="text-white">{{ errorMsg }}</p>
+        <Input id="username" type="text" placeholder="Username.." @input="handleInput" />
+        <Input id="password" type="password" placeholder="Password" @input="handleInput"
+          :class="isMatching && 'border border-success-500'" />
+        <Input id="confirm" type="password" placeholder="Confirm password" @input="handleInput"
+          :class="isMatching && 'border border-success-500'" />
+        <Button label="Register" @click="register" />
+        <p @click="createUser = false, loginFail = false" class="text-white">Or log in?</p>
+      </section>
+    </article>
+    <article v-if="isLoggedIn">Profile</article>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useCounterStore } from '~/stores/counter';
+import { userStore } from '~~/stores/userStore';
 import { IResponse, IUser } from '~~/domain/types';
-import { checkUser } from '~~/helpers.vue';
-const store = useCounterStore();
-const { user, userCategories, userRecipes, defaultCategories, isLoggedIn } = storeToRefs(store);
+import { checkLogin } from '~~/helpers.vue';
+const store = userStore();
+const { userName, userCategories, userRecipes, defaultCategories, isLoggedIn } = storeToRefs(store);
 
 const loginFail = ref(false);
 const createUser = ref(false);
@@ -62,11 +53,10 @@ const handleInput = (e: Event): void => {
 //set user from fetch response
 const setUser = (response: IUser) => {
   errorMsg.value = '';
-  user.value = { userName: response.userName, password: response.password };
-  userCategories.value = response.categories;
-  userRecipes.value = response.recipes;
-  localStorage.setItem('user', response.userName);
-  isLoggedIn.value = true;
+  localStorage.setItem('user', JSON.stringify({ userName: response.userName, id: response._id }));
+  localStorage.setItem('recipes', JSON.stringify(response.recipes));
+  localStorage.setItem('categories', JSON.stringify(response.categories));
+  checkLogin();
   navigateTo('/');
 }
 
@@ -93,7 +83,7 @@ const register = async () => {
   const newUser = {
     userName: userLogin.value.userName,
     password: userLogin.value.password,
-    categories: defaultCategories,
+    categories: defaultCategories.value,
     recipes: recipes || []
   };
 
@@ -113,11 +103,6 @@ const register = async () => {
     errorMsg.value = 'Passwords are not matching';
   }
 
-};
-
-const signOut = () => {
-  localStorage.removeItem('user');
-  isLoggedIn.value = false;
 };
 
 const recipes = [
@@ -202,8 +187,5 @@ const recipes = [
     }
   }
 ]
-onMounted(() => {
-  checkUser();
-});
-
+onMounted(() => checkLogin());
 </script>

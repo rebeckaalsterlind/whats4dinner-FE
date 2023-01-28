@@ -22,7 +22,7 @@
             <ComboboxOption v-for="recipe in filteredRecipes" :key="recipe.id" :value="recipe">
               <div
                 class="cursor-pointer my-2 rounded-lg px-2 bg-white bg-opacity-10 text-white hover:text-accent-normal"
-                @click="navigateTo(`/show-meal/${recipe.id}`)">{{
+                @click="selectedMeal = recipe, navigateTo('/show-meal')">{{
                   recipe.title || ''
                 }}</div>
             </ComboboxOption>
@@ -57,178 +57,15 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from '@headlessui/vue';
-
-// interface IUser {
-//   userName: string,
-//   userEmail: string,
-//   password: string,
-//   categories: [{ categoryId: number, name: string }],
-//   recipes: [
-//     {
-//       title: string,
-//       id: number,
-//       keywords: [],
-//       categories: [{ name: string, categoryId: number }]
-//       picture: boolean,
-//       recipe: [{ ingredients: [], description: string }]
-//     }
-//   ]
-// }
-
-
-
-const user = {
-  userName: 'Kalle',
-  userEmail: 'kalle@gmail.com',
-  password: 'jf948yf980w34fh',
-  categories: [
-    { categoryId: 1, name: 'vegetarian' },
-    { categoryId: 2, name: 'vegan' },
-    { categoryId: 3, name: 'healthy' },
-    { categoryId: 4, name: 'spicy' },
-    { categoryId: 5, name: 'soup' },
-    { categoryId: 6, name: 'salad' },
-    { categoryId: 7, name: 'comfort food' },
-    { categoryId: 8, name: 'quick' },
-    { categoryId: 9, name: 'special' },
-    { categoryId: 10, name: 'slow cook' },
-    { categoryId: 11, name: 'favourites' }
-  ],
-  recipes: [
-    {
-      title: 'pizza',
-      id: 987533454647,
-      keywords: ['pizza', 'pancake'],
-      categories: [{ name: 'soup', categoryId: 5 }, { name: 'slow cook', categoryId: 10 }],
-      picture: false,
-      recipe: {
-        ingredients: [
-          { name: 'water', amount: '2' },
-          { name: 'chilli', amount: '150g' },
-          { name: 'spinach', amount: '1dl' },
-          { name: 'salt', amount: '2' },
-        ],
-        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-      }
-    },
-    {
-      title: 'pasta bolognese',
-      id: 9873654274693,
-      keywords: ['pasta', 'pork mince'],
-      categories: [{ name: 'favourites', categoryId: 11 }, { name: 'comfort food', categoryId: 7 }],
-      picture: false,
-      recipe: {
-        ingredients: [
-          { name: 'eggs', amount: '2' },
-          { name: 'butter', amount: '150g' },
-          { name: 'tomato sauce', amount: '1dl' },
-          { name: 'onions', amount: '2' },
-        ],
-        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-      }
-    },
-    {
-      title: 'fish & chips',
-      id: 2765425674695,
-      keywords: ['fish', 'potato'],
-      categories: [{ name: 'favourites', categoryId: 11 }, { name: 'healty', categoryId: 3 }],
-      picture: false,
-      recipe: {
-        ingredients: [
-          { name: 'eggs', amount: '2' },
-          { name: 'butter', amount: '150g' },
-          { name: 'tomato sauce', amount: '1dl' },
-          { name: 'onions', amount: '2' },
-        ],
-        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-      }
-    },
-    {
-      title: 'chicken',
-      id: 27232425674695,
-      keywords: ['chicken', 'potato'],
-      categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }, { name: 'vegan', categoryId: 2 }],
-      picture: false,
-      recipe: {
-        ingredients: [
-          { name: 'eggs', amount: '2' },
-          { name: 'butter', amount: '150g' },
-          { name: 'tomato sauce', amount: '1dl' },
-          { name: 'onions', amount: '2' },
-        ],
-        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-      }
-    },
-    {
-      title: 'curry',
-      id: 27232425674695,
-      keywords: ['spicy', 'chili'],
-      categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'quick', categoryId: 8 }, { name: 'special', categoryId: 9 }],
-      picture: false,
-      recipe: {
-        ingredients: [
-          { name: 'eggs', amount: '2' },
-          { name: 'butter', amount: '150g' },
-          { name: 'tomato sauce', amount: '1dl' },
-          { name: 'onions', amount: '2' },
-        ],
-        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-      }
-    },
-    {
-      title: 'Stirfry',
-      id: 27287654676,
-      keywords: ['noodles', 'potato'],
-      categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
-      picture: false,
-      recipe: {
-        ingredients: [
-          { name: 'eggs', amount: '2' },
-          { name: 'butter', amount: '150g' },
-          { name: 'tomato sauce', amount: '1dl' },
-          { name: 'onions', amount: '2' },
-        ],
-        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-      }
-    },
-    {
-      title: 'broccoli soup',
-      id: 2728548746,
-      keywords: ['noodles', 'potato'],
-      categories: [{ name: 'vegan', categoryId: 2 }, { name: 'healty', categoryId: 3 }, { name: 'soup', categoryId: 5 }, { name: 'vegetarian', categoryId: 1 }],
-      picture: false,
-      recipe: {
-        ingredients: [
-          { name: 'eggs', amount: '2' },
-          { name: 'butter', amount: '150g' },
-          { name: 'tomato sauce', amount: '1dl' },
-          { name: 'onions', amount: '2' },
-        ],
-        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-      }
-    },
-    {
-      title: 'pea soup',
-      id: 3527554889846,
-      keywords: ['peas', 'potato'],
-      categories: [{ name: 'vegan', categoryId: 2 }, { name: 'healty', categoryId: 3 }, { name: 'soup', categoryId: 5 }, { name: 'vegetarian', categoryId: 1 }],
-      picture: false,
-      recipe: {
-        ingredients: [
-          { name: 'eggs', amount: '2' },
-          { name: 'butter', amount: '150g' },
-          { name: 'tomato sauce', amount: '1dl' },
-          { name: 'onions', amount: '2' },
-        ],
-        description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-      }
-    }
-  ]
-};
+import { checkLogin } from '~~/helpers.vue';
+import { userStore } from '~~/stores/userStore';
+import { storeToRefs } from 'pinia';
+const store = userStore();
+const { userRecipes, selectedMeal } = storeToRefs(store);
 
 const query = ref('')
-const selectedRecipe = ref(user.recipes[1])
-const filteredRecipes = ref(user.recipes)
+const selectedRecipe = ref(userRecipes[1])
+const filteredRecipes = ref(userRecipes)
 const searchCategories = ref(true)
 const searchIngredients = ref(true)
 const searchTitle = ref(true)
@@ -236,10 +73,11 @@ const componentKey = ref(0);
 
 const filterSearch = () => {
   if (query.value !== '') {
+    console.log('recipe in serach', userRecipes.value);
 
     const filtered = [];
 
-    for (const recipe of user.recipes) {
+    for (const recipe of userRecipes.value) {
       let isMatch = false;
 
       if (searchCategories.value) {
@@ -249,7 +87,7 @@ const filterSearch = () => {
       }
 
       if (searchIngredients.value) {
-        const foundByIngredients = recipe.ingredients.filter(i => i.name.includes(query.value));
+        const foundByIngredients = recipe.keywords.filter(i => i.includes(query.value));
         if (foundByIngredients.length > 0) isMatch = true;
       }
 
@@ -264,5 +102,6 @@ const filterSearch = () => {
   }
 }
 
-watch(query, filterSearch)
+watch(query, filterSearch);
+onMounted(() => checkLogin());
 </script>
