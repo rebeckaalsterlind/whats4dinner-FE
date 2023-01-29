@@ -47,6 +47,7 @@ interface ICategories {
   categoryId: number, 
   name: string
 }
+
 interface IRecipe {
   title: string;
   id: number;

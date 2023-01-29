@@ -45,23 +45,15 @@ const goToMeal = (meal: IRecipes) => {
 }
 
 const printRecipes = () => {
-  console.log('userRecipes', userRecipes.value);
-  console.log('category', category);
+
   const mealsInCategory: { title: string; id: number; keywords: string[]; categories: { name: string; categoryId: number; }[]; picture: string | undefined; recipe: { ingredients: { name: string; amount: string; }[]; description: string; }[]; }[] = [];
 
   for (const recipe of userRecipes.value) {
-    console.log('here', recipe.categories);
+
     for (const cat of recipe.categories) {
       if (cat.categoryId === category.categoryId) mealsInCategory.push(recipe)
     }
   }
-  // userRecipes.value.forEach((recipes: any) => {
-  //   for (const recipe of recipes) {
-  //     for (const cat of recipe.categories) {
-  //       if (cat.categoryId === category.categoryId) mealsInCategory.push(recipe)
-  //     }
-  //   }
-  // });
 
   Object.assign(filteredCategories, mealsInCategory);
 }
@@ -69,7 +61,6 @@ const printRecipes = () => {
 watch(category, printRecipes)
 
 onMounted(() => {
-  console.log('category', category);
   printRecipes();
 });
 </script>

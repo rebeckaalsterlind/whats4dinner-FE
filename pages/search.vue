@@ -1,29 +1,28 @@
 <template>
   <article class="p-2 mb-6 bg-white rounded-lg bg-opacity-10 text-prime-normal">
-    <h2 class="text-white">Search meal</h2>
+    <h2 class="text-white text-center">Search meal</h2>
     <section class="">
       <aside class="flex justify-between flex-nowrap mb-2">
         <button @click="searchTitle = !searchTitle"
           :class="[searchTitle ? 'bg-accent-normal' : 'bg-white bg-opacity-10', 'm-1 px-2 py-1 rounded-full text-xs drop-shadow-lg hover:text-white']">By
           name</button>
+        <button @click="searchIngredients = !searchIngredients"
+          :class="[searchIngredients ? 'bg-accent-normal' : 'bg-white bg-opacity-10', 'm-1 px-2 py-1 rounded-full text-xs drop-shadow-lg hover:text-white']">By
+          keyword</button>
         <button @click="searchCategories = !searchCategories"
           :class="[searchCategories ? 'bg-accent-normal' : 'bg-white bg-opacity-10', 'm-1 px-2 py-1 rounded-full text-xs drop-shadow-lg hover:text-white']"
           first-letter:>By
           category</button>
-        <button @click="searchIngredients = !searchIngredients"
-          :class="[searchIngredients ? 'bg-accent-normal' : 'bg-white bg-opacity-10', 'm-1 px-2 py-1 rounded-full text-xs drop-shadow-lg hover:text-white']">By
-          ingredient</button>
       </aside>
       <div>
-        <Combobox v-model="selectedRecipe">
-          <ComboboxInput @change="query = $event.target.value" placeholder="Search meal name.."
-            class="px-2 py-1 rounded-lg" />
-          <ComboboxOptions :key="componentKey">
+        <Combobox>
+          <ComboboxInput @change="query = $event.target.value" placeholder="Search.." class="px-2 py-1 rounded-lg" />
+          <ComboboxOptions>
             <ComboboxOption v-for="recipe in filteredRecipes" :key="recipe.id" :value="recipe">
               <div
                 class="cursor-pointer my-2 rounded-lg px-2 bg-white bg-opacity-10 text-white hover:text-accent-normal"
                 @click="selectedMeal = recipe, navigateTo('/show-meal')">{{
-                  recipe.title || ''
+                  recipe.title
                 }}</div>
             </ComboboxOption>
           </ComboboxOptions>
@@ -32,14 +31,14 @@
     </section>
   </article>
 
-  <article class="p-4 bg-white rounded-lg bg-opacity-10 text-prime-normal">
+  <article class="p-4 bg-white rounded-lg bg-opacity-10">
     <Disclosure v-slot="{ open }">
-      <DisclosureButton class="py-2">
-        <h2 class="text-white inline">Generate meal suggestions</h2>
+      <DisclosureButton class="py-2 w-full">
+        <h2 class="text-white w-full inline">Generate meal suggestions</h2>
         <ChevronDownIcon :class="[open && 'rotate-180 transform', 'w-6 h-6 inline text-white']" />
       </DisclosureButton>
-      <DisclosurePanel class="flex flex-col text-gray-500">
-        <MealGenerator :recipes="recipes" />
+      <DisclosurePanel class="flex flex-col text-gray-500 w-full">
+        <MealGenerator />
       </DisclosurePanel>
     </Disclosure>
   </article>
@@ -61,19 +60,18 @@ import { checkLogin } from '~~/helpers.vue';
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
 const store = userStore();
-const { userRecipes, selectedMeal } = storeToRefs(store);
+const { userRecipes, userCategories, selectedMeal } = storeToRefs(store);
 
 const query = ref('')
-const selectedRecipe = ref(userRecipes[1])
+// const selectedRecipe = ref(userRecipes[1])
 const filteredRecipes = ref(userRecipes)
 const searchCategories = ref(true)
 const searchIngredients = ref(true)
 const searchTitle = ref(true)
-const componentKey = ref(0);
+// const componentKey = ref(0);
 
 const filterSearch = () => {
   if (query.value !== '') {
-    console.log('recipe in serach', userRecipes.value);
 
     const filtered = [];
 
@@ -81,7 +79,7 @@ const filterSearch = () => {
       let isMatch = false;
 
       if (searchCategories.value) {
-        console.log('recipe in serach', recipe);
+        console.log('recipe in serach', recipe.categories);
         const foundByCategories = recipe.categories.filter(i => i.name.includes(query.value));
         if (foundByCategories.length > 0) isMatch = true;
       }
@@ -97,6 +95,7 @@ const filterSearch = () => {
 
       //if one of them returns true, add to list. if none, remove from list
       if (isMatch) filtered.push(recipe)
+      console.log('filtered', filtered);
       filteredRecipes.value = filtered;
     }
   }

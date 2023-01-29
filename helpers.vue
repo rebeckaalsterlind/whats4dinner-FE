@@ -23,11 +23,7 @@ export const checkLogin = () => {
   }
   if (categoriesInLS) {
     const categories = JSON.parse(categoriesInLS)
-    console.log('ac', categories);
     userCategories.value = categories
-    // store.$patch((state) => {
-    //   state.userCategories.push(categories)
-    // });
   }
   if (recipesInLS) {
     const recipes = JSON.parse(recipesInLS)

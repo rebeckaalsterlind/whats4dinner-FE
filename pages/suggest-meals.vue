@@ -1,12 +1,15 @@
-
 <template>
-  <section class="flex gap-4 items-center my-4 justify-between">
-    <div>{{ selectedNumber }} meals</div>
-    <div>from {{ selectedCategories.map((category) => category.name).join(', ') }}</div>
-    <Button label="Generate" @click="generateMeals" />
-  </section>
-  <section class=" flex justify-between items-start text-whitew-full">
-    <div class="flex flex-col">
+  <article class="p-4 bg-white rounded-lg bg-opacity-10">
+
+    <h2 class="text-accent-normal text-center w-full">Generate meal suggestions</h2>
+
+    <section class="flex gap-4 items-center my-4 justify-between">
+      <div>{{ selectedNumber }} meals</div>
+      <div>from {{ selectedCategories.map((category) => category.name).join(', ') }}</div>
+      <Button label="Generate" @click="generateMeals" />
+    </section>
+    <section class=" flex flex-col justify-between items-start text-whitew-full">
+
       <Listbox v-model="selectedNumber">
         <ListboxButton class="text-start content-fit">
           Select number of meals:
@@ -18,8 +21,7 @@
           </ListboxOption>
         </ListboxOptions>
       </Listbox>
-    </div>
-    <div class="flex flex-col">
+
       <Listbox v-model="selectedCategories" multiple>
         <!-- <ListboxLabel> {{ selectedCategories.map((category) => category.name).join(', ') }} </ListboxLabel> -->
         <ListboxButton class="text-start content-fit">Select categories</ListboxButton>
@@ -30,9 +32,13 @@
           </ListboxOption>
         </ListboxOptions>
       </Listbox>
-    </div>
-  </section>
+
+    </section>
+
+  </article>
 </template>
+
+
 
 <script setup lang="ts">
 import {
@@ -43,6 +49,7 @@ import {
   ListboxOption,
 } from '@headlessui/vue';
 import { storeToRefs } from 'pinia';
+import { Ref } from 'vue';
 import { IRecipes } from '~~/domain/types';
 import { userStore } from '~~/stores/userStore';
 const store = userStore();
@@ -74,9 +81,9 @@ interface IRec {
 }[]
 
 // const { recipes } = defineProps<IUser>()
-const selectedCategories = ref([] as ICategory[])
-const selectedNumber = ref(0)
-
+const selectedCategories = ref([] as ICategory[]);
+const selectedNumber = ref(0);
+const showSuggestions = ref(false);
 const getMealInCategory = (index: number) => {
 
   for (const recipe of userRecipes.value) {
@@ -94,56 +101,35 @@ const generateMeals = () => {
   const generatedMeals = [] as IRec[];
 
   //random sort category list. 
+  const shuffledCategories = [];
+  const arrayToShuffle = [...selectedCategories.value];
+  while (arrayToShuffle.length) {
+    shuffledCategories.push(arrayToShuffle.splice(~~(Math.random() * arrayToShuffle.length), 1)[0]);
+  }
 
-  for (const selectedCategory of selectedCategories.value) {
-
-    console.log('lengths', generatedMeals.length, selectedNumber.value);
-
+  for (const selectedCategory of shuffledCategories) {
     for (const recipe of userRecipes.value) {
       if (generatedMeals.length < selectedNumber.value) {
         const matchingCategory = recipe.categories.find((category: { categoryId: number; }) => selectedCategory.categoryId === category.categoryId)
         if (matchingCategory) {
           const findDouble = generatedMeals.find((savedRecipe: { id: number; }) => savedRecipe.id === recipe.id)
           if (!findDouble) generatedMeals.push(recipe);
-
         }
       }
     }
-
   }
 
   if (generatedMeals.length < selectedNumber.value) {
-    console.log('not enough recipes in categories', generatedMeals);
+    console.log('not enough recipes in categories');
     //show suggestions => set meal state form generatedMeals. 
   } else {
-    console.log('all done', generatedMeals);
+    showSuggestions.value = true;
+    console.log('all done');
   }
 
-
-
-
-
-  // if (selectedNumber.value <= selectedCategories.value.length) {
-  //   for (let i = 0; i < selectedNumber.value; i++) {
-  //     console.log('i', i);
-  //     //i is index in category search
-  //     //push found to list
-  //     getMealInCategory(i);
-
-  //   }
-  // } else {
-  //   let index = 0;
-  //   for (let i = 0; i < selectedNumber.value; i++) {
-  //     index++;
-  //     if (index >= selectedCategories.value.length) index = 0
-  //     getMealInCategory(index);
-  //   }
-  // }
 }
 
-//4 meals from 3 categoies
-// 4/3 = 1.2
-// 3/4
+
 //push categories to array = > [favourites, quick, veggie]
 // loop thtough category array with number of meals. for each number of meal => get a recipe from category
 
