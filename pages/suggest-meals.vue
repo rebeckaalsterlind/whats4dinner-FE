@@ -2,7 +2,11 @@
   <article class="p-4 bg-white rounded-lg bg-opacity-10">
 
     <h2 class="text-accent-normal text-center w-full">Generate meal suggestions</h2>
-
+    <section v-if="tooFewMeals">There were only {{ showSuggestions.length }} meals in selected categories</section>
+    <section v-if="showSuggestions.length > 0" v-for="meal in showSuggestions">
+      <Pill :label="meal.title" />
+      <XMarkIcon class="text-white w-4 h-4" @click="removeSuggested(meal)" />
+    </section>
     <section class="flex gap-4 items-center my-4 justify-between">
       <div>{{ selectedNumber }} meals</div>
       <div>from {{ selectedCategories.map((category) => category.name).join(', ') }}</div>
@@ -34,10 +38,8 @@
       </Listbox>
 
     </section>
-
   </article>
 </template>
-
 
 
 <script setup lang="ts">
@@ -48,6 +50,7 @@ import {
   ListboxOptions,
   ListboxOption,
 } from '@headlessui/vue';
+import { XMarkIcon } from '@heroicons/vue/20/solid';
 import { storeToRefs } from 'pinia';
 import { Ref } from 'vue';
 import { IRecipes } from '~~/domain/types';
@@ -83,21 +86,11 @@ interface IRec {
 // const { recipes } = defineProps<IUser>()
 const selectedCategories = ref([] as ICategory[]);
 const selectedNumber = ref(0);
-const showSuggestions = ref(false);
-const getMealInCategory = (index: number) => {
-
-  for (const recipe of userRecipes.value) {
-    // console.log('recipe', recipe);
-  }
-  // selectedCategories[index].name = 'favourites';
-  //find number of recipes that is category
-  //get length of number
-  //random number from length. => index of recipe in category
-}
-
+const showSuggestions = reactive([] as IRec[]);
+const tooFewMeals = ref(false);
+const searchThroughRecipes = ref(userRecipes.value)
 const generateMeals = () => {
-
-
+  tooFewMeals.value = false;
   const generatedMeals = [] as IRec[];
 
   //random sort category list. 
@@ -108,7 +101,7 @@ const generateMeals = () => {
   }
 
   for (const selectedCategory of shuffledCategories) {
-    for (const recipe of userRecipes.value) {
+    for (const recipe of searchThroughRecipes.value) {
       if (generatedMeals.length < selectedNumber.value) {
         const matchingCategory = recipe.categories.find((category: { categoryId: number; }) => selectedCategory.categoryId === category.categoryId)
         if (matchingCategory) {
@@ -120,19 +113,28 @@ const generateMeals = () => {
   }
 
   if (generatedMeals.length < selectedNumber.value) {
-    console.log('not enough recipes in categories');
-    //show suggestions => set meal state form generatedMeals. 
-  } else {
-    showSuggestions.value = true;
-    console.log('all done');
+    tooFewMeals.value = true;
   }
-
+  Object.assign(showSuggestions, generatedMeals)
 }
 
 
-//push categories to array = > [favourites, quick, veggie]
-// loop thtough category array with number of meals. for each number of meal => get a recipe from category
+const removeSuggested = (meal: any) => {
 
-//if recipe selected, pop from recipes list. and pop one number from that category? 
-// if recipe excist in more than one category, check first. 
+  console.log('searchthgoughrecipes', searchThroughRecipes.value);
+
+  //remove from list of recipies to generate from
+  for (const i of showSuggestions) {
+    const index = searchThroughRecipes.value.findIndex(recipes => recipes.id === i.id)
+    searchThroughRecipes.value.splice(index, 1);
+  }
+
+  //remove from selected
+  const deleted = showSuggestions.findIndex(recipe => recipe.id === meal.id)
+  showSuggestions.splice(deleted, 1)
+
+}
+
+//add button for generate all new or just the remaining
+
 </script>

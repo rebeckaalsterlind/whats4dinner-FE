@@ -33,7 +33,6 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
-
 import { storeToRefs } from 'pinia';
 import { generateId } from '~~/helpers.vue';
 import { userStore } from '~~/stores/userStore';

@@ -12,5 +12,4 @@ interface IButton {
 }
 
 defineProps<IButton>()
-
 </script>
