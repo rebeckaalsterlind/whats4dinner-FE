@@ -17,6 +17,11 @@
       <ul v-if="savedCategories.length > 0" class="overflow-scroll my-6">
         <li v-for="category in savedCategories" class="inline">{{ category.name }} | </li>
       </ul>
+
+      <ul v-if="selectAll" class="overflow-scroll my-6">
+        <li v-for="category in userCategories" class="inline">{{ category.name }} | </li>
+      </ul>
+
       <section class="flex flex-col gap-6">
         <Listbox v-model="selectedNumber">
           <ListboxButton class="text-start content-fit">
@@ -36,8 +41,15 @@
             <ChevronDownIcon class="w-4 h-4 inline" />
           </ListboxButton>
           <ListboxOptions>
+            <li @click="selectAll = !selectAll" :class="{
+              'bg-prime-normal text-white': selectAll,
+              'bg-white bg-opacity-10 text-prime-normal': !selectAll,
+            }"
+              class="cursor-pointer h-10 text-center  my-2 p-2 rounded-lg  hover:text-accent-normal active:text-white">
+              Select all</li>
             <ListboxOption v-for="category in userCategories" :key="category.categoryId" :value="category"
               v-slot="{ active, selected }" @click="handleCategories(category)">
+
               <li :class="{
                 'bg-prime-normal text-white': selected,
                 'bg-white bg-opacity-10 text-prime-normal': !selected,
@@ -55,9 +67,9 @@
 
 
     <section class="grow flex gap-4 items-end justify-between">
-      <Button v-if="(selectedCategories.length > 0) && selectedNumber"
+      <Button v-if="((selectedCategories.length > 0) || selectAll) && selectedNumber"
         :label="`Give me ${selectedNumber} ${selectedNumber > 1 ? 'meals' : 'meal'}`" @click="generateMeals" />
-      <Button v-if="selectedCategories.length > 0" label="Reset" @click="reset" />
+      <Button v-if="selectedCategories.length > 0 || selectAll" label="Reset" @click="reset" />
       <Button v-if="mealSuggestions.length > 0" label="Save" @click="saveMeals" />
     </section>
   </div>
@@ -85,11 +97,13 @@ const savedCategories = ref([] as ICategory[]);
 const generatedMeals = reactive([] as IRecipes[]);
 const mealSuggestions = reactive([] as IRecipes[]);
 const tooFewMeals = ref(false);
-const initialState = reactive([] as IRecipes[]);
-
+const selectAll = ref(false)
 //generate meal suggestions
 const generateMeals = () => {
   tooFewMeals.value = false;
+  if (selectAll) {
+    selectedCategories.value = userCategories.value;
+  }
   console.log('mealsuggestion', mealSuggestions);
   console.log('selected number', selectedNumber.value);
   Object.assign(generatedMeals, [])
@@ -134,6 +148,7 @@ const deleteMeal = (meal: IRecipes, replaceIndex: number) => {
 
 //save selected categories
 const handleCategories = (category: ICategory) => {
+  selectAll.value = false;
   const pushOrSplice = savedCategories.value.findIndex(cat => cat.categoryId === category.categoryId)
   if (pushOrSplice !== -1) savedCategories.value.splice(pushOrSplice, 1)
   else savedCategories.value.push(category)
@@ -143,6 +158,7 @@ const reset = () => {
   selectedCategories.value = [];
   selectedNumber.value = null;
   savedCategories.value = [];
+  selectAll.value = false;
   //Object.assign(generatedMeals, []);
   //Object.assign(mealSuggestions, initialState)
   console.log('generateMeals', generatedMeals);
