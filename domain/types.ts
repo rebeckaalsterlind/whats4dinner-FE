@@ -11,6 +11,11 @@ export interface IRecipes {
   }
 }
 
+export interface ICategory {
+  categoryId: number, 
+  name: string
+}
+
 export interface IResponse {
   status: boolean,
   body: IUser
@@ -21,5 +26,6 @@ export interface IUser {
   _id: string;
   password: string;
   categories: [];
-  recipes: []
+  recipes: [];
+  list?: []
 }

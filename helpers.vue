@@ -2,7 +2,7 @@
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
 const store = userStore();
-const { isLoggedIn, userName, userCategories, userRecipes } = storeToRefs(store);
+const { isLoggedIn, userCategories, userRecipes, userList } = storeToRefs(store);
 
 export const capitalize = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -16,6 +16,7 @@ export const checkLogin = () => {
   const userInLS = localStorage.getItem('user');
   const categoriesInLS = localStorage.getItem('categories');
   const recipesInLS = localStorage.getItem('recipes');
+  const listInLS = localStorage.getItem('list');
 
   if (userInLS) {
     const user = JSON.parse(userInLS)
@@ -31,6 +32,10 @@ export const checkLogin = () => {
     // store.$patch((state) => {
     //   state.userRecipes.push(recipes)
     // });
+  }
+  if (listInLS) {
+    const list = JSON.parse(listInLS)
+    userList.value = list;
   }
   if (userInLS && categoriesInLS) {
     isLoggedIn.value = true;

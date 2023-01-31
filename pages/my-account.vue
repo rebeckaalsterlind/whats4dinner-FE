@@ -52,10 +52,13 @@ const handleInput = (e: Event): void => {
 
 //set user from fetch response
 const setUser = (response: IUser) => {
+  console.log('response', response);
   errorMsg.value = '';
   localStorage.setItem('user', JSON.stringify({ userName: response.userName, id: response._id }));
   localStorage.setItem('recipes', JSON.stringify(response.recipes));
   localStorage.setItem('categories', JSON.stringify(response.categories));
+  if (response.list) localStorage.setItem('list', JSON.stringify(response.list));
+  //set lists in ls too?
   checkLogin();
   navigateTo('/');
 }

@@ -22,7 +22,7 @@
               <div
                 class="cursor-pointer my-2 rounded-lg px-2 bg-white bg-opacity-10 text-white hover:text-accent-normal"
                 @click="selectedMeal = recipe, navigateTo('/show-meal')">{{
-                  recipe.title
+  recipe.title
                 }}</div>
             </ComboboxOption>
           </ComboboxOptions>
@@ -31,17 +31,6 @@
     </section>
   </article>
 
-  <article class="p-4 bg-white rounded-lg bg-opacity-10">
-    <Disclosure v-slot="{ open }">
-      <DisclosureButton class="py-2 w-full">
-        <h2 class="text-white w-full inline">Generate meal suggestions</h2>
-        <ChevronDownIcon :class="[open && 'rotate-180 transform', 'w-6 h-6 inline text-white']" />
-      </DisclosureButton>
-      <DisclosurePanel class="flex flex-col text-gray-500 w-full">
-        <MealGenerator />
-      </DisclosurePanel>
-    </Disclosure>
-  </article>
 </template>
 
 <script setup>

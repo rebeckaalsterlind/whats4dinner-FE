@@ -2,6 +2,7 @@
   <button
     :class="[disabled && 'bg-opacity-40 text-opacity-20', 'bg-white text-prime-normal rounded-full drop-shadow-md w-fit h-10 px-4 py-1 mx-2']">
     {{ label }}
+    <slot />
   </button>
 </template>
 

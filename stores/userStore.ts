@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia';
+import { ICategory, IRecipes } from '~~/domain/types';
 
 export const userStore = defineStore('user', () => {
     const userName = ref('')
     const user = ref({userName: '', id: ''})
     const isLoggedIn = ref(false)
-    const userCategories = ref([] as ICategories[])
-    const userRecipes = ref([] as IRecipe[]);
+    const userCategories = ref([] as ICategory[])
+    const userRecipes = ref([] as IRecipes[]);
+    const userList = ref([] as IRecipes[]);
     const defaultCategories = ref([
       { categoryId: 1, name: 'vegetarian' },
       { categoryId: 2, name: 'vegan' },
@@ -39,26 +41,7 @@ export const userStore = defineStore('user', () => {
       defaultCategories,
       userCategories,
       userRecipes,
+      userList,
       selectedMeal
     }
 })
-
-interface ICategories {
-  categoryId: number, 
-  name: string
-}
-
-interface IRecipe {
-  title: string;
-  id: number;
-  keywords: string[];
-  categories: { name: string, categoryId: number }[];
-  picture: string;
-  recipe: {
-    ingredients:
-      { name: string, amount: string }[];
-    description: string;
-  }
-}
-
-
