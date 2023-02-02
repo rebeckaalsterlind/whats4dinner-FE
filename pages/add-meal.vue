@@ -1,78 +1,76 @@
 <template>
-  <article class="fit-content min-h-[250px]">
-    <div class="w-full flex justify-center">
-      <h2 class="mt-0 items-center font-bold mx-auto fit-content inline-block text-xl">{{
-        capitalize(addMeal.title) || ''
-      }}
+  <section class="mb-20 mx-4 grow flex flex-col justify-between">
+    <article>
+      <h1 class="text-center text-accent-normal font-bold text-xl">Add new meal</h1>
+      <h2 class="mt-0 text-center font-bold text-xl">
+        {{ capitalize(addMeal.title) || '' }}
       </h2>
-    </div>
+      <section class="my-4">
+        <h5 v-if="addMeal.keywords.length > 0">Key ingredients:</h5>
+        <ul class="list-none w-full min-h-[40px] flex flex-wrap">
+          <Pill v-if="addMeal.keywords" v-for="option in addMeal.keywords" :key="option" :label="capitalize(option)">
+            <XMarkIcon @click="deleteKeyword(option)" class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
+          </Pill>
+        </ul>
+      </section>
+      <section>
+        <h5 v-if="addMeal.categories.length > 0">Categories:</h5>
+        <ul class="list-none w-full min-h-[40px] flex flex-wrap">
+          <Pill v-if="addMeal.categories" v-for="(option, key) in addMeal.categories" :key="key"
+            :label="capitalize(option.name)">
+            <XMarkIcon @click="deleteCategory(option)" class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
+          </Pill>
+        </ul>
+      </section>
+      <section v-if="addPhoto" class="my-4">
+        <img :src="imgSrc" alt="image name" class="w-36 rounded-lg" />
+      </section>
+    </article>
 
-    <section class="my-4">
-      <h5 v-if="addMeal.keywords.length > 0">Key ingredients:</h5>
-      <ul class="list-none w-full min-h-[40px] flex flex-wrap">
-        <Pill v-if="addMeal.keywords" v-for="option in addMeal.keywords" :key="option" :label="capitalize(option)">
-          <XMarkIcon @click="deleteKeyword(option)" class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
-        </Pill>
-      </ul>
-    </section>
-    <section>
-      <h5 v-if="addMeal.categories.length > 0">Categories:</h5>
-      <ul class="list-none w-full min-h-[40px] flex flex-wrap">
-        <Pill v-if="addMeal.categories" v-for="(option, key) in addMeal.categories" :key="key"
-          :label="capitalize(option.name)">
-          <XMarkIcon @click="deleteCategory(option)" class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
-        </Pill>
-      </ul>
-    </section>
-    <section v-if="addMeal.picture">
-      <PhotoIcon class="w-10 h-10 text-prime-hover cursor-pointer" />
-    </section>
-  </article>
+    <article class="items-start">
+      <Input v-if="showName" placeholder="Name.." @input="updateName" />
 
-  <article class="mb-20">
-    <BaseComponent v-if="showName">
-      <Input placeholder="Name.." @input="updateName" />
-      <AddMealBtn :disabled="mealName.length === 0" label="Next.." @click="goToNext('keywords')" />
-    </BaseComponent>
+      <Keywords v-if="showKeywords" label="Add key ingredients.." @update="updateKeywords" />
 
-    <BaseComponent v-if="showKeywords">
-      <Keywords label="Add key ingredients.." @update="updateKeywords" />
-      <AddMealBtn :disabled="addMeal.keywords.length === 0" label="Next.." @click="goToNext('categories')" />
-    </BaseComponent>
-
-    <BaseComponent v-if="showCategories">
-      <Categories :key="componentKey" :deleted="deletedCategory" label="Select categories.."
+      <Categories v-if="showCategories" :key="componentKey" :deleted="deletedCategory" label="Select categories.."
         @update="updateCategories" />
-      <AddMealBtn :disabled="addMeal.categories.length === 0" label="Next.." @click="goToNext('picture')" />
-    </BaseComponent>
 
-    <BaseComponent v-if="showPicture">
-      <div class="mt-4 flex items-center" @click="addPhoto">
-        <PhotoIcon class="w-6 h-6 cursor-pointer" />
-        <PlusIcon class="w-4 h-4" />
-      </div>
-      <AddMealBtn label="Next.." @click="goToNext('recipe')" />
-    </BaseComponent>
+      <BaseComponent v-if="showPicture && !addPhoto" class="flex flex-row justify-evenly items-center">
+        <label for="file">
+          <PhotoIcon required class="w-16 h-16 hover:text-accent-normal active:text-white cursor-pointer " />
+        </label>
+        <CameraIcon v-if="!selectedFile" class="w-16 h-16 hover:text-accent-normal active:text-white cursor-pointer " />
+        <input id="file" type="file" name="image" @change="onFileSelected" required class="hidden">
+        <span v-if="selectedFile"> {{ selectedFile.name }}</span>
+        <button v-if="selectedFile" @click="onUpload"
+          class="border border-white rounded-full px-4 hover:text-accent-normal hover:border-accent-normal active:text-white active:border-white">Upload</button>
+      </BaseComponent>
 
-    <BaseComponent v-if="showRecipe">
-      <AddRecipe @addRecipe="addRecipe" @click="toggleBtn" />
-      <Button v-if="!showAll && showBtn" label="Skip?" @click="goToNext('done')" />
-    </BaseComponent>
+      <AddRecipe v-if="showRecipe" @addRecipe="addRecipe" @click="toggleBtn" />
+    </article>
 
-    <div v-if="showAll" class="w-full flex justify-center">
-      <Button :label="saving ? 'Saving...' : 'Save meal'" @click="handleSave"
-        class="bg-accent-normal text-prime-normal" />
-    </div>
-
-  </article>
+    <article class="flex justify-center">
+      <AddMealBtn v-if="showName" :disabled="mealName.length === 0" label="Next.." @click="goToNext('keywords')" />
+      <AddMealBtn v-if="showKeywords" :disabled="addMeal.keywords.length === 0" label="Next.."
+        @click="goToNext('categories')" />
+      <AddMealBtn v-if="showCategories" :disabled="addMeal.categories.length === 0" label="Next.."
+        @click="goToNext('picture')" />
+      <Button v-if="showPicture && !addPhoto" label="'Skip?" @click="goToNext('recipe')" />
+      <Button v-if="showRecipe && !showAll" label="Skip?" @click="goToNext('done')" />
+      <Button v-if="showAll" :label="saving ? 'Saving...' : 'Save meal'" class="bg-accent-normal text-prime-normal"
+        @click="handleSave" />
+    </article>
+  </section>
 </template>
 
 <script setup lang="ts">
-import { PhotoIcon, PlusIcon } from '@heroicons/vue/24/outline';
+import { PhotoIcon, CameraIcon } from '@heroicons/vue/24/outline';
 import { XMarkIcon } from '@heroicons/vue/20/solid';
 import { checkLogin, capitalize, generateId } from '@/helpers.vue';
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
+import { Ref } from '@vue/runtime-core';
+import axios from 'axios';
 const store = userStore();
 const { user, userCategories, userRecipes, selectedMeal } = storeToRefs(store);
 
@@ -86,6 +84,7 @@ interface IRecipe {
 }
 
 const saving = ref(false);
+
 const addMeal = reactive({
   title: '',
   id: 0,
@@ -98,16 +97,33 @@ const addMeal = reactive({
   }
 })
 
+
 const deletedCategory = reactive({ name: '', categoryId: 0 });
 const showName = ref(true);
 const showPicture = ref(false);
+const addPhoto = ref(false);
 const showKeywords = ref(false);
 const showCategories = ref(false);
 const showRecipe = ref(false);
 const showAll = ref(false);
-const showBtn = ref(true);
+const showBtn = ref(false);
 const mealName = ref('');
 const componentKey = ref(0)
+const selectedFile: Ref<FileList | null | any> = ref(null)
+const imgSrc = ref('')
+
+const onFileSelected = (evt: Event) => {
+  if ((evt.target as HTMLInputElement).files) {
+    selectedFile.value = (evt.target as HTMLInputElement).files![0]
+  }
+}
+
+const onUpload = () => {
+  imgSrc.value = URL.createObjectURL(selectedFile.value);
+  addPhoto.value = true;
+  showPicture.value = false
+  showRecipe.value = true
+}
 
 const toggleBtn = (evt: Event): void => {
   if ((evt.target as HTMLInputElement).id.includes('headlessui-disclosure-button')) {
@@ -167,10 +183,6 @@ const deleteKeyword = (deleted: string) => {
   addMeal.keywords = addMeal.keywords.filter(item => item !== deleted);
 }
 
-const addPhoto = (): void => {
-  addMeal.picture = 'true';
-}
-
 const updateName = (e: Event) => {
   mealName.value = (e.target as HTMLInputElement).value
 }
@@ -181,20 +193,35 @@ const addRecipe = (recipe: IRecipe) => {
 }
 
 const handleSave = async () => {
+
   const userInLS = localStorage.getItem('user');
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
 
-    const saveMeal = await $fetch('http://localhost:3030/meals/addMeal', {
-      method: 'POST',
-      body: { id: LSuser.id, meal: addMeal }
-    });
 
-    localStorage.setItem('recipes', JSON.stringify(saveMeal));
-    //subscribe to ls instead?
-    store.$patch((state) => state.userRecipes.push(addMeal))
-    selectedMeal.value = addMeal
-    saving.value = false;
+    //save image
+    console.log('selectedFile', selectedFile.value);
+    const fd = new FormData();
+    fd.append('image', selectedFile.value, LSuser.id + '_' + addMeal.title + '.jpg')
+    console.log('after', fd);
+    axios.post('http://localhost:3030/images/saveImage', fd)
+      .then(res => {
+        console.log('res', res.data)
+      })
+
+
+
+    // //save meal
+    // const saveMeal = await $fetch('http://localhost:3030/meals/addMeal', {
+    //   method: 'POST',
+    //   body: { id: LSuser.id, meal: addMeal }
+    // });
+
+    // localStorage.setItem('recipes', JSON.stringify(saveMeal));
+    // //subscribe to ls instead?
+    // store.$patch((state) => state.userRecipes.push(addMeal))
+    // selectedMeal.value = addMeal
+    // saving.value = false;
 
     navigateTo('/show-meal')
   } else {

@@ -1,6 +1,6 @@
 <template>
   <div class="flex grow flex-col gap-6 mb-28">
-    <h2 class="text-accent-normal text-center w-full">Generate meal suggestions</h2>
+    <h1 class="text-center text-accent-normal font-bold text-xl">Generate meal suggestions</h1>
 
     <section class="min-h-[40px] my-4">
       <h5 v-if="tooFewMeals">There are no more meals in selected categories</h5>

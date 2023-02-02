@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1 class="text-center text-accent-normal font-bold text-xl">My account</h1>
     <article v-if="!isLoggedIn" class="pt-40 flex justify-center text-white">
       <section v-if="!createUser" class="flex flex-col gap-4 items-center text-prime-normal">
         <p v-if="loginFail" class="text-white">{{ errorMsg }}</p>

@@ -5,7 +5,7 @@
       class="flex flex-col justify-items-stretch mb-8">
       <Slide v-for="slide of userList" :key="slide.id" class="h-36 pb-2 px-1 cursor-pointer">
         <article @click="goToMeal(slide)" class="w-full h-full flex rounded-lg overflow-hidden drop-shadow-lg">
-          <img src="@/assets/img/pizza.jpg" :alt="slide.title" class="grow object-cover " />
+          <img :src="ramen" :alt="slide.title" class="grow object-cover " />
           <h6
             class="absolute flex items-center px-2 overflow-hidden break-all bottom-0 w-full text-xs font-light text-white h-[18%] bg-prime-normal bg-opacity-80">
             {{ slide.title }}
@@ -20,7 +20,7 @@
       class="flex flex-col justify-items-stretch mb-8">
       <Slide v-for="slide of filteredCategories" :key="slide.id" class="h-36 pb-2 px-1 cursor-pointer">
         <article @click="goToMeal(slide)" class="w-full h-full flex rounded-lg overflow-hidden drop-shadow-lg">
-          <img src="@/assets/img/pizza.jpg" :alt="slide.title" class="grow object-cover " />
+          <img :src="soup" :alt="slide.title" class="grow object-cover " />
           <h6
             class="absolute flex items-center px-2 overflow-hidden break-all bottom-0 w-full text-xs font-light text-white h-[18%] bg-prime-normal bg-opacity-80">
             {{ slide.title }}
@@ -41,7 +41,8 @@ import { userStore } from '~~/stores/userStore';
 import { IRecipes } from '~~/domain/types';
 const store = userStore();
 const { userRecipes, selectedMeal, userList } = storeToRefs(store);
-
+const ramen = 'ramen.jpg';
+const soup = 'broccoli-soup.jpg'
 const settings = {
   itemsToShow: 3,
   snapAlign: 'start',

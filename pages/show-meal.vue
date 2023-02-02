@@ -1,6 +1,7 @@
 <template>
+  <h1 class="text-center text-accent-normal font-bold text-xl">{{ capitalize(selectedMeal.title) }}</h1>
   <article class="p-4 bg-white rounded-lg bg-opacity-10">
-    <h2 class="font-bold text-lg  text-accent-normal">{{ capitalize(selectedMeal.title) }}</h2>
+
     <section class="my-4" v-if="selectedMeal.picture">
       <PhotoIcon class="w-40 h-40 text-white" />
     </section>

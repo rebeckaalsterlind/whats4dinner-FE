@@ -1,6 +1,6 @@
 <template>
+  <h1 class="text-center text-accent-normal font-bold text-xl">Search meal</h1>
   <article class="p-2 mb-6 bg-white rounded-lg bg-opacity-10 text-prime-normal">
-    <h2 class="text-white text-center">Search meal</h2>
     <section class="">
       <aside class="flex justify-between flex-nowrap mb-2">
         <button @click="searchTitle = !searchTitle"
