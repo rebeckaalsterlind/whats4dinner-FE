@@ -34,6 +34,16 @@ export const userStore = defineStore('user', () => {
       }
     })
 
+    const newMeal = ref([]as newMeal[])
+    interface newMeal {
+      title: string, 
+      id: number,
+      picture: string,
+      servings: number,
+      ingredients: [{name: string, amount: string}],
+      instructions: string
+    }
+
     return {
       isLoggedIn, 
       user,
@@ -42,6 +52,7 @@ export const userStore = defineStore('user', () => {
       userCategories,
       userRecipes,
       userList,
-      selectedMeal
+      selectedMeal,
+      newMeal
     }
 })

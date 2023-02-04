@@ -12,7 +12,7 @@ export interface IRecipes {
 }
 
 export interface ICategory {
-  categoryId: number, 
+  categoryId: number | undefined, 
   name: string
 }
 

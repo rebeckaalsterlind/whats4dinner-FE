@@ -3,14 +3,13 @@
     <Disclosure v-slot="{ open }">
       <DisclosureButton v-if="!savedRecipe"
         class="flex grow w-full items-center bg-white bg-opacity-10 justify-between rounded-full px-4 py-2 text-left text-white">
-        <span>Add recipe<span v-if="!open">? &nbsp;</span></span>
+        <span>Add my own recipe<span v-if="!open">? &nbsp;</span></span>
         <ChevronUpIcon :class="open ? '' : 'rotate-180 transform'" class="h-5 w-5 text-white" />
       </DisclosureButton>
       <DisclosurePanel
         :class="[savedRecipe ? 'bg-prime-normal' : 'bg-white bg-opacity-10', 'pt-4 pb-2 text-sm  mt-2 rounded-lg']">
         <section class="p-2">
           <h5 v-if="savedRecipe && ingredients.length > -1">Recipe:</h5>
-          <h6>Ingredients</h6>
           <ul class="list-none w-full text-white min-h-[40px]">
             <li v-if="ingredients" v-for="(ingredient, key) in ingredients" :key="key">
               {{ ingredient.amount }} {{ ingredient.name }}
@@ -20,21 +19,28 @@
           </ul>
         </section>
         <section v-if="savedRecipe" class="flex flex-col justify-evenly gap-2 p-2">
-          <h6>Description</h6>
-          <p>{{ description }}</p>
+          <h6>instructions</h6>
+          <p>{{ instructions }}</p>
         </section>
 
-        <section class="flex justify-evenly gap-2 p-2">
-          <input v-if="!savedRecipe" type="text" v-model="ingredient" placeholder="Ingredient.. "
-            class="p-2 rounded-lg bg-white bg-opacity-10 grow min-w-60 h-8">
-          <input v-if="!savedRecipe" type="text" v-model="amount" placeholder="Amount.."
-            class="p-2 rounded-lg bg-white bg-opacity-10 w-[20%] min-w-[80px] flex-none h-8">
-          <button v-if="!savedRecipe" class="bg-white text-prime-normal px-2 min-w-[60px] h-8 rounded-full"
-            @click="addIngredient">Add</button>
+        <section>
+          <div class="p-2">
+            <input type="number" placeholder="Servings.." v-model="servings"
+              class="p-2 rounded-lg bg-white bg-opacity-10 grow min-w-60 h-8" />
+          </div>
+          <div class="flex justify-evenly gap-2 p-2">
+            <input v-if="!savedRecipe" type="text" v-model="ingredient" placeholder="Ingredient.. "
+              class="p-2 rounded-lg bg-white bg-opacity-10 grow min-w-60 h-8">
+            <input v-if="!savedRecipe" type="text" v-model="amount" placeholder="Amount.."
+              class="p-2 rounded-lg bg-white bg-opacity-10 w-[20%] min-w-[80px] flex-none h-8">
+            <button v-if="!savedRecipe" class="bg-white text-prime-normal px-2 min-w-[60px] h-8 rounded-full"
+              @click="addIngredient">Add</button>
+          </div>
+
         </section>
 
         <section class="flex flex-col justify-evenly gap-2 p-2">
-          <textarea v-if="!savedRecipe" :rows="4" placeholder="Description.." v-model="description"
+          <textarea v-if="!savedRecipe" :rows="4" placeholder="instructions.." v-model="instructions"
             class="rounded-lg p-2 bg-white text-white bg-opacity-10" />
           <button v-if="!savedRecipe" @click="saveRecipe"
             class="bg-white rounded-full w-fit px-2 h-8 text-prime-normal">Save recipe
@@ -49,6 +55,7 @@
 <script setup lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import { ChevronUpIcon, XMarkIcon } from '@heroicons/vue/20/solid';
+import { Ref } from '@vue/runtime-core';
 
 const emit = defineEmits(['addRecipe'])
 
@@ -59,13 +66,14 @@ interface IIngredients {
 
 interface IRecipe {
   ingredients: IIngredients[],
-  description: string
+  instructions: string
 }
 
 const ingredient = ref();
 const amount = ref();
+const servings: Ref<number | undefined> = ref()
 const ingredients = ref([] as IIngredients[]);
-const description = ref();
+const instructions = ref();
 const recipe = reactive([] as IRecipe[]);
 const savedRecipe = ref(false)
 
@@ -82,7 +90,7 @@ const deleteIngredient = (ingredient: IIngredients) => {
 const saveRecipe = () => {
   savedRecipe.value = !savedRecipe.value;
   if (savedRecipe.value === true) {
-    recipe.push({ ingredients: ingredients.value, description: description.value });
+    recipe.push({ ingredients: ingredients.value, instructions: instructions.value });
     emit('addRecipe', recipe);
     savedRecipe.value = true;
   }

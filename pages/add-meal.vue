@@ -23,7 +23,7 @@
         </ul>
       </section>
       <section v-if="addPhoto" class="my-4">
-        <img :src="imgSrc" alt="image name" class="w-36 rounded-lg" />
+        <img :src="imgSrc" :alt="addMeal.title" class="w-36 rounded-lg" />
       </section>
     </article>
 
@@ -40,7 +40,7 @@
           <PhotoIcon required class="w-16 h-16 hover:text-accent-normal active:text-white cursor-pointer " />
         </label>
         <CameraIcon v-if="!selectedFile" class="w-16 h-16 hover:text-accent-normal active:text-white cursor-pointer " />
-        <input id="file" type="file" name="image" @change="onFileSelected" required class="hidden">
+        <input id="file" type="file" :name="addMeal.title" @change="onFileSelected" required class="hidden">
         <span v-if="selectedFile"> {{ selectedFile.name }}</span>
         <button v-if="selectedFile" @click="onUpload"
           class="border border-white rounded-full px-4 hover:text-accent-normal hover:border-accent-normal active:text-white active:border-white">Upload</button>
@@ -123,6 +123,14 @@ const onUpload = () => {
   addPhoto.value = true;
   showPicture.value = false
   showRecipe.value = true
+
+  console.log('addMeal.picture', addMeal.picture);
+
+
+  axios.get('https://api.spoonacular.com/recipes/autocomplete?number=10&query=chick')
+    .then(res => {
+      console.log('res', res.data)
+    })
 }
 
 const toggleBtn = (evt: Event): void => {
@@ -193,35 +201,35 @@ const addRecipe = (recipe: IRecipe) => {
 }
 
 const handleSave = async () => {
-
+  console.log('addmeal', addMeal.picture);
   const userInLS = localStorage.getItem('user');
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
 
 
-    //save image
-    console.log('selectedFile', selectedFile.value);
-    const fd = new FormData();
-    fd.append('image', selectedFile.value, LSuser.id + '_' + addMeal.title + '.jpg')
-    console.log('after', fd);
-    axios.post('http://localhost:3030/images/saveImage', fd)
-      .then(res => {
-        console.log('res', res.data)
-      })
+    // //save image
+    // console.log('selectedFile', selectedFile.value);
+    // const fd = new FormData();
+    // fd.append('image', selectedFile.value, LSuser.id + '_' + addMeal.title + '.jpg')
+    // console.log('after', fd);
+    // axios.post('http://localhost:3030/images/saveImage', fd)
+    //   .then(res => {
+    //     console.log('res', res.data)
+    //   })
 
 
 
-    // //save meal
-    // const saveMeal = await $fetch('http://localhost:3030/meals/addMeal', {
-    //   method: 'POST',
-    //   body: { id: LSuser.id, meal: addMeal }
-    // });
+    //save meal
+    const saveMeal = await $fetch('http://localhost:3030/meals/addMeal', {
+      method: 'POST',
+      body: { id: LSuser.id, meal: addMeal }
+    });
 
-    // localStorage.setItem('recipes', JSON.stringify(saveMeal));
-    // //subscribe to ls instead?
-    // store.$patch((state) => state.userRecipes.push(addMeal))
-    // selectedMeal.value = addMeal
-    // saving.value = false;
+    localStorage.setItem('recipes', JSON.stringify(saveMeal));
+    //subscribe to ls instead?
+    store.$patch((state) => state.userRecipes.push(addMeal))
+    selectedMeal.value = addMeal
+    saving.value = false;
 
     navigateTo('/show-meal')
   } else {

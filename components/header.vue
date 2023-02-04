@@ -1,7 +1,7 @@
 <template>
   <header>
     <Logo @click="() => { navigateTo('/') }" class="cursor-pointer w-20 h-auto" />
-    <aside v-if="isLoggedIn" class="flex flex-col cpntent-fit">
+    <aside v-if="isLoggedIn" class="flex flex-col content-fit">
       <UserCircleIcon @click="showOptions" class="h-10 w-10 text-white cursor-pointer" />
       <div class="text-white font-bold text-xl">
         {{ userName }}
