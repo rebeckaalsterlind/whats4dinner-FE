@@ -1,8 +1,8 @@
 <template>
-  <div class="flex grow flex-col gap-6 mb-28">
-    <h1 class="text-center text-accent-normal font-bold text-xl">Generate meal suggestions</h1>
+  <PageTitle label="Generate meal" />
+  <article class="flex grow gap-4 flex-col justify-center border border-white">
 
-    <section class="min-h-[40px] my-4">
+    <section>
       <h5 v-if="tooFewMeals">There are no more meals in selected categories</h5>
       <div v-if="mealSuggestions.length > 0" v-for="(meal, index) in mealSuggestions" :key="index">
         <button :key="meal.id" class="bg-prime-normal px-2 my-1 rounded-full ">
@@ -13,7 +13,7 @@
     </section>
 
 
-    <article class="p-4 bg-white rounded-lg bg-opacity-10 max-h-[60%]">
+    <article class="bg-white rounded-lg bg-opacity-10 max-h-[60%]">
       <ul v-if="savedCategories.length > 0" class="overflow-scroll my-6">
         <li v-for="category in savedCategories" class="inline">{{ category.name }} | </li>
       </ul>
@@ -22,7 +22,7 @@
         <li v-for="category in userCategories" class="inline">{{ category.name }} | </li>
       </ul>
 
-      <section class="flex flex-col gap-6">
+      <section class="flex flex-col gap-6 grow border border-white">
         <Listbox v-model="selectedNumber">
           <ListboxButton class="text-start content-fit">
             Meals {{ selectedNumber }}
@@ -72,7 +72,7 @@
       <Button v-if="selectedCategories.length > 0 || selectAll" label="Reset" @click="reset" />
       <Button v-if="mealSuggestions.length > 0" label="Save" @click="saveMeals" />
     </section>
-  </div>
+  </article>
 </template>
 
 <script setup lang="ts">

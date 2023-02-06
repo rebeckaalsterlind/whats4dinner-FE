@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-center text-accent-normal font-bold text-xl">Search meal</h1>
+  <PageTitle label="Search meal" />
   <article class="p-2 mb-6 bg-white rounded-lg bg-opacity-10 text-prime-normal">
     <section class="">
       <aside class="flex justify-between flex-nowrap mb-2">

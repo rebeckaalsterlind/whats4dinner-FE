@@ -2,7 +2,7 @@
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
 const store = userStore();
-const { isLoggedIn, userCategories, userRecipes, userList } = storeToRefs(store);
+const { isLoggedIn, userCategories, userMeals, userList, user } = storeToRefs(store);
 
 export const capitalize = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -14,34 +14,39 @@ export const generateId = (): number => {
 
 export const checkLogin = () => {
   const userInLS = localStorage.getItem('user');
-  const categoriesInLS = localStorage.getItem('categories');
-  const recipesInLS = localStorage.getItem('recipes');
-  const listInLS = localStorage.getItem('list');
 
   if (userInLS) {
-    const user = JSON.parse(userInLS)
-    user.value = user;
+    const LSuser = JSON.parse(userInLS)
+    user.value = LSuser;
+    // console.log('user in helper', user.categories);
+    userCategories.value = LSuser.categories;
+    userMeals.value = LSuser.meals;
+    console.log('userCategories', userCategories.value);
+    if (LSuser.list) userList.value = LSuser.list
+    isLoggedIn.value = true
+
   }
-  if (categoriesInLS) {
-    const categories = JSON.parse(categoriesInLS)
-    userCategories.value = categories
-  }
-  if (recipesInLS) {
-    const recipes = JSON.parse(recipesInLS)
-    userRecipes.value = recipes;
-    // store.$patch((state) => {
-    //   state.userRecipes.push(recipes)
-    // });
-  }
-  if (listInLS) {
-    const list = JSON.parse(listInLS)
-    userList.value = list;
-  }
-  if (userInLS && categoriesInLS) {
-    isLoggedIn.value = true;
-  }
-  else if (!userInLS || !categoriesInLS) {
-    isLoggedIn.value = false;
+  // if (categoriesInLS) {
+  //   const categories = JSON.parse(categoriesInLS)
+  //   userCategories.value = categories
+  // }
+  // if (recipesInLS) {
+  //   const recipes = JSON.parse(recipesInLS)
+  //   userMeals.value = recipes;
+  //   // store.$patch((state) => {
+  //   //   state.userMeals.push(recipes)
+  //   // });
+  // }
+  // if (listInLS) {
+  //   const list = JSON.parse(listInLS)
+  //   userList.value = list;
+  // }
+  // if (userInLS && categoriesInLS) {
+  //   isLoggedIn.value = true;
+  // }
+  else {
+    console.log('no use5', user);
+    user.value = undefined;
     navigateTo("/my-account")
   }
 }

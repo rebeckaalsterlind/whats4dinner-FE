@@ -1,20 +1,42 @@
 <template>
-  <section class="mb-20 mx-4 grow flex flex-col justify-between">
-    <article>
-      <h1 class="text-center text-accent-normal font-bold text-xl">Add new meal</h1>
-      <h2 class="mt-0 text-center font-bold text-xl">
-        {{ capitalize(addMeal.title) || '' }}
-      </h2>
-      <section class="my-4">
-        <h5 v-if="addMeal.keywords.length > 0">Key ingredients:</h5>
-        <ul class="list-none w-full min-h-[40px] flex flex-wrap">
-          <Pill v-if="addMeal.keywords" v-for="option in addMeal.keywords" :key="option" :label="capitalize(option)">
-            <XMarkIcon @click="deleteKeyword(option)" class="inline text-prime-normal ml-2 h-4 w-4 cursor-pointer" />
-          </Pill>
-        </ul>
+  <PageTitle label="Add meal" />
+  <article class="flex grow flex-col justify-center">
+
+    <div class="flex flex-col gap-4">
+      <section v-if="!addMeal" class="flex flex-col items-center gap-4">
+        <Input @input="setQuery" type="text" placeholder="Name.." class="min-w-[60%]" />
+        <ButtonSecondary @click="searchMeal" label="Go" />
       </section>
-      <section>
-        <h5 v-if="addMeal.categories.length > 0">Categories:</h5>
+
+      <section v-if="showCarousel">
+        <Carousel :items-to-scroll="1" :wrap-around="true" :items-to-show="3" snap-align="start"
+          class="flex flex-col justify-items-stretch mb-8">
+          <Slide v-for="slide of recipeOptions" :key="slide.id" @click="selectMeal(slide.id)">
+            <article class="cursor-pointer flex rounded-lg overflow-hidden drop-shadow-lg h-40 px-1">
+              <img :src="slide.img" :alt="slide.title" class="object-cover w-full" />
+              <div class="absolute p-1 overflow-hidden break-all bottom-0 w-full h-8 bg-prime-normal bg-opacity-80">
+                <h6 class=" text-xs font-light text-white text-center">
+                  {{ slide.title }}
+                </h6>
+              </div>
+            </article>
+          </Slide>
+        </Carousel>
+      </section>
+    </div>
+
+    <section v-if="addMeal" class="flex flex-col items-center gap-4">
+      <div v-if="!editTitle" class="flex flex-col items-center">
+        <h2 class="text-accent-normal text-lg font-bold"> {{ capitalize(addMeal.title) }}</h2>
+        <ButtonSecondary @click="editTitle = true" label="Change name?" class="text-xs" />
+      </div>
+      <div v-else class="flex flex-col items-center gap-4">
+        <Input v-model="setTitle" @input="setTitle" type="text" :placeholder="addMeal.title" class="min-w-[60%]" />
+        <ButtonSecondary @click="changeTitle" label="Ok" />
+      </div>
+      <img :src="addMeal.picture" :alt="addMeal.title" class="w-40 h-auto rounded-lg overflow-hidden" />
+
+      <section v-if="addMeal.categories.length > 0">
         <ul class="list-none w-full min-h-[40px] flex flex-wrap">
           <Pill v-if="addMeal.categories" v-for="(option, key) in addMeal.categories" :key="key"
             :label="capitalize(option.name)">
@@ -22,221 +44,186 @@
           </Pill>
         </ul>
       </section>
-      <section v-if="addPhoto" class="my-4">
-        <img :src="imgSrc" :alt="addMeal.title" class="w-36 rounded-lg" />
-      </section>
-    </article>
 
-    <article class="items-start">
-      <Input v-if="showName" placeholder="Name.." @input="updateName" />
+      <Categories id="cat" :deleted="deletedCategory" label="Select categories.." @update="updateCategories" />
+      <Disclosure v-if="recipeAdded" v-slot="{ open }">
+        <DisclosureButton
+          class="flex grow w-full items-center bg-white bg-opacity-10 justify-between rounded-lg px-4 py-2 mb-1 text-left text-white">
+          <span>Recipe</span>
+          <ChevronUpIcon :class="open ? '' : 'rotate-180 transform'" class="h-5 w-5 text-white" />
+        </DisclosureButton>
+        <DisclosurePanel>
+          <section v-if="recipeAdded" class="flex flex-col gap-2 p-4 bg-white bg-opacity-10 text-sm rounded-lg">
+            <h4>Servings: {{ addMeal.recipe.servings || '' }}</h4>
+            <div>
+              <h4>Ingredients: </h4>
+              <ul>
+                <li v-for="ingredient in addMeal.recipe.ingredients">
+                  {{ ingredient.amount }} {{ ingredient.name }}
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4>Instructions: </h4>
+              <p>{{ addMeal.recipe.instructions }}</p>
+            </div>
+          </section>
+        </DisclosurePanel>
+      </Disclosure>
 
-      <Keywords v-if="showKeywords" label="Add key ingredients.." @update="updateKeywords" />
-
-      <Categories v-if="showCategories" :key="componentKey" :deleted="deletedCategory" label="Select categories.."
-        @update="updateCategories" />
-
-      <BaseComponent v-if="showPicture && !addPhoto" class="flex flex-row justify-evenly items-center">
-        <label for="file">
-          <PhotoIcon required class="w-16 h-16 hover:text-accent-normal active:text-white cursor-pointer " />
-        </label>
-        <CameraIcon v-if="!selectedFile" class="w-16 h-16 hover:text-accent-normal active:text-white cursor-pointer " />
-        <input id="file" type="file" :name="addMeal.title" @change="onFileSelected" required class="hidden">
-        <span v-if="selectedFile"> {{ selectedFile.name }}</span>
-        <button v-if="selectedFile" @click="onUpload"
-          class="border border-white rounded-full px-4 hover:text-accent-normal hover:border-accent-normal active:text-white active:border-white">Upload</button>
-      </BaseComponent>
-
-      <AddRecipe v-if="showRecipe" @addRecipe="addRecipe" @click="toggleBtn" />
-    </article>
-
-    <article class="flex justify-center">
-      <AddMealBtn v-if="showName" :disabled="mealName.length === 0" label="Next.." @click="goToNext('keywords')" />
-      <AddMealBtn v-if="showKeywords" :disabled="addMeal.keywords.length === 0" label="Next.."
-        @click="goToNext('categories')" />
-      <AddMealBtn v-if="showCategories" :disabled="addMeal.categories.length === 0" label="Next.."
-        @click="goToNext('picture')" />
-      <Button v-if="showPicture && !addPhoto" label="'Skip?" @click="goToNext('recipe')" />
-      <Button v-if="showRecipe && !showAll" label="Skip?" @click="goToNext('done')" />
-      <Button v-if="showAll" :label="saving ? 'Saving...' : 'Save meal'" class="bg-accent-normal text-prime-normal"
-        @click="handleSave" />
-    </article>
-  </section>
+      <GetRecipe v-if="!recipeAdded" :recipe="addMeal.recipe" @add-existing-recipe="addRecipe" />
+      <AddRecipe v-if="!recipeAdded" @addOwnRecipe="addRecipe" />
+      <Button :disabled="addMeal.categories.length < 1" label="Save meal" @click="handleSave" />
+    </section>
+  </article>
 </template>
 
 <script setup lang="ts">
-import { PhotoIcon, CameraIcon } from '@heroicons/vue/24/outline';
-import { XMarkIcon } from '@heroicons/vue/20/solid';
-import { checkLogin, capitalize, generateId } from '@/helpers.vue';
+import 'vue3-carousel/dist/carousel.css';
+import { Carousel, Slide } from 'vue3-carousel';
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
+import { XMarkIcon, ChevronUpIcon } from '@heroicons/vue/20/solid';
 import { userStore } from '~~/stores/userStore';
+import { ICategory, IIngredient, IMeal, IRecipe } from '~~/domain/types';
 import { storeToRefs } from 'pinia';
-import { Ref } from '@vue/runtime-core';
 import axios from 'axios';
+import { capitalize, checkLogin } from '@/helpers.vue';
+import { Ref } from '@vue/runtime-core';
 const store = userStore();
-const { user, userCategories, userRecipes, selectedMeal } = storeToRefs(store);
+const { selectedMeal } = storeToRefs(store);
+const appId = "2eb3cc88b15045b5b434805c117b656d";
 
-interface IOptions {
-  name: string,
-  categoryId: number
-}
-interface IRecipe {
-  ingredients: [{ name: string, amount: string }],
-  description: string
-}
-
-const saving = ref(false);
-
-const addMeal = reactive({
-  title: '',
-  id: 0,
-  keywords: [] as string[],
-  categories: [] as IOptions[],
-  picture: '',
-  recipe: {
-    ingredients: [{ name: '', amount: '' }],
-    description: ''
-  }
-})
-
-
+const query = ref('')
+const recipeOptions = ref()
+const showCarousel = ref(false)
+const editTitle = ref(false)
+const newTitle = ref('')
+const addMeal: Ref<IMeal | undefined> = ref()
 const deletedCategory = reactive({ name: '', categoryId: 0 });
-const showName = ref(true);
-const showPicture = ref(false);
-const addPhoto = ref(false);
-const showKeywords = ref(false);
-const showCategories = ref(false);
-const showRecipe = ref(false);
-const showAll = ref(false);
-const showBtn = ref(false);
-const mealName = ref('');
-const componentKey = ref(0)
-const selectedFile: Ref<FileList | null | any> = ref(null)
-const imgSrc = ref('')
+const recipeAdded = ref(false);
 
-const onFileSelected = (evt: Event) => {
-  if ((evt.target as HTMLInputElement).files) {
-    selectedFile.value = (evt.target as HTMLInputElement).files![0]
-  }
+//search query
+const setQuery = (e: Event) => {
+  query.value = (e.target as HTMLInputElement).value;
 }
 
-const onUpload = () => {
-  imgSrc.value = URL.createObjectURL(selectedFile.value);
-  addPhoto.value = true;
-  showPicture.value = false
-  showRecipe.value = true
+//get meal suggestions
+const searchMeal = () => {
+  let SERVICE_URL = `https://api.spoonacular.com/recipes/complexSearch?query=${query.value}&number=10`;
+  const request_url = `${SERVICE_URL}&apiKey=${appId}`;
+  axios.get(request_url)
+    .then((response) => {
+      let data = response.data;
+      console.log('first data', data.results);
 
-  console.log('addMeal.picture', addMeal.picture);
-
-
-  axios.get('https://api.spoonacular.com/recipes/autocomplete?number=10&query=chick')
-    .then(res => {
-      console.log('res', res.data)
+      const arr = []
+      for (const recipe of data.results) {
+        arr.push({ title: recipe.title, img: recipe.image, id: recipe.id })
+      }
+      recipeOptions.value = arr;
+      showCarousel.value = true;
+      console.log('recipeOtions', recipeOptions.value);
     })
+    .catch((error) => {
+      console.log(error);
+
+    });
 }
 
-const toggleBtn = (evt: Event): void => {
-  if ((evt.target as HTMLInputElement).id.includes('headlessui-disclosure-button')) {
-    showBtn.value = !showBtn.value;
-  };
-};
+//get meal
+const selectMeal = (id: number) => {
+  const SERVICE_URL = `https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false`;
+  const request_url = `${SERVICE_URL}&apiKey=${appId}`;
 
-const goToNext = (nextStep: string) => {
-  switch (nextStep) {
-    case 'keywords':
-      if (mealName.value !== '') {
-        addMeal.title = mealName.value;
-        showKeywords.value = true;
-        showName.value = false;
+  axios.get(request_url)
+    .then((response) => {
+      let data = response.data;
+      const ingredients = [] as IIngredient[];
+      for (const ingredient of data.extendedIngredients) {
+        ingredients.push({ name: ingredient.name, amount: ingredient.amount })
       }
-      break;
-    case 'categories':
-      if (addMeal.keywords.length !== 0) {
-        showKeywords.value = false;
-        showCategories.value = true
-        addMeal.id = generateId();
+      const meal: IMeal = {
+        title: data.title,
+        id: (data.id).toString(),
+        picture: data.image,
+        categories: [],
+        recipe: {
+          servings: (data.servings).toString(),
+          ingredients: ingredients,
+          instructions: data.instructions
+        }
       }
-      break;
-    case 'picture':
-      if (addMeal.keywords.length !== 0) {
-        showKeywords.value = false;
-        showCategories.value = false;
-        showPicture.value = true;
-      }
-      break;
-    case 'recipe':
-      showPicture.value = false
-      showRecipe.value = true
-      break;
-    case 'done':
-      showRecipe.value = false
-      showAll.value = true
-      break;
+      showCarousel.value = false
+      addMeal.value = meal;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+//categories
+const updateCategories = (updatedSelections: ICategory) => {
+  if (addMeal.value && addMeal.value.categories) {
+    addMeal.value.categories.push(updatedSelections);
   }
 }
 
-const updateCategories = (updatedSelections: IOptions) => {
-  addMeal.categories.push(updatedSelections);
+const deleteCategory = (category: ICategory) => {
+  if (addMeal.value && addMeal.value.categories) {
+    addMeal.value.categories = addMeal.value.categories.filter(item => item.categoryId !== category.categoryId);
+    Object.assign(deletedCategory, category)
+  }
 }
 
-const deleteCategory = (category: IOptions) => {
-  addMeal.categories = addMeal.categories.filter(item => item.categoryId !== category.categoryId);
-  Object.assign(deletedCategory, category)
-  componentKey.value += 1
+//title
+const setTitle = (e: Event) => {
+  newTitle.value = (e.target as HTMLInputElement).value;
 }
 
-const updateKeywords = (updatedSelections: string) => {
-  addMeal.keywords.push(updatedSelections);
+const changeTitle = () => {
+  if (addMeal.value && addMeal.value.title) {
+    addMeal.value.title = newTitle.value;
+    editTitle.value = false;
+  }
 }
 
-const deleteKeyword = (deleted: string) => {
-  addMeal.keywords = addMeal.keywords.filter(item => item !== deleted);
-}
-
-const updateName = (e: Event) => {
-  mealName.value = (e.target as HTMLInputElement).value
-}
-
+//reipe
 const addRecipe = (recipe: IRecipe) => {
-  addMeal.recipe = recipe;
-  showAll.value = true;
+  if (addMeal.value && addMeal.value.recipe) addMeal.value.recipe = recipe;
+  console.log('recipe', recipe);
+  recipeAdded.value = true;
 }
 
+//save meal
 const handleSave = async () => {
-  console.log('addmeal', addMeal.picture);
+  console.log('in dandle save');
   const userInLS = localStorage.getItem('user');
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
-
-
-    // //save image
-    // console.log('selectedFile', selectedFile.value);
-    // const fd = new FormData();
-    // fd.append('image', selectedFile.value, LSuser.id + '_' + addMeal.title + '.jpg')
-    // console.log('after', fd);
-    // axios.post('http://localhost:3030/images/saveImage', fd)
-    //   .then(res => {
-    //     console.log('res', res.data)
-    //   })
-
-
-
+    console.log('lisuder', LSuser.id);
     //save meal
-    const saveMeal = await $fetch('http://localhost:3030/meals/addMeal', {
-      method: 'POST',
-      body: { id: LSuser.id, meal: addMeal }
-    });
+    try {
+      const { data, error } = await useFetch('http://localhost:3030/meals/addMeal', {
+        headers: { "Content-type": "application/json" },
+        method: 'POST',
+        body: { id: LSuser._id, meal: addMeal.value }
+      });
 
-    localStorage.setItem('recipes', JSON.stringify(saveMeal));
-    //subscribe to ls instead?
-    store.$patch((state) => state.userRecipes.push(addMeal))
-    selectedMeal.value = addMeal
-    saving.value = false;
+      store.$patch({
+        selectedMeal: addMeal.value
+      })
+      localStorage.setItem('user', JSON.stringify(data.value));
+      checkLogin();
 
-    navigateTo('/show-meal')
+      navigateTo('/show-meal')
+    } catch (error) {
+      console.log('error', error);
+    }
+
   } else {
     navigateTo('/my-account')
   }
-
-}
+};
 
 onMounted(() => checkLogin());
 </script>

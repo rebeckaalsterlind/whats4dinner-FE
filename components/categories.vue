@@ -34,22 +34,18 @@ import {
 } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { storeToRefs } from 'pinia';
+import { ICategory } from '~~/domain/types';
 import { generateId } from '~~/helpers.vue';
 import { userStore } from '~~/stores/userStore';
 const store = userStore();
-const { defaultCategories, userCategories, user } = storeToRefs(store);
+const { defaultCategories, user } = storeToRefs(store);
 
-interface ICategory {
-  categoryId: number,
-  name: string,
-}
-
-interface ICategories {
+interface IHandleCategories {
   label: string,
   deleted: ICategory
 }
 
-const { deleted, label } = defineProps<ICategories>()
+const { deleted, label } = defineProps<IHandleCategories>()
 const emit = defineEmits(['update'])
 const allCategories = reactive([...defaultCategories.value, { categoryId: 0, name: 'Add new category?' }]);
 const showAddCategory = ref(false);
@@ -77,17 +73,20 @@ const addCategoryToList = () => {
   showAddCategory.value = false;
   if (addCategory.value.length > 0) {
     const newCategory = { categoryId: generateId(), name: addCategory.value };
-    //filter categories first. id 0 should be last.
-    allCategories.push(newCategory);
-    //push category to state and save to db
-    store.$patch((state) => {
-      state.userCategories.push(newCategory)
-    });
-    console.log('usercategories state', userCategories.value);
-    // save to ls
-    localStorage.setItem('categories', JSON.stringify(userCategories.value));
-    //add to db
 
+    allCategories.push(newCategory);
+    //sort Categories here! id 0 should be last.
+
+    //add to userStore
+    store.$patch(() => {
+      user.value!.categories.push(newCategory)
+    });
+    console.log('updated categories in user state', user.value!.categories);
+
+    // update user in ls
+    localStorage.setItem('user', JSON.stringify(user.value));
+
+    //update categories in db
     const userInLS = localStorage.getItem('user');
     if (userInLS) {
       const LSuser = JSON.parse(userInLS)
@@ -96,7 +95,6 @@ const addCategoryToList = () => {
         body: { id: LSuser.id, category: newCategory }
       });
     }
-    console.log('updated state', userCategories.value);
   }
 }
 

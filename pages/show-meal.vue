@@ -1,42 +1,45 @@
 <template>
-  <h1 class="text-center text-accent-normal font-bold text-xl">{{ capitalize(selectedMeal.title) }}</h1>
-  <article class="p-4 bg-white rounded-lg bg-opacity-10">
+  <PageTitle v-if="selectedMeal!.title" :label="capitalize(selectedMeal!.title)" />
+  <article v-if="selectedMeal" class="p-4 bg-white rounded-lg bg-opacity-10">
 
     <section class="my-4" v-if="selectedMeal.picture">
-      <PhotoIcon class="w-40 h-40 text-white" />
-    </section>
-    <section class="my-4">
-      <h5 class="font-semibold">Key ingredients: </h5>
-      <ul class="flex">
-        <Pill v-for="(keyword, key) in selectedMeal.keywords" :key="key" :label="capitalize(keyword)" />
-      </ul>
+      <img :src="selectedMeal.picture" :alt="selectedMeal.title" class="rounded-lg object-cover w-full h-48">
     </section>
 
     <section class="my-4">
-      <h5 class="font-semibold">Categories:</h5>
+      <h5>Categories:</h5>
       <ul class="flex">
         <Pill v-for="category in selectedMeal.categories" :key="category.categoryId"
           :label="capitalize(category.name)" />
       </ul>
     </section>
 
-    <section class="mt-4">
-      <h5 class="font-semibold">Recipe: </h5>
-      <ul>
-        <li v-for="(ingredient, key) in selectedMeal.recipe.ingredients" :key="key">
-          {{ ingredient.amount }} {{ ingredient.name }}
-        </li>
-      </ul>
-      <p class="mt-4">{{ selectedMeal.recipe.description }}</p>
+    <section class="flex flex-col gap-2">
+      <h5>Recipe: </h5>
+      <h4 v-if="selectedMeal.recipe.servings">Servings: {{ selectedMeal.recipe.servings }}</h4>
+      <div>
+        <h4>Ingredients:</h4>
+        <ul>
+          <li v-for="(ingredient, key) in selectedMeal.recipe.ingredients" :key="key">
+            {{ ingredient.amount }} {{ ingredient.name }}
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h4>Instructions:</h4>
+        <p>{{ selectedMeal.recipe.instructions }}</p>
+      </div>
     </section>
+
   </article>
 </template>
 
 <script setup lang="ts">
-import { capitalize } from '@/helpers.vue'
-import { PhotoIcon } from '@heroicons/vue/24/outline';
+import { capitalize, checkLogin } from '@/helpers.vue'
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
 const store = userStore();
 const { selectedMeal } = storeToRefs(store);
+
+onMounted(() => checkLogin());
 </script>

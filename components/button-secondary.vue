@@ -1,5 +1,6 @@
 <template>
-  <button class="border border-white text-white rounded-full fit-content drop-shadow-md h-10 px-4 py-1 mx-2 break-keep">
+  <button
+    class="border border-white text-white rounded-full w-fit min-w-[80px] drop-shadow-md px-4 py-1 mx-2 break-keep">
     {{ label }}
     <slot />
   </button>
