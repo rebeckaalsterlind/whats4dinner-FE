@@ -210,11 +210,12 @@ const addName = (e: Event) => {
 }
 
 const saveMeals = async () => {
-
+  console.log('savemeals');
   const newList = { name: listName.value, list: mealSuggestions };
 
   //customLists.value.push(newList)
   const userInLS = localStorage.getItem('user');
+  console.log('userinls', userInLS);
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
     if (LSuser.customList) // push if already there. if not make array first?
@@ -226,7 +227,7 @@ const saveMeals = async () => {
           body: { id: LSuser._id, customList: newList }
         });
 
-
+        console.log('data', data);
         ///check waht data.value is
         localStorage.setItem('user', JSON.stringify(data.value));
         checkLogin();
