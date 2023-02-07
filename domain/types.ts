@@ -1,14 +1,19 @@
-export interface IRecipes {
-  title: string,
-  id: number,
-  keywords: string[],
-  categories: { name: string, categoryId: number }[],
-  picture: string,
-  recipe: {
-    ingredients:
-      { name: string, amount: number }[],
-    description: string;
-  }
+// export interface IRecipes {
+//   title: string,
+//   id: number,
+//   keywords: string[],
+//   categories: ICategory[],
+//   picture: string,
+//   recipe: {
+//     ingredients:
+//       { name: string, amount: string }[],
+//     instructions: string;
+//   }
+// }
+
+export interface ICategory {
+  categoryId: number, 
+  name: string
 }
 
 export interface IResponse {
@@ -20,6 +25,31 @@ export interface IUser {
   userName: string;
   _id: string;
   password: string;
-  categories: [];
-  recipes: []
+  categories: ICategory[];
+  meals: IMeal[] | any[];
+  list?: IMeal[] | any[];
+}
+
+export interface IIngredient {
+  name: string;
+  amount: string;
+}
+
+export interface IRecipe {
+  servings: undefined | string,
+  ingredients: IIngredient[],
+  instructions: string
+}
+
+export interface IMeal {
+  title: string,
+  id: string | undefined;
+  categories: ICategory[] | any[];
+  picture: string;
+  recipe: IRecipe;
+}
+
+export interface ICustomLists {
+  name: string;
+  list: IMeal[];
 }

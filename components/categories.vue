@@ -1,4 +1,5 @@
 <template>
+  <AddCategory v-if="showAddCategory" v-model="addCategory" />
   <Listbox class="w-full">
     <div>
       <ListboxButton
@@ -32,31 +33,34 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
-
 import { storeToRefs } from 'pinia';
-import { useCounterStore } from '~~/stores/counter';
-const store = useCounterStore();
-const { defaultCategories } = storeToRefs(store);
+import { ICategory } from '~~/domain/types';
+import { generateId } from '~~/helpers.vue';
+import { userStore } from '~~/stores/userStore';
+const store = userStore();
+const { defaultCategories, user } = storeToRefs(store);
 
-interface ICategory {
-  categoryId: number,
-  name: string,
-}
-
-interface ICategories {
+interface IHandleCategories {
   label: string,
   deleted: ICategory
 }
 
-const { deleted, label } = defineProps<ICategories>()
+const { deleted, label } = defineProps<IHandleCategories>()
 const emit = defineEmits(['update'])
-const allCategories = reactive(defaultCategories.value);
+const allCategories = reactive([...defaultCategories.value, { categoryId: 0, name: 'Add new category?' }]);
+const showAddCategory = ref(false);
+const addCategory = ref();
 const componentKey = ref(0)
 
 const updateSelected = (category: ICategory) => {
-  const remainingCategories = allCategories.findIndex(item => item.categoryId === category.categoryId);
-  allCategories.splice(remainingCategories, 1)
-  emit('update', category);
+  if (category.categoryId === 0) {
+    showAddCategory.value = true;
+
+  } else {
+    const remainingCategories = allCategories.findIndex(item => item.categoryId === category.categoryId);
+    allCategories.splice(remainingCategories, 1)
+    emit('update', category);
+  }
 }
 
 const deleteCategory = () => {
@@ -65,6 +69,36 @@ const deleteCategory = () => {
   componentKey.value += 1
 }
 
+const addCategoryToList = () => {
+  showAddCategory.value = false;
+  if (addCategory.value.length > 0) {
+    const newCategory = { categoryId: generateId(), name: addCategory.value };
+
+    allCategories.push(newCategory);
+    //sort Categories here! id 0 should be last.
+
+    //add to userStore
+    store.$patch(() => {
+      user.value!.categories.push(newCategory)
+    });
+    console.log('updated categories in user state', user.value!.categories);
+
+    // update user in ls
+    localStorage.setItem('user', JSON.stringify(user.value));
+
+    //update categories in db
+    const userInLS = localStorage.getItem('user');
+    if (userInLS) {
+      const LSuser = JSON.parse(userInLS)
+      $fetch('http://localhost:3030/meals/addCategory', {
+        method: 'POST',
+        body: { id: LSuser.id, category: newCategory }
+      });
+    }
+  }
+}
+
 watch(deleted, deleteCategory)
+watch(addCategory, addCategoryToList)
 </script>
 

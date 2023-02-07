@@ -1,13 +1,17 @@
 <template>
   <header>
-    <Logo @click="() => { navigateTo('/') }" class="cursor-pointer w-20 h-auto" />
-    <aside v-if="isLoggedIn" class="flex flex-col absolute">
-      <UserCircleIcon @click="showOptions" class="h-10 w-10 text-white cursor-pointer" />
+    <NuxtLink to="/">
+      <Logo class="cursor-pointer w-20 h-auto" />
+    </NuxtLink>
+    <aside v-if="user" class="flex flex-col content-fit">
+      <UserCircleIcon @click="showLogOut = true" class="h-10 w-10 text-white cursor-pointer" />
       <div class="text-white font-bold text-xl">
-        {{ userName }}
+        {{ user.userName }}
       </div>
-      <article v-if="showLogOut" class="pt-40 flex justify-center text-white">
-        <p>My account</p>
+      <article v-if="showLogOut" class="pt-40 flex flex-col justify-center text-white">
+        <NuxtLink to="/my-account">
+          <p>My account</p>
+        </NuxtLink>
         <p @click="signOut" class="cursor-pointer">Sign out?</p>
       </article>
     </aside>
@@ -18,33 +22,16 @@
 import { UserCircleIcon } from '@heroicons/vue/20/solid';
 import Logo from '@/assets/img/logo.vue';
 import { storeToRefs } from 'pinia';
-import { useCounterStore } from '~~/stores/counter';
-//import { checkUser } from '~~/helpers.vue';
-const store = useCounterStore();
-const { userName, isLoggedIn } = storeToRefs(store);
+import { userStore } from '~~/stores/userStore';
+const store = userStore();
+const { user } = storeToRefs(store);
 const showLogOut = ref(false);
 
 const signOut = () => {
   localStorage.clear();
-  isLoggedIn.value = false;
-  userName.value = '';
+  user.value = undefined;
   showLogOut.value = false;
   navigateTo("/my-account")
 };
-
-const showOptions = () => {
-  showLogOut.value = true
-}
-
-
-// onMounted(() => {
-//   var getUser = localStorage.getItem('user')
-//   if (getUser) {
-//     console.log('get user in  header', getUser);
-//     const user = JSON.parse(getUser)
-//     isLoggedIn.value = true;
-//     userName.value = user.userName;
-//   }
-// });
 
 </script>

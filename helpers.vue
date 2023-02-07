@@ -1,9 +1,8 @@
 <script lang="ts">
-import { useCounterStore } from '~/stores/counter';
+import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
-const store = useCounterStore();
-const { isLoggedIn, userName, userCategories, userRecipes } = storeToRefs(store);
-
+const store = userStore();
+const { userCategories, userMeals, customLists, user } = storeToRefs(store);
 
 export const capitalize = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -13,24 +12,17 @@ export const generateId = (): number => {
   return Math.floor(Math.random() * 100000);
 }
 
-export const helpers = {
-  capitalize,
-  generateId
-}
-
 export const checkLogin = () => {
-  const userInLS = localStorage.getItem('user')
+  const userInLS = localStorage.getItem('user');
   if (userInLS) {
-    console.log('in helper, ls true');
-    const user = JSON.parse(userInLS)
-    userName.value = user.userName;
-    userCategories.value = user.categories;
-    userRecipes.value = user.recipes
-    isLoggedIn.value = true;
+    const LSuser = JSON.parse(userInLS)
+    user.value = LSuser;
+    userCategories.value = LSuser.categories;
+    userMeals.value = LSuser.meals;
+    customLists.value = [LSuser.customLists];
   }
-  if (!userInLS) {
-    console.log('in helper. no ls');
-    isLoggedIn.value = false;
+  else {
+    user.value = undefined;
     navigateTo("/my-account")
   }
 }

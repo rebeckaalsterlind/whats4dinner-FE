@@ -1,8 +1,9 @@
 <template>
+  <PageTitle label="My account" />
   <div>
-    <article v-if="!isLoggedIn" class="pt-40 flex justify-center text-white">
+    <article v-if="!user" class="pt-40 flex justify-center text-white">
       <section v-if="!createUser" class="flex flex-col gap-4 items-center text-prime-normal">
-        <p v-if="loginFail" class="text-white">{{ errorMsg }}</p>
+        <p v-if="loginFail && errorMsg" class="text-white">{{ errorMsg }}</p>
         <Input id="username" type="text" placeholder="Username.." @input="handleInput" />
         <Input id="password" type="password" placeholder="Password.." @input="handleInput" />
         <Button label="Log in" @click="logIn" />
@@ -19,18 +20,17 @@
         <p @click="createUser = false, loginFail = false" class="text-white">Or log in?</p>
       </section>
     </article>
-    <article v-if="isLoggedIn">Profile</article>
+    <article v-if="user">{{ user.userName }}</article>
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useCounterStore } from '~/stores/counter';
+import { userStore } from '~~/stores/userStore';
 import { IResponse, IUser } from '~~/domain/types';
 import { checkLogin } from '~~/helpers.vue';
-//import { checkLogin } from '~~/helpers.vue';
-const store = useCounterStore();
-const { userName, userCategories, userRecipes, defaultCategories, isLoggedIn } = storeToRefs(store);
+const store = userStore();
+const { user, userCategories, userMeals, defaultCategories } = storeToRefs(store);
 
 const loginFail = ref(false);
 const createUser = ref(false);
@@ -51,30 +51,12 @@ const handleInput = (e: Event): void => {
   if (userLogin.value.password === confirmPassword.value) isMatching.value = true;
 };
 
-const checkLogin = () => {
-  const userInLS = localStorage.getItem('user')
-  if (userInLS) {
-    const user = JSON.parse(userInLS)
-    userName.value = user.userName;
-    userCategories.value = user.categories;
-    userRecipes.value = user.recipes
-    isLoggedIn.value = true;
-  }
-  if (!userInLS) {
-    isLoggedIn.value = false;
-    navigateTo("/my-account")
-  }
-}
-
 //set user from fetch response
 const setUser = (response: IUser) => {
+  console.log('response', response);
   errorMsg.value = '';
-  // userName.value = response.userName;
-  // userCategories.value = response.categories;
-  // userRecipes.value = response.recipes;
   localStorage.setItem('user', JSON.stringify(response));
-  localStorage.setItem('recipes', JSON.stringify(response.recipes));
-  localStorage.setItem('categories', JSON.stringify(response.categories));
+  console.log('before checkin');
   checkLogin();
   navigateTo('/');
 }
@@ -86,16 +68,19 @@ const logIn = async () => {
     method: 'POST',
     body: userLogin.value
   })
-
+  console.log('get user status', getUser);
   if (getUser.status) {
+    console.log('in get user');
     setUser(getUser.body)
   } else {
+    console.log('somwthing wen trowng');
     loginFail.value = true;
     errorMsg.value = getUser.body;
   }
 }
 
 const register = async () => {
+
   loginFail.value = false;
   userTaken.value = false;
 
@@ -103,9 +88,10 @@ const register = async () => {
     userName: userLogin.value.userName,
     password: userLogin.value.password,
     categories: defaultCategories.value,
-    recipes: recipes || []
+    meals: [],
+    cumstomLists: []
   };
-
+  console.log('in regfister new user', newUser);
   if (isMatching.value) {
     errorMsg.value = '';
     const registerUser = await $fetch<IResponse>('http://localhost:3030/users/registerUser', {
@@ -113,6 +99,7 @@ const register = async () => {
       body: newUser
     });
     if (registerUser.status) {
+      console.log('it worked');
       setUser(registerUser.body);
     } else {
       userTaken.value = true;
@@ -124,87 +111,5 @@ const register = async () => {
 
 };
 
-const recipes = [
-  {
-    title: 'pizza',
-    id: 9875334647,
-    keywords: ['pizza', 'pancake'],
-    categories: [{ name: 'soup', categoryId: 5 }, { name: 'slow cook', categoryId: 10 }],
-    picture: 'pizza',
-    recipe: {
-      ingredients: [
-        { name: 'water', amount: '2' },
-        { name: 'chilli', amount: '150g' },
-        { name: 'spinach', amount: '1dl' },
-        { name: 'salt', amount: '2' },
-      ],
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-    }
-  },
-  {
-    title: 'pasta bolognese',
-    id: 987365493,
-    keywords: ['pasta', 'pork mince'],
-    categories: [{ name: 'favourites', categoryId: 11 }, { name: 'comfort food', categoryId: 7 }],
-    picture: 'pizza',
-    recipe: {
-      ingredients: [
-        { name: 'eggs', amount: '2' },
-        { name: 'butter', amount: '150g' },
-        { name: 'tomato sauce', amount: '1dl' },
-        { name: 'onions', amount: '2' },
-      ],
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-    }
-  },
-  {
-    title: 'fish & chips',
-    id: 2765425675,
-    keywords: ['fish', 'potato'],
-    categories: [{ name: 'favourites', categoryId: 11 }, { name: 'healty', categoryId: 3 }],
-    picture: 'pizza',
-    recipe: {
-      ingredients: [
-        { name: 'eggs', amount: '2' },
-        { name: 'butter', amount: '150g' },
-        { name: 'tomato sauce', amount: '1dl' },
-        { name: 'onions', amount: '2' },
-      ],
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-    }
-  },
-  {
-    title: 'chicken',
-    id: 2723242565,
-    keywords: ['chicken', 'potato'],
-    categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
-    picture: 'pizza',
-    recipe: {
-      ingredients: [
-        { name: 'eggs', amount: '2' },
-        { name: 'butter', amount: '150g' },
-        { name: 'tomato sauce', amount: '1dl' },
-        { name: 'onions', amount: '2' },
-      ],
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-    }
-  },
-  {
-    title: 'Stirfry',
-    id: 27287676,
-    keywords: ['noodles', 'potato'],
-    categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
-    picture: 'pizza',
-    recipe: {
-      ingredients: [
-        { name: 'eggs', amount: '2' },
-        { name: 'butter', amount: '150g' },
-        { name: 'tomato sauce', amount: '1dl' },
-        { name: 'onions', amount: '2' },
-      ],
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-    }
-  }
-]
 onMounted(() => checkLogin());
 </script>
