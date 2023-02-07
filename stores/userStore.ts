@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { Ref } from 'vue';
-import { ICategory, IMeal, IUser } from '~~/domain/types';
+import { ICategory, IMeal, IUser, ICustomLists } from '~~/domain/types';
 
 export const userStore = defineStore('user', () => {
 
@@ -8,7 +8,7 @@ export const userStore = defineStore('user', () => {
     const isLoggedIn = ref(false)
     const userCategories = ref([] as ICategory[])
     const userMeals = ref([] as IMeal[]);
-    const userList = ref([] as IMeal[]);
+    const customLists = ref([] as ICustomLists[] | undefined);
     const defaultCategories = ref([
       { categoryId: 1, name: 'vegetarian' },
       { categoryId: 2, name: 'vegan' },
@@ -31,7 +31,7 @@ export const userStore = defineStore('user', () => {
       defaultCategories,
       userCategories,
       userMeals,
-      userList,
+      customLists,
       selectedMeal
     }
 })

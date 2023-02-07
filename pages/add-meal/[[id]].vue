@@ -92,6 +92,7 @@ import { Ref } from '@vue/runtime-core';
 const store = userStore();
 const { selectedMeal } = storeToRefs(store);
 const appId = "2eb3cc88b15045b5b434805c117b656d";
+const route = useRoute();
 
 const query = ref('')
 const recipeOptions = ref()
@@ -196,11 +197,10 @@ const addRecipe = (recipe: IRecipe) => {
 
 //save meal
 const handleSave = async () => {
-  console.log('in dandle save');
   const userInLS = localStorage.getItem('user');
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
-    console.log('lisuder', LSuser.id);
+
     //save meal
     try {
       const { data, error } = await useFetch('http://localhost:3030/meals/addMeal', {
@@ -225,5 +225,11 @@ const handleSave = async () => {
   }
 };
 
-onMounted(() => checkLogin());
+onMounted(() => {
+  checkLogin();
+  if (route.params.id) {
+    selectMeal(Number(route.params.id))
+    console.log('route.params.company', route.params.id);
+  }
+});
 </script>

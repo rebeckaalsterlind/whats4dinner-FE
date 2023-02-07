@@ -2,7 +2,7 @@
 
   <article v-if="filteredMeals.length > 0">
     <h4 v-if="category" class="ml-1 text-white font-semibold">{{ capitalize(category.name) }}</h4>
-    <h4 v-else>My list</h4>
+    <h4 v-if="customList">{{ capitalize(customList.name) }}</h4>
     <Carousel :items-to-scroll="1" :wrap-around="false" :settings="settings"
       class="flex flex-col justify-items-stretch mb-8">
       <Slide v-for="slide of filteredMeals" :key="slide.id" class="h-36 pb-2 px-1 cursor-pointer">
@@ -28,21 +28,25 @@ import { userStore } from '~~/stores/userStore';
 import { IMeal } from '~~/domain/types';
 import { capitalize } from '~~/helpers.vue';
 const store = userStore();
-const { userCategories, userMeals, selectedMeal, userList } = storeToRefs(store);
+const { userCategories, userMeals, selectedMeal } = storeToRefs(store);
 
 const settings = {
   itemsToShow: 3,
   snapAlign: 'start',
 };
 
-interface ICategory {
+interface ICarousel {
   category?: {
     categoryId: number,
     name: string
+  };
+  customList?: {
+    name: string;
+    list: IMeal[];
   }
 }
 
-const { category } = defineProps<ICategory>();
+const { category, customList } = defineProps<ICarousel>();
 const filteredMeals = reactive([] as IMeal[]);
 const setMeal = ref();
 
@@ -53,27 +57,23 @@ const goToMeal = (meal: IMeal) => {
 }
 
 const printRecipes = () => {
-  console.log('list', userList.value);
+  console.log('category', category);
+  console.log('customList', customList);
   if (category) {
     const mealsInCategory = [] as IMeal[]
-    for (const recipe of userMeals.value) {
-      for (const cat of recipe.categories) {
-        const findDouble = mealsInCategory.find(meal => meal.id === recipe.id)
-        if ((cat.categoryId === category.categoryId) && (!findDouble)) mealsInCategory.push(recipe)
+    for (const userMeal of userMeals.value) {
+      for (const cat of userMeal.categories) {
+        const findDouble = mealsInCategory.find(meal => meal.id === userMeal.id)
+        if ((cat.categoryId === category.categoryId) && (!findDouble)) mealsInCategory.push(userMeal)
       }
     }
     Object.assign(filteredMeals, mealsInCategory);
-    console.log('filtered meals', filteredMeals);
-  } else {
-    Object.assign(filteredMeals, userList.value);
-    console.log('no category userlist', userList.value);
+  } if (customList) {
+    console.log('customList in if', customList);
+    Object.assign(filteredMeals, customList.list);
+
   }
-
-
-
 }
-
-// watch(category, printRecipes)
 
 onMounted(() => {
   printRecipes();

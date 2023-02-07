@@ -48,3 +48,8 @@ export interface IMeal {
   picture: string;
   recipe: IRecipe;
 }
+
+export interface ICustomLists {
+  name: string;
+  list: IMeal[];
+}

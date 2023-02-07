@@ -1,152 +1,246 @@
-
 <template>
-  <section class="flex gap-4 items-center my-4 justify-between">
-    <div>{{ selectedNumber }} meals</div>
-    <div>from {{ selectedCategories.map((category) => category.name).join(', ') }}</div>
-    <Button label="Generate" @click="generateMeals" />
-  </section>
-  <section class=" flex justify-between items-start text-whitew-full">
-    <div class="flex flex-col">
-      <Listbox v-model="selectedNumber">
-        <ListboxButton class="text-start content-fit">
-          Select number of meals:
-        </ListboxButton>
-        <ListboxOptions>
-          <ListboxOption v-for="meal in numberOfMeals" :key="meal" :value="meal"
-            class="cursor-pointer h-6 bg-white bg-opacity-10 my-1 px-2 rounded-lg text-prime-normal hover:text-accent-normal">
-            {{ meal }}
-          </ListboxOption>
-        </ListboxOptions>
-      </Listbox>
-    </div>
-    <div class="flex flex-col">
-      <Listbox v-model="selectedCategories" multiple>
-        <!-- <ListboxLabel> {{ selectedCategories.map((category) => category.name).join(', ') }} </ListboxLabel> -->
-        <ListboxButton class="text-start content-fit">Select categories</ListboxButton>
-        <ListboxOptions>
-          <ListboxOption v-for="category in userCategories" :key="category.categoryId" :value="category"
-            class="cursor-pointer h-6 bg-white bg-opacity-10 my-1 px-2 rounded-lg text-prime-normal hover:text-accent-normal">
-            {{ category.name }}
-          </ListboxOption>
-        </ListboxOptions>
-      </Listbox>
-    </div>
-  </section>
+  <p class="px-8">Get list of selected number of meals from chosen categories</p>
+  <article class="flex flex-col grow justify-center">
+    <h3 v-if="showName">{{ capitalize(listName) }}</h3>
+    <section class="flex gap-4 flex-col justify-center">
+      <section>
+        <h5 v-if="tooFewMeals">There are no more meals to choose from in selected categories</h5>
+        <div v-if="mealSuggestions.length > 0" v-for="(meal, index) in mealSuggestions" :key="index">
+          <Pill :label="meal.title">
+            <XMarkIcon class="w-4 h-4 inline hover:text-white cursor-pointer" @click="deleteMeal(meal, index)" />
+          </Pill>
+        </div>
+      </section>
+
+
+      <article class="p-4 bg-white rounded-lg bg-opacity-10 max-h-[60%]">
+        <section>
+          <ul :key="componentKey" v-if="savedCategories.length > 0 && !selectAll" class="overflow-scroll my-6">
+            <li v-for="(category, index) in savedCategories" class="inline">
+              {{ capitalize(category.name) }} {{ index !==
+              savedCategories.length - 1 ? '| ' : '' }}
+            </li>
+          </ul>
+          <ul v-if="selectAll" class="overflow-scroll my-6">
+            <li v-for="(category, index) in userCategories" class="inline">{{ capitalize(category.name) }} {{ index !==
+            userCategories.length - 1 ? '| ' : ''}} </li>
+          </ul>
+        </section>
+
+
+        <section class="flex flex-col gap-6 grow">
+          <div v-if="!showName" class="flex gap-2">
+            <Input class="grow bg-opacity-10 placeholder-prime-normal" v-model="listName" @input="addName"
+              placeholder="Name of list.." />
+            <ButtonSecondary label="Ok" @click="showName = true" />
+          </div>
+
+          <Listbox v-model="selectedNumber">
+            <ListboxButton
+              class="text-start content-fit cursor-pointer h-10 bg-white bg-opacity-10 my-2 p-2 rounded-lg text-prime-normal hover:text-accent-normal flex justify-between items-center">
+              Number of meals {{ selectedNumber }}
+              <ChevronDownIcon class="w-4 h-4 inline" />
+            </ListboxButton>
+            <ListboxOptions>
+              <ListboxOption v-for="meal in numberOfMeals" :key="meal" :value="meal"
+                class="cursor-pointer h-10 text-center bg-white bg-opacity-10 my-2 p-2 rounded-lg text-prime-normal hover:text-accent-normal flex justify-between items-center">
+                {{ meal }}
+              </ListboxOption>
+            </ListboxOptions>
+          </Listbox>
+
+          <Listbox v-model="selectedCategories" multiple>
+            <ListboxButton
+              class="text-start content-fit cursor-pointer h-10 bg-white bg-opacity-10 my-2 p-2 rounded-lg text-prime-normal hover:text-accent-normal">
+              From categories
+              <ChevronDownIcon class="w-4 h-4 inline" />
+            </ListboxButton>
+            <ListboxOptions>
+              <li @click="toggleSelectAll" :class="{
+                'bg-prime-normal text-white': selectAll,
+                'bg-white bg-opacity-10 text-prime-normal': !selectAll,
+              }"
+                class="cursor-pointer h-10 text-center  my-2 p-2 rounded-lg  hover:text-accent-normal hover:bg-prime-normal active:text-white">
+                Select all</li>
+              <ListboxOption v-for="category in userCategories" :key="category.categoryId" :value="category"
+                v-slot="{ active, selected }" @click="handleCategories(category)">
+                <li className="category-list" :class="{
+                  'bg-prime-normal text-white': selected,
+                  'bg-white bg-opacity-10 text-prime-normal': !selected
+                }"
+                  class="cursor-pointer h-10 text-center  my-2 p-2 rounded-lg  hover:text-accent-normal hover:bg-prime-normal active:text-white">
+                  {{ capitalize(category.name) }}
+                </li>
+
+              </ListboxOption>
+            </ListboxOptions>
+          </Listbox>
+        </section>
+      </article>
+      <section class="grow flex gap-4 items-end justify-between">
+        <Button v-if="((selectedCategories.length > 0) || selectAll) && selectedNumber"
+          :label="`Give me ${selectedNumber} ${selectedNumber > 1 ? 'meals' : 'meal'}`" @click="generateMeals" />
+        <Button v-if="selectedCategories.length > 0 || selectAll" label="Reset" @click="reset" />
+        <Button v-if="mealSuggestions.length > 0" label="Save" @click="saveMeals" />
+      </section>
+    </section>
+
+  </article>
 </template>
 
 <script setup lang="ts">
 import {
   Listbox,
-  ListboxLabel,
   ListboxButton,
   ListboxOptions,
   ListboxOption,
 } from '@headlessui/vue';
+import { XMarkIcon, ChevronDownIcon } from '@heroicons/vue/20/solid';
 import { storeToRefs } from 'pinia';
-import { IRecipes } from '~~/domain/types';
+import { ICategory, IMeal } from '~~/domain/types';
+import { capitalize, checkLogin } from '~~/helpers.vue'
 import { userStore } from '~~/stores/userStore';
 const store = userStore();
-const { userRecipes, userCategories } = storeToRefs(store);
+const { userMeals, userCategories, customLists } = storeToRefs(store);
 
+const listName = ref('');
+const showName = ref(false);
 const numberOfMeals = [1, 2, 3, 4, 5, 6, 7];
-
-interface ICategory {
-  name: string,
-  categoryId: number
-}
-
-interface IRec {
-  title: string;
-  id: number;
-  keywords: string[];
-  categories: {
-    name: string;
-    categoryId: number;
-  }[];
-  picture: string;
-  recipe: {
-    ingredients: {
-      name: string;
-      amount: string;
-    }[];
-    description: string;
-  };
-}[]
-
-// const { recipes } = defineProps<IUser>()
 const selectedCategories = ref([] as ICategory[])
-const selectedNumber = ref(0)
+const selectedNumber = ref();
+const savedCategories = ref([] as ICategory[]);
+const generatedMeals = reactive([] as IMeal[]);
+const mealSuggestions = reactive([] as IMeal[]);
+const tooFewMeals = ref(false);
+const selectAll = ref(false)
+const excludeMeals = ref([] as IMeal[] | any[])
+const componentKey = ref(1)
 
-const getMealInCategory = (index: number) => {
-
-  for (const recipe of userRecipes.value) {
-    // console.log('recipe', recipe);
-  }
-  // selectedCategories[index].name = 'favourites';
-  //find number of recipes that is category
-  //get length of number
-  //random number from length. => index of recipe in category
-}
-
+//generate meal suggestions
 const generateMeals = () => {
-
-
-  const generatedMeals = [] as IRec[];
-
-  //random sort category list. 
+  tooFewMeals.value = false;
+  if (selectAll) {
+    selectedCategories.value = userCategories.value;
+  }
+  Object.assign(generatedMeals, [])
 
   for (const selectedCategory of selectedCategories.value) {
-
-    console.log('lengths', generatedMeals.length, selectedNumber.value);
-
-    for (const recipe of userRecipes.value) {
+    for (const meal of userMeals.value) {
       if (generatedMeals.length < selectedNumber.value) {
-        const matchingCategory = recipe.categories.find((category: { categoryId: number; }) => selectedCategory.categoryId === category.categoryId)
+        const matchingCategory = meal.categories.find((category: { categoryId: number; }) => category.categoryId === selectedCategory.categoryId)
         if (matchingCategory) {
-          const findDouble = generatedMeals.find((savedRecipe: { id: number; }) => savedRecipe.id === recipe.id)
-          if (!findDouble) generatedMeals.push(recipe);
-
+          const findDouble = generatedMeals.find((savedMeal: { id: string | undefined; }) => savedMeal.id === meal.id)
+          if (!findDouble) generatedMeals.push(meal)
         }
       }
     }
-
   }
 
   if (generatedMeals.length < selectedNumber.value) {
-    console.log('not enough recipes in categories', generatedMeals);
-    //show suggestions => set meal state form generatedMeals. 
+    tooFewMeals.value = true;
   } else {
-    console.log('all done', generatedMeals);
+    Object.assign(mealSuggestions, generatedMeals);
   }
-
-
-
-
-
-  // if (selectedNumber.value <= selectedCategories.value.length) {
-  //   for (let i = 0; i < selectedNumber.value; i++) {
-  //     console.log('i', i);
-  //     //i is index in category search
-  //     //push found to list
-  //     getMealInCategory(i);
-
-  //   }
-  // } else {
-  //   let index = 0;
-  //   for (let i = 0; i < selectedNumber.value; i++) {
-  //     index++;
-  //     if (index >= selectedCategories.value.length) index = 0
-  //     getMealInCategory(index);
-  //   }
-  // }
 }
 
-//4 meals from 3 categoies
-// 4/3 = 1.2
-// 3/4
-//push categories to array = > [favourites, quick, veggie]
-// loop thtough category array with number of meals. for each number of meal => get a recipe from category
+//delete suggestion and generate new
+const deleteMeal = (meal: IMeal, replaceIndex: number) => {
+  excludeMeals.value.push(...mealSuggestions, meal);
+  let newMeal;
+  let chosenCategories;
+  if (selectAll.value) chosenCategories = userCategories.value;
+  else chosenCategories = savedCategories.value;
 
-//if recipe selected, pop from recipes list. and pop one number from that category? 
-// if recipe excist in more than one category, check first. 
+  for (const selectedCategory of chosenCategories) {
+    for (const userMeal of userMeals.value) {
+      if (userMeal.id !== meal.id) {
+        let matchingCategory = userMeal.categories.find((category: { categoryId: number; }) => category.categoryId === selectedCategory.categoryId)
+        if (matchingCategory) {
+          const findDouble = excludeMeals.value.find(meal => meal.id === userMeal.id);
+          console.log('mealsuggestons', mealSuggestions);
+          if (!findDouble) {
+            console.log('findDouble', findDouble);
+            newMeal = userMeal;
+          }
+        }
+      }
+    }
+  }
+
+  if (newMeal) mealSuggestions.splice(replaceIndex, 1, newMeal)
+  else {
+    mealSuggestions.splice(replaceIndex, 1)
+    tooFewMeals.value = true;
+  }
+
+}
+
+//save selected categories
+const handleCategories = (category: ICategory) => {
+  selectAll.value = false;
+  const pushOrSplice = savedCategories.value.findIndex(cat => cat.categoryId === category.categoryId)
+  if (pushOrSplice !== -1) savedCategories.value.splice(pushOrSplice, 1)
+  else savedCategories.value.push(category)
+}
+
+const toggleSelectAll = () => {
+  selectAll.value = !selectAll.value;
+  selectedCategories.value = [];
+};
+
+const reset = () => {
+  selectedCategories.value = [];
+  selectedNumber.value = null;
+  savedCategories.value = [];
+  selectAll.value = false;
+  excludeMeals.value = [];
+  tooFewMeals.value = false
+  while (mealSuggestions.length > 0) {
+    mealSuggestions.splice(0, 1)
+  }
+  while (generatedMeals.length > 0) {
+    generatedMeals.splice(0, 1)
+  }
+}
+
+const addName = (e: Event) => {
+  console.log('value', (e.target as HTMLInputElement).value);
+  listName.value = (e.target as HTMLInputElement).value;
+  console.log('listname ', listName.value);
+}
+
+const saveMeals = async () => {
+
+  const newList = { name: listName.value, list: mealSuggestions };
+
+  //customLists.value.push(newList)
+  const userInLS = localStorage.getItem('user');
+  if (userInLS) {
+    const LSuser = JSON.parse(userInLS)
+    if (LSuser.customList) // push if already there. if not make array first?
+      //in db
+      try {
+        const { data, error } = await useFetch('http://localhost:3030/meals/addCustomList', {
+          headers: { "Content-type": "application/json" },
+          method: 'POST',
+          body: { id: LSuser._id, customList: newList }
+        });
+
+
+        ///check waht data.value is
+        localStorage.setItem('user', JSON.stringify(data.value));
+        checkLogin();
+        navigateTo('/')
+      } catch (error) {
+        console.log('error', error);
+      }
+  } else {
+    navigateTo('/my-account')
+  }
+}
+
 </script>
+
+
+
+

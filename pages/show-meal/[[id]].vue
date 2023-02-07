@@ -6,7 +6,7 @@
       <img :src="selectedMeal.picture" :alt="selectedMeal.title" class="rounded-lg object-cover w-full h-48">
     </section>
 
-    <section class="my-4">
+    <section v-if="selectedMeal.categories" class="my-4">
       <h5>Categories:</h5>
       <ul class="flex">
         <Pill v-for="category in selectedMeal.categories" :key="category.categoryId"
@@ -30,6 +30,9 @@
         <p>{{ selectedMeal.recipe.instructions }}</p>
       </div>
     </section>
+    <NuxtLink v-if="(route.params.id)" :to="`/add-meal/${route.params.id}`" class="flex justify-center">
+      <ButtonSecondary label="Save meal?" />
+    </NuxtLink>
 
   </article>
 </template>
@@ -40,6 +43,11 @@ import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
 const store = userStore();
 const { selectedMeal } = storeToRefs(store);
+const route = useRoute();
 
-onMounted(() => checkLogin());
+onMounted(() => {
+  checkLogin();
+  if (route.params.id) {
+  }
+});
 </script>

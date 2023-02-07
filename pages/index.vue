@@ -7,7 +7,7 @@
     </NuxtLink>
   </section>
   <section v-else>
-    <Carousel v-if="userList" v-for="meal in userList" :key="meal.id" />
+    <Carousel v-if="customLists" v-for="(list, index) in [customLists]" :key="index" :customList="list" />
     <Carousel v-if="user" v-for="category in userCategories" :key="category.categoryId" :category="category" />
   </section>
 </template>
@@ -17,7 +17,7 @@ import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
 import { checkLogin } from '~~/helpers.vue';
 const store = userStore();
-const { userCategories, userList, user } = storeToRefs(store);
+const { userCategories, customLists, user } = storeToRefs(store);
 
 onMounted(() => checkLogin());
 </script>

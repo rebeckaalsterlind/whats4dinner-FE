@@ -56,10 +56,7 @@ const setUser = (response: IUser) => {
   console.log('response', response);
   errorMsg.value = '';
   localStorage.setItem('user', JSON.stringify(response));
-  // localStorage.setItem('recipes', JSON.stringify(response.meals));
-  // localStorage.setItem('categories', JSON.stringify(response.categories));
-  // if (response.list) localStorage.setItem('list', JSON.stringify(response.list));
-  //set lists in ls too?
+  console.log('before checkin');
   checkLogin();
   navigateTo('/');
 }
