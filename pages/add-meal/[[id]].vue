@@ -200,26 +200,21 @@ const handleSave = async () => {
   const userInLS = localStorage.getItem('user');
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
-
-    //save meal
     try {
       const { data, error } = await useFetch('http://localhost:3030/meals/addMeal', {
         headers: { "Content-type": "application/json" },
         method: 'POST',
         body: { id: LSuser._id, meal: addMeal.value }
       });
-
       store.$patch({
         selectedMeal: addMeal.value
       })
       localStorage.setItem('user', JSON.stringify(data.value));
       checkLogin();
-
       navigateTo('/show-meal')
     } catch (error) {
       console.log('error', error);
     }
-
   } else {
     navigateTo('/my-account')
   }

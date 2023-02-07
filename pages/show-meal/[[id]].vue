@@ -31,7 +31,7 @@
       </div>
     </section>
     <NuxtLink v-if="(route.params.id)" :to="`/add-meal/${route.params.id}`" class="flex justify-center">
-      <ButtonSecondary label="Save meal?" />
+      <ButtonSecondary label="Save meal" />
     </NuxtLink>
 
   </article>
@@ -45,9 +45,5 @@ const store = userStore();
 const { selectedMeal } = storeToRefs(store);
 const route = useRoute();
 
-onMounted(() => {
-  checkLogin();
-  if (route.params.id) {
-  }
-});
+onMounted(() => checkLogin());
 </script>

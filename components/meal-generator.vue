@@ -1,7 +1,9 @@
 <template>
   <p class="px-8">Get list of selected number of meals from chosen categories</p>
+
   <article class="flex flex-col grow justify-center">
     <h3 v-if="showName">{{ capitalize(listName) }}</h3>
+
     <section class="flex gap-4 flex-col justify-center">
       <section>
         <h5 v-if="tooFewMeals">There are no more meals to choose from in selected categories</h5>
@@ -11,7 +13,6 @@
           </Pill>
         </div>
       </section>
-
 
       <article class="p-4 bg-white rounded-lg bg-opacity-10 max-h-[60%]">
         <section>
@@ -26,7 +27,6 @@
             userCategories.length - 1 ? '| ' : ''}} </li>
           </ul>
         </section>
-
 
         <section class="flex flex-col gap-6 grow">
           <div v-if="!showName" class="flex gap-2">
@@ -71,12 +71,12 @@
                   class="cursor-pointer h-10 text-center  my-2 p-2 rounded-lg  hover:text-accent-normal hover:bg-prime-normal active:text-white">
                   {{ capitalize(category.name) }}
                 </li>
-
               </ListboxOption>
             </ListboxOptions>
           </Listbox>
         </section>
       </article>
+
       <section class="grow flex gap-4 items-end justify-between">
         <Button v-if="((selectedCategories.length > 0) || selectAll) && selectedNumber"
           :label="`Give me ${selectedNumber} ${selectedNumber > 1 ? 'meals' : 'meal'}`" @click="generateMeals" />
@@ -204,39 +204,28 @@ const reset = () => {
 }
 
 const addName = (e: Event) => {
-  console.log('value', (e.target as HTMLInputElement).value);
   listName.value = (e.target as HTMLInputElement).value;
-  console.log('listname ', listName.value);
 }
 
 const saveMeals = async () => {
-
   const newList = { name: listName.value, list: mealSuggestions };
-  console.log('newList', newList);
-  //customLists.value.push(newList)
-
   const userInLS = localStorage.getItem('user');
+
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
-    if (LSuser) // push if already there. if not make array first?
-      //in db
-      try {
-        const { data, error } = await useFetch('http://localhost:3030/meals/addCustomList', {
-          headers: { "Content-type": "application/json" },
-          method: 'POST',
-          body: { id: LSuser._id, customList: newList }
-        });
-
-        console.log('data', data);
-        ///check waht data.value is
-        localStorage.setItem('user', JSON.stringify(data.value));
-        checkLogin();
-        navigateTo('/')
-      } catch (error) {
-        console.log('error', error);
-      }
+    try {
+      const { data, error } = await useFetch('http://localhost:3030/meals/addCustomList', {
+        headers: { "Content-type": "application/json" },
+        method: 'POST',
+        body: { id: LSuser._id, customList: newList }
+      });
+      localStorage.setItem('user', JSON.stringify(data.value));
+      checkLogin();
+      navigateTo('/')
+    } catch (error) {
+      console.log('error', error);
+    }
   } else {
-    console.log('no user in ls?');
     navigateTo('/my-account')
   }
 }

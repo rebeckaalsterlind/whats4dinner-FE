@@ -7,7 +7,8 @@
       class="flex flex-col justify-items-stretch mb-8">
       <Slide v-for="slide of filteredMeals" :key="slide.id" class="h-36 pb-2 px-1 cursor-pointer">
         <article @click="goToMeal(slide)" class="w-full h-full flex rounded-lg overflow-hidden drop-shadow-lg">
-          <img :src="slide.picture" :alt="slide.title" class="grow object-cover" />
+          <img :src="slide.picture" :alt="slide.title"
+            class="rounded-lg h-auto w-full object-cover border-2 border-prime-normal hover:border-2 hover:border-accent-normal" />
           <h6
             class="absolute flex items-center px-2 overflow-hidden break-all bottom-0 w-full text-xs font-light text-white h-[18%] bg-prime-normal bg-opacity-80">
             {{ capitalize(slide.title) }}
