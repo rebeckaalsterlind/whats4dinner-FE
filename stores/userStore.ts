@@ -1,11 +1,14 @@
 import { defineStore } from 'pinia';
+import { Ref } from 'vue';
+import { ICategory, IMeal, IUser, ICustomLists } from '~~/domain/types';
 
 export const userStore = defineStore('user', () => {
-    const userName = ref('')
-    const user = ref({userName: '', id: ''})
+
+    const user:Ref<IUser | undefined> = ref()
     const isLoggedIn = ref(false)
-    const userCategories = ref([] as ICategories[])
-    const userRecipes = ref([] as IRecipe[]);
+    const userCategories = ref([] as ICategory[])
+    const userMeals = ref([] as IMeal[]);
+    const customLists = ref([] as ICustomLists[] | undefined);
     const defaultCategories = ref([
       { categoryId: 1, name: 'vegetarian' },
       { categoryId: 2, name: 'vegan' },
@@ -19,45 +22,16 @@ export const userStore = defineStore('user', () => {
       { categoryId: 10, name: 'slow cook' },
       { categoryId: 11, name: 'favourites' }
     ])
-    const selectedMeal = ref ( {
-      title: '',
-      id: 0,
-      keywords: [] as string[],
-      categories: [{ name: '', categoryId: 0 }],
-      picture: '',
-      recipe: {
-        ingredients:
-          [{ name: '', amount: '' }],
-        description: ''
-      }
-    })
+
+    const selectedMeal:Ref<IMeal | undefined> = ref()
 
     return {
       isLoggedIn, 
       user,
-      userName, 
       defaultCategories,
       userCategories,
-      userRecipes,
+      userMeals,
+      customLists,
       selectedMeal
     }
 })
-
-interface ICategories {
-  categoryId: number, 
-  name: string
-}
-interface IRecipe {
-  title: string;
-  id: number;
-  keywords: string[];
-  categories: { name: string, categoryId: number }[];
-  picture: string;
-  recipe: {
-    ingredients:
-      { name: string, amount: string }[];
-    description: string;
-  }
-}
-
-

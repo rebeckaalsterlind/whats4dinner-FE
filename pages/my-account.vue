@@ -1,8 +1,9 @@
 <template>
+  <PageTitle label="My account" />
   <div>
-    <article v-if="!isLoggedIn" class="pt-40 flex justify-center text-white">
+    <article v-if="!user" class="pt-40 flex justify-center text-white">
       <section v-if="!createUser" class="flex flex-col gap-4 items-center text-prime-normal">
-        <p v-if="loginFail" class="text-white">{{ errorMsg }}</p>
+        <p v-if="loginFail && errorMsg" class="text-white">{{ errorMsg }}</p>
         <Input id="username" type="text" placeholder="Username.." @input="handleInput" />
         <Input id="password" type="password" placeholder="Password.." @input="handleInput" />
         <Button label="Log in" @click="logIn" />
@@ -19,7 +20,7 @@
         <p @click="createUser = false, loginFail = false" class="text-white">Or log in?</p>
       </section>
     </article>
-    <article v-if="isLoggedIn">Profile</article>
+    <article v-if="user">{{ user.userName }}</article>
   </div>
 </template>
 
@@ -29,7 +30,7 @@ import { userStore } from '~~/stores/userStore';
 import { IResponse, IUser } from '~~/domain/types';
 import { checkLogin } from '~~/helpers.vue';
 const store = userStore();
-const { userName, userCategories, userRecipes, defaultCategories, isLoggedIn } = storeToRefs(store);
+const { user, userCategories, userMeals, defaultCategories } = storeToRefs(store);
 
 const loginFail = ref(false);
 const createUser = ref(false);
@@ -52,10 +53,10 @@ const handleInput = (e: Event): void => {
 
 //set user from fetch response
 const setUser = (response: IUser) => {
+  console.log('response', response);
   errorMsg.value = '';
-  localStorage.setItem('user', JSON.stringify({ userName: response.userName, id: response._id }));
-  localStorage.setItem('recipes', JSON.stringify(response.recipes));
-  localStorage.setItem('categories', JSON.stringify(response.categories));
+  localStorage.setItem('user', JSON.stringify(response));
+  console.log('before checkin');
   checkLogin();
   navigateTo('/');
 }
@@ -67,16 +68,19 @@ const logIn = async () => {
     method: 'POST',
     body: userLogin.value
   })
-
+  console.log('get user status', getUser);
   if (getUser.status) {
+    console.log('in get user');
     setUser(getUser.body)
   } else {
+    console.log('somwthing wen trowng');
     loginFail.value = true;
     errorMsg.value = getUser.body;
   }
 }
 
 const register = async () => {
+
   loginFail.value = false;
   userTaken.value = false;
 
@@ -84,9 +88,9 @@ const register = async () => {
     userName: userLogin.value.userName,
     password: userLogin.value.password,
     categories: defaultCategories.value,
-    recipes: recipes || []
+    meals: []
   };
-
+  console.log('in regfister new user', newUser);
   if (isMatching.value) {
     errorMsg.value = '';
     const registerUser = await $fetch<IResponse>('http://localhost:3030/users/registerUser', {
@@ -94,6 +98,7 @@ const register = async () => {
       body: newUser
     });
     if (registerUser.status) {
+      console.log('it worked');
       setUser(registerUser.body);
     } else {
       userTaken.value = true;

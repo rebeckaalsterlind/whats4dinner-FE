@@ -1,19 +1,22 @@
 <template>
-  <article v-if="filteredCategories.length > 0">
-    <h4 class="ml-1 text-white font-semibold">{{ category.name }}</h4>
-    <Carousel :items-to-scroll="1" :wrap-around="true" :settings="settings"
+
+  <article v-if="filteredMeals.length > 0">
+    <h4 v-if="category" class="ml-1 text-white font-semibold">{{ capitalize(category.name) }}</h4>
+    <h4 v-if="customList">{{ capitalize(customList.name) }}</h4>
+    <Carousel :items-to-scroll="1" :wrap-around="false" :settings="settings"
       class="flex flex-col justify-items-stretch mb-8">
-      <Slide v-for="slide of filteredCategories" :key="slide.id" class="h-36 pb-2 px-1 cursor-pointer">
+      <Slide v-for="slide of filteredMeals" :key="slide.id" class="h-36 pb-2 px-1 cursor-pointer">
         <article @click="goToMeal(slide)" class="w-full h-full flex rounded-lg overflow-hidden drop-shadow-lg">
-          <img src="@/assets/img/pizza.jpg" :alt="slide.title" class="grow object-cover " />
+          <img :src="slide.picture" :alt="slide.title" class="grow object-cover" />
           <h6
             class="absolute flex items-center px-2 overflow-hidden break-all bottom-0 w-full text-xs font-light text-white h-[18%] bg-prime-normal bg-opacity-80">
-            {{ slide.title }}
+            {{ capitalize(slide.title) }}
           </h6>
         </article>
       </Slide>
     </Carousel>
   </article>
+
 </template>
 
 <script setup lang="ts">
@@ -22,9 +25,10 @@ import { Carousel, Slide } from 'vue3-carousel';
 import { reactive } from '@vue/runtime-core';
 import { storeToRefs } from 'pinia';
 import { userStore } from '~~/stores/userStore';
-import { IRecipes } from '~~/domain/types';
+import { IMeal } from '~~/domain/types';
+import { capitalize } from '~~/helpers.vue';
 const store = userStore();
-const { userRecipes, selectedMeal } = storeToRefs(store);
+const { userCategories, userMeals, selectedMeal } = storeToRefs(store);
 
 const settings = {
   itemsToShow: 3,
@@ -32,44 +36,46 @@ const settings = {
 };
 
 interface ICarousel {
-  category: { name: string, categoryId: number }
+  category?: {
+    categoryId: number,
+    name: string
+  };
+  customList?: {
+    name: string;
+    list: IMeal[];
+  }
 }
-const { category } = defineProps<ICarousel>();
-const filteredCategories = reactive([] as IRecipes[]);
+
+const { category, customList } = defineProps<ICarousel>();
+const filteredMeals = reactive([] as IMeal[]);
 const setMeal = ref();
 
-const goToMeal = (meal: IRecipes) => {
+const goToMeal = (meal: IMeal) => {
   setMeal.value = meal;
   selectedMeal.value = setMeal.value;
   navigateTo("/show-meal");
 }
 
 const printRecipes = () => {
-  console.log('userRecipes', userRecipes.value);
   console.log('category', category);
-  const mealsInCategory: { title: string; id: number; keywords: string[]; categories: { name: string; categoryId: number; }[]; picture: string | undefined; recipe: { ingredients: { name: string; amount: string; }[]; description: string; }[]; }[] = [];
-
-  for (const recipe of userRecipes.value) {
-    console.log('here', recipe.categories);
-    for (const cat of recipe.categories) {
-      if (cat.categoryId === category.categoryId) mealsInCategory.push(recipe)
+  console.log('customList', customList);
+  if (category) {
+    const mealsInCategory = [] as IMeal[]
+    for (const userMeal of userMeals.value) {
+      for (const cat of userMeal.categories) {
+        const findDouble = mealsInCategory.find(meal => meal.id === userMeal.id)
+        if ((cat.categoryId === category.categoryId) && (!findDouble)) mealsInCategory.push(userMeal)
+      }
     }
-  }
-  // userRecipes.value.forEach((recipes: any) => {
-  //   for (const recipe of recipes) {
-  //     for (const cat of recipe.categories) {
-  //       if (cat.categoryId === category.categoryId) mealsInCategory.push(recipe)
-  //     }
-  //   }
-  // });
+    Object.assign(filteredMeals, mealsInCategory);
+  } if (customList) {
+    console.log('customList in if', customList);
+    Object.assign(filteredMeals, customList.list);
 
-  Object.assign(filteredCategories, mealsInCategory);
+  }
 }
 
-watch(category, printRecipes)
-
 onMounted(() => {
-  console.log('category', category);
   printRecipes();
 });
 </script>

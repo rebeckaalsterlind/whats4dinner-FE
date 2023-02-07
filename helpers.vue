@@ -2,7 +2,7 @@
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
 const store = userStore();
-const { isLoggedIn, userName, userCategories, userRecipes } = storeToRefs(store);
+const { isLoggedIn, userCategories, userMeals, customLists, user } = storeToRefs(store);
 
 export const capitalize = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -13,34 +13,23 @@ export const generateId = (): number => {
 }
 
 export const checkLogin = () => {
-  const userInLS = localStorage.getItem('user');
-  const categoriesInLS = localStorage.getItem('categories');
-  const recipesInLS = localStorage.getItem('recipes');
 
+
+  // if response comes back with null, dont set user in ls!!?? 
+  const userInLS = localStorage.getItem('user');
   if (userInLS) {
-    const user = JSON.parse(userInLS)
-    user.value = user;
+    const LSuser = JSON.parse(userInLS)
+    user.value = LSuser;
+    userCategories.value = LSuser.categories;
+    userMeals.value = LSuser.meals;
+    if (LSuser.customLists) {
+      customLists.value = LSuser.customLists
+      console.log('ls custom', LSuser.customLists, customLists.value);
+    }
+    isLoggedIn.value = true
   }
-  if (categoriesInLS) {
-    const categories = JSON.parse(categoriesInLS)
-    console.log('ac', categories);
-    userCategories.value = categories
-    // store.$patch((state) => {
-    //   state.userCategories.push(categories)
-    // });
-  }
-  if (recipesInLS) {
-    const recipes = JSON.parse(recipesInLS)
-    userRecipes.value = recipes;
-    // store.$patch((state) => {
-    //   state.userRecipes.push(recipes)
-    // });
-  }
-  if (userInLS && categoriesInLS) {
-    isLoggedIn.value = true;
-  }
-  else if (!userInLS || !categoriesInLS) {
-    isLoggedIn.value = false;
+  else {
+    user.value = undefined;
     navigateTo("/my-account")
   }
 }
