@@ -1,7 +1,8 @@
 <template>
-  <p class="px-8">Get list of selected number of meals from chosen categories</p>
 
   <article class="flex flex-col grow justify-center">
+    <p>Get list of selected number of meals from chosen categories</p>
+
     <h3 v-if="showName">{{ capitalize(listName) }}</h3>
 
     <section class="flex gap-4 flex-col justify-center">
@@ -28,22 +29,22 @@
           </ul>
         </section>
 
-        <section class="flex flex-col gap-6 grow">
+        <section class="flex flex-col grow">
           <div v-if="!showName" class="flex gap-2">
-            <Input class="grow bg-opacity-10 placeholder-prime-normal" v-model="listName" @input="addName"
+            <Input class="grow bg-opacity-10 placeholder-white" v-model="listName" @input="addName"
               placeholder="Name of list.." />
             <ButtonSecondary label="Ok" @click="showName = true" />
           </div>
 
           <Listbox v-model="selectedNumber">
             <ListboxButton
-              class="text-start content-fit cursor-pointer h-10 bg-white bg-opacity-10 my-2 p-2 rounded-lg text-prime-normal hover:text-accent-normal flex justify-between items-center">
+              class="text-start content-fit cursor-pointer h-10 bg-white bg-opacity-10 mt-4 mb-1 p-2 rounded-lg text-white hover:text-accent-normal flex justify-between items-center">
               Number of meals {{ selectedNumber }}
               <ChevronDownIcon class="w-4 h-4 inline" />
             </ListboxButton>
             <ListboxOptions>
               <ListboxOption v-for="meal in numberOfMeals" :key="meal" :value="meal"
-                class="cursor-pointer h-10 text-center bg-white bg-opacity-10 my-2 p-2 rounded-lg text-prime-normal hover:text-accent-normal flex justify-between items-center">
+                class="cursor-pointer h-10 text-center bg-white bg-opacity-10 mb-1 p-2 rounded-lg text-white hover:text-accent-normal flex justify-between items-center">
                 {{ meal }}
               </ListboxOption>
             </ListboxOptions>
@@ -51,7 +52,7 @@
 
           <Listbox v-model="selectedCategories" multiple>
             <ListboxButton
-              class="text-start content-fit cursor-pointer h-10 bg-white bg-opacity-10 my-2 p-2 rounded-lg text-prime-normal hover:text-accent-normal">
+              class="text-start content-fit cursor-pointer h-10 bg-white bg-opacity-10 mt-4 mb-1 p-2 rounded-lg text-white hover:text-accent-normal">
               From categories
               <ChevronDownIcon class="w-4 h-4 inline" />
             </ListboxButton>
@@ -60,7 +61,7 @@
                 'bg-prime-normal text-white': selectAll,
                 'bg-white bg-opacity-10 text-prime-normal': !selectAll,
               }"
-                class="cursor-pointer h-10 text-center  my-2 p-2 rounded-lg  hover:text-accent-normal hover:bg-prime-normal active:text-white">
+                class="cursor-pointer h-10 text-center mb-1 p-2 rounded-lg  hover:text-accent-normal hover:bg-prime-normal active:text-white">
                 Select all</li>
               <ListboxOption v-for="category in userCategories" :key="category.categoryId" :value="category"
                 v-slot="{ active, selected }" @click="handleCategories(category)">
@@ -68,7 +69,7 @@
                   'bg-prime-normal text-white': selected,
                   'bg-white bg-opacity-10 text-prime-normal': !selected
                 }"
-                  class="cursor-pointer h-10 text-center  my-2 p-2 rounded-lg  hover:text-accent-normal hover:bg-prime-normal active:text-white">
+                  class="cursor-pointer h-10 text-center mb-1 p-2 rounded-lg hover:text-accent-normal hover:bg-prime-normal active:text-white">
                   {{ capitalize(category.name) }}
                 </li>
               </ListboxOption>

@@ -79,7 +79,7 @@ const saveRecipe = () => {
   if (savedRecipe.value === true) {
     if (servings.value) (servings.value).toString;
     recipe.push({ servings: servings.value, ingredients: ingredients.value, instructions: instructions.value });
-    emit('addOwnRecipe', recipe);
+    emit('addOwnRecipe', ...recipe);
     savedRecipe.value = true;
   }
 };

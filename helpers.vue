@@ -13,7 +13,6 @@ export const generateId = (): number => {
 }
 
 export const sort = (arr: any[]) => {
-  console.log('arr', arr);
   return arr.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 0 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 1));
 }
 
@@ -31,5 +30,12 @@ export const checkLogin = () => {
     navigateTo("/my-account")
   }
 }
+
+export const logout = () => {
+  console.log('in logout');
+  localStorage.clear();
+  user.value = undefined;
+  navigateTo("/my-account")
+};
 
 </script>

@@ -14,7 +14,7 @@
           </NuxtLink>
           </MenuItem>
           <MenuItem v-slot="{ close }">
-          <p class="cursor-pointer hover:text-accent-normal text-sm text-white" @click="signOut, close">
+          <p class="cursor-pointer hover:text-accent-normal text-sm text-white" @click="logout">
             Sign out
           </p>
           </MenuItem>
@@ -30,16 +30,9 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import Logo from '@/assets/img/logo.vue';
 import { storeToRefs } from 'pinia';
 import { userStore } from '~~/stores/userStore';
-import { capitalize } from '~~/helpers.vue'
+import { capitalize, logout } from '~~/helpers.vue'
 const store = userStore();
 const { user } = storeToRefs(store);
-const showLogOut = ref(false);
 
-const signOut = () => {
-  localStorage.clear();
-  user.value = undefined;
-  showLogOut.value = false;
-  navigateTo("/my-account")
-};
 
 </script>

@@ -3,7 +3,7 @@
   <Listbox class="w-full">
     <div>
       <ListboxButton
-        class="relative w-full cursor-default rounded-lg bg-white text-prime-normal py-2 pl-3 pr-10 text-left">
+        class="relative w-full cursor-default rounded-lg bg-white bg-opacity-10 text-white py-2 pl-3 pr-10 text-left">
         <span class="block truncate">{{ label }}</span>
         <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           <ChevronDownIcon class="h-5 w-5 text-white" aria-hidden="true" />

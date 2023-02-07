@@ -1,40 +1,43 @@
 <template>
   <PageTitle label="Add meal" />
   <article class="flex grow flex-col justify-center">
+    <section class="flex flex-col gap-4">
+      <Carousel v-if="showCarousel" :items-to-scroll="1" :wrap-around="true" :items-to-show="3" snap-align="start"
+        class="flex flex-col justify-items-stretch mb-8">
+        <Slide v-for="slide of recipeOptions" :key="slide.id" @click="selectMeal(slide.id)">
+          <article
+            class="cursor-pointer flex rounded-lg overflow-hidden border-2 border-prime-normal hover:border-accent-normal active:border-white drop-shadow-lg h-40  mx-1">
+            <img :src="slide.img" :alt="slide.title" class="object-cover w-full" />
+            <div class="absolute p-1 bottom-0 w-full min-h-8 bg-prime-normal bg-opacity-90">
+              <h6 class="text-xs break-words font-light text-white text-start">
+                {{ slide.title }}
+              </h6>
+            </div>
+          </article>
+        </Slide>
+      </Carousel>
 
-    <div class="flex flex-col gap-4">
-      <section v-if="!addMeal" class="flex flex-col items-center gap-4">
+      <section v-if="!addMeal" class="flex flex-col items-center gap-4 bg-white bg-opacity-10 rounded-lg p-4">
         <Input @input="setQuery" type="text" placeholder="Name.." class="min-w-[60%]" />
         <ButtonSecondary @click="searchMeal" label="Go" />
       </section>
-
-      <section v-if="showCarousel">
-        <Carousel :items-to-scroll="1" :wrap-around="true" :items-to-show="3" snap-align="start"
-          class="flex flex-col justify-items-stretch mb-8">
-          <Slide v-for="slide of recipeOptions" :key="slide.id" @click="selectMeal(slide.id)">
-            <article class="cursor-pointer flex rounded-lg overflow-hidden drop-shadow-lg h-40 px-1">
-              <img :src="slide.img" :alt="slide.title" class="object-cover w-full" />
-              <div class="absolute p-1 overflow-hidden break-all bottom-0 w-full h-8 bg-prime-normal bg-opacity-80">
-                <h6 class=" text-xs font-light text-white text-center">
-                  {{ slide.title }}
-                </h6>
-              </div>
-            </article>
-          </Slide>
-        </Carousel>
-      </section>
-    </div>
+    </section>
 
     <section v-if="addMeal" class="flex flex-col items-center gap-4">
-      <div v-if="!editTitle" class="flex flex-col items-center">
+
+      <div v-if="!editTitle" class="flex flex-col items-center gap-1">
         <h2 class="text-accent-normal text-lg font-bold"> {{ capitalize(addMeal.title) }}</h2>
         <ButtonSecondary @click="editTitle = true" label="Change name?" class="text-xs" />
       </div>
+
       <div v-else class="flex flex-col items-center gap-4">
         <Input v-model="setTitle" @input="setTitle" type="text" :placeholder="addMeal.title" class="min-w-[60%]" />
         <ButtonSecondary @click="changeTitle" label="Ok" />
       </div>
-      <img :src="addMeal.picture" :alt="addMeal.title" class="w-40 h-auto rounded-lg overflow-hidden" />
+
+      <div class="overflow-hidden rounded-lg">
+        <img :src="addMeal.picture" :alt="addMeal.title" class="w-full object-cover h-auto" />
+      </div>
 
       <section v-if="addMeal.categories.length > 0">
         <ul class="list-none w-full min-h-[40px] flex flex-wrap">
@@ -45,31 +48,34 @@
         </ul>
       </section>
 
-      <Categories id="cat" :deleted="deletedCategory" label="Select categories.." @update="updateCategories" />
-      <Disclosure v-if="recipeAdded" v-slot="{ open }">
-        <DisclosureButton
-          class="flex grow w-full items-center bg-white bg-opacity-10 justify-between rounded-lg px-4 py-2 mb-1 text-left text-white">
-          <span>Recipe</span>
-          <ChevronUpIcon :class="open ? '' : 'rotate-180 transform'" class="h-5 w-5 text-white" />
-        </DisclosureButton>
-        <DisclosurePanel>
-          <section v-if="recipeAdded" class="flex flex-col gap-2 p-4 bg-white bg-opacity-10 text-sm rounded-lg">
-            <h4>Servings: {{ addMeal.recipe.servings || '' }}</h4>
-            <div>
-              <h4>Ingredients: </h4>
-              <ul>
-                <li v-for="ingredient in addMeal.recipe.ingredients">
-                  {{ ingredient.amount }} {{ ingredient.name }}
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4>Instructions: </h4>
-              <p>{{ addMeal.recipe.instructions }}</p>
-            </div>
-          </section>
-        </DisclosurePanel>
-      </Disclosure>
+      <section class="w-full flex flex-col gap-4">
+        <Categories id="cat" :deleted="deletedCategory" label="Select categories.." @update="updateCategories" />
+        <Disclosure v-if="recipeAdded" v-slot="{ open }">
+          <DisclosureButton
+            class="flex grow w-full items-center bg-white bg-opacity-10 justify-between rounded-lg px-4 py-2 mb-1 text-left text-white">
+            <span>Recipe</span>
+            <ChevronUpIcon :class="open ? '' : 'rotate-180 transform'" class="h-5 w-5 text-white" />
+          </DisclosureButton>
+          <DisclosurePanel>
+            <section v-if="recipeAdded"
+              class="flex flex-col gap-2 p-4 w-full grow bg-white bg-opacity-10 text-sm rounded-lg">
+              <h4>Servings: {{ addMeal.recipe.servings || '' }}</h4>
+              <div>
+                <h4>Ingredients:</h4>
+                <ul>
+                  <li v-for="ingredient in addMeal.recipe.ingredients">
+                    {{ ingredient.amount }} {{ ingredient.name }}
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4>Instructions: </h4>
+                <p>{{ addMeal.recipe.instructions }}</p>
+              </div>
+            </section>
+          </DisclosurePanel>
+        </Disclosure>
+      </section>
 
       <GetRecipe v-if="!recipeAdded" :recipe="addMeal.recipe" @add-existing-recipe="addRecipe" />
       <AddRecipe v-if="!recipeAdded" @addOwnRecipe="addRecipe" />
@@ -123,7 +129,6 @@ const searchMeal = () => {
       }
       recipeOptions.value = arr;
       showCarousel.value = true;
-      console.log('recipeOtions', recipeOptions.value);
     })
     .catch((error) => {
       console.log(error);
@@ -190,9 +195,11 @@ const changeTitle = () => {
 
 //reipe
 const addRecipe = (recipe: IRecipe) => {
-  if (addMeal.value && addMeal.value.recipe) addMeal.value.recipe = recipe;
-  console.log('recipe', recipe);
-  recipeAdded.value = true;
+  if (addMeal.value && addMeal.value.recipe) {
+    addMeal.value.recipe = recipe;
+    recipeAdded.value = true;
+  }
+
 }
 
 //save meal
@@ -222,9 +229,6 @@ const handleSave = async () => {
 
 onMounted(() => {
   checkLogin();
-  if (route.params.id) {
-    selectMeal(Number(route.params.id))
-    console.log('route.params.company', route.params.id);
-  }
+  if (route.params.id) selectMeal(Number(route.params.id))
 });
 </script>
