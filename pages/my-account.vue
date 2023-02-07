@@ -88,7 +88,8 @@ const register = async () => {
     userName: userLogin.value.userName,
     password: userLogin.value.password,
     categories: defaultCategories.value,
-    meals: []
+    meals: [],
+    cumstomLists: []
   };
   console.log('in regfister new user', newUser);
   if (isMatching.value) {
@@ -110,87 +111,5 @@ const register = async () => {
 
 };
 
-const recipes = [
-  {
-    title: 'pizza',
-    id: 9875334647,
-    keywords: ['pizza', 'pancake'],
-    categories: [{ name: 'soup', categoryId: 5 }, { name: 'slow cook', categoryId: 10 }],
-    picture: 'pizza',
-    recipe: {
-      ingredients: [
-        { name: 'water', amount: '2' },
-        { name: 'chilli', amount: '150g' },
-        { name: 'spinach', amount: '1dl' },
-        { name: 'salt', amount: '2' },
-      ],
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-    }
-  },
-  {
-    title: 'pasta bolognese',
-    id: 987365493,
-    keywords: ['pasta', 'pork mince'],
-    categories: [{ name: 'favourites', categoryId: 11 }, { name: 'comfort food', categoryId: 7 }],
-    picture: 'pizza',
-    recipe: {
-      ingredients: [
-        { name: 'eggs', amount: '2' },
-        { name: 'butter', amount: '150g' },
-        { name: 'tomato sauce', amount: '1dl' },
-        { name: 'onions', amount: '2' },
-      ],
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-    }
-  },
-  {
-    title: 'fish & chips',
-    id: 2765425675,
-    keywords: ['fish', 'potato'],
-    categories: [{ name: 'favourites', categoryId: 11 }, { name: 'healty', categoryId: 3 }],
-    picture: 'pizza',
-    recipe: {
-      ingredients: [
-        { name: 'eggs', amount: '2' },
-        { name: 'butter', amount: '150g' },
-        { name: 'tomato sauce', amount: '1dl' },
-        { name: 'onions', amount: '2' },
-      ],
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-    }
-  },
-  {
-    title: 'chicken',
-    id: 2723242565,
-    keywords: ['chicken', 'potato'],
-    categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
-    picture: 'pizza',
-    recipe: {
-      ingredients: [
-        { name: 'eggs', amount: '2' },
-        { name: 'butter', amount: '150g' },
-        { name: 'tomato sauce', amount: '1dl' },
-        { name: 'onions', amount: '2' },
-      ],
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-    }
-  },
-  {
-    title: 'Stirfry',
-    id: 27287676,
-    keywords: ['noodles', 'potato'],
-    categories: [{ name: 'vegetarian', categoryId: 1 }, { name: 'healty', categoryId: 3 }],
-    picture: 'pizza',
-    recipe: {
-      ingredients: [
-        { name: 'eggs', amount: '2' },
-        { name: 'butter', amount: '150g' },
-        { name: 'tomato sauce', amount: '1dl' },
-        { name: 'onions', amount: '2' },
-      ],
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry´s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting'
-    }
-  }
-]
 onMounted(() => checkLogin());
 </script>

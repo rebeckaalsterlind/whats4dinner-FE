@@ -8,7 +8,7 @@ export const userStore = defineStore('user', () => {
     const isLoggedIn = ref(false)
     const userCategories = ref([] as ICategory[])
     const userMeals = ref([] as IMeal[]);
-    const customLists = ref([] as ICustomLists[] | undefined);
+    const customLists = ref([] as ICustomLists[] | any[]);
     const defaultCategories = ref([
       { categoryId: 1, name: 'vegetarian' },
       { categoryId: 2, name: 'vegan' },

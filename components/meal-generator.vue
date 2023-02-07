@@ -210,15 +210,15 @@ const addName = (e: Event) => {
 }
 
 const saveMeals = async () => {
-  console.log('savemeals');
-  const newList = { name: listName.value, list: mealSuggestions };
 
+  const newList = { name: listName.value, list: mealSuggestions };
+  console.log('newList', newList);
   //customLists.value.push(newList)
+
   const userInLS = localStorage.getItem('user');
-  console.log('userinls', userInLS);
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
-    if (LSuser.customList) // push if already there. if not make array first?
+    if (LSuser) // push if already there. if not make array first?
       //in db
       try {
         const { data, error } = await useFetch('http://localhost:3030/meals/addCustomList', {
@@ -236,6 +236,7 @@ const saveMeals = async () => {
         console.log('error', error);
       }
   } else {
+    console.log('no user in ls?');
     navigateTo('/my-account')
   }
 }
