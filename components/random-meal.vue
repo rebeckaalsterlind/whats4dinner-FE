@@ -5,13 +5,16 @@
       <img :src="randomMeal.picture" :alt="randomMeal.title"
         class="rounded-lg h-auto w-full object-cover border-2 border-prime-normal hover:border-2 hover:border-accent-normal">
     </section>
-    <ButtonSecondary label="New random meal" @click="findMeal" />
+    <ButtonSecondary label="Suggest a meal" @click="findMeal">
+      <ArrowPathIcon class="w-4 h-4 inline" />
+    </ButtonSecondary>
   </article>
 </template>
 
 <script setup lang="ts">import axios from 'axios';
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
+import { ArrowPathIcon } from '@heroicons/vue/24/outline'
 const store = userStore();
 const { selectedMeal } = storeToRefs(store);
 const appId = "2eb3cc88b15045b5b434805c117b656d";
