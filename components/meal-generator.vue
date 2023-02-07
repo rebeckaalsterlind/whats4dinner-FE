@@ -78,9 +78,9 @@
       </article>
 
       <section class="grow flex gap-4 items-end justify-between">
-        <Button v-if="((selectedCategories.length > 0) || selectAll) && selectedNumber"
+        <ButtonSecondary v-if="((selectedCategories.length > 0) || selectAll) && selectedNumber"
           :label="`Give me ${selectedNumber} ${selectedNumber > 1 ? 'meals' : 'meal'}`" @click="generateMeals" />
-        <Button v-if="selectedCategories.length > 0 || selectAll" label="Reset" @click="reset" />
+        <ButtonSecondary v-if="selectedCategories.length > 0 || selectAll" label="Reset" @click="reset" />
         <Button v-if="mealSuggestions.length > 0" label="Save" @click="saveMeals" />
       </section>
     </section>

@@ -20,11 +20,15 @@
         <p @click="createUser = false, loginFail = false" class="text-white">Or log in?</p>
       </section>
     </article>
-    <article v-if="user">{{ user.userName }}</article>
+    <article v-if="user">
+      <UserCircleIcon class="h-10 w-10 text-white cursor-pointer" />
+      <PageTitle :label="user.userName" />
+    </article>
   </div>
 </template>
 
 <script setup lang="ts">
+import { UserCircleIcon } from '@heroicons/vue/20/solid';
 import { storeToRefs } from 'pinia';
 import { userStore } from '~~/stores/userStore';
 import { IResponse, IUser } from '~~/domain/types';

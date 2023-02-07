@@ -3,26 +3,34 @@
     <NuxtLink to="/">
       <Logo class="cursor-pointer w-20 h-auto" />
     </NuxtLink>
-    <aside v-if="user" class="flex flex-col content-fit">
-      <UserCircleIcon @click="showLogOut = true" class="h-10 w-10 text-white cursor-pointer" />
-      <div class="text-white font-bold text-xl">
-        {{ user.userName }}
-      </div>
-      <article v-if="showLogOut" class="pt-40 flex flex-col justify-center text-white">
-        <NuxtLink to="/my-account">
-          <p>My account</p>
-        </NuxtLink>
-        <p @click="signOut" class="cursor-pointer">Sign out?</p>
-      </article>
+    <aside v-if="user"
+      class="fixed right-6 top-4 font-black text-lg text-accent-normal hover:text-white flex flex-col gap-4">
+      <Menu>
+        <MenuButton class="text-right cursor-pointer">{{ capitalize(user.userName) }}</MenuButton>
+        <MenuItems class="flex flex-col text-right gap-2">
+          <MenuItem v-slot="{ close }">
+          <NuxtLink class="cursor-pointer hover:text-accent-normal text-sm text-white" to="/my-account" @click="close">
+            My account
+          </NuxtLink>
+          </MenuItem>
+          <MenuItem v-slot="{ close }">
+          <p class="cursor-pointer hover:text-accent-normal text-sm text-white" @click="signOut, close">
+            Sign out
+          </p>
+          </MenuItem>
+        </MenuItems>
+      </Menu>
+
     </aside>
   </header>
 </template>
 
 <script setup lang="ts">
-import { UserCircleIcon } from '@heroicons/vue/20/solid';
+import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import Logo from '@/assets/img/logo.vue';
 import { storeToRefs } from 'pinia';
 import { userStore } from '~~/stores/userStore';
+import { capitalize } from '~~/helpers.vue'
 const store = userStore();
 const { user } = storeToRefs(store);
 const showLogOut = ref(false);

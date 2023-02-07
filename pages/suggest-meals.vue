@@ -2,7 +2,7 @@
   <PageTitle label="Meal suggestions" />
   <article class="grow flex flex-col justify-center items-center gap-4">
 
-    <ButtonSecondary v-if="!randomMeal && !savedMeals" label="From saved meals"
+    <ButtonSecondary v-if="!randomMeal && !savedMeals" label="From my saved meals"
       @click="savedMeals = true, randomMeal = false" />
     <ButtonSecondary v-if="!randomMeal && !savedMeals" label="New random meal"
       @click="randomMeal = true, savedMeals = false" />
