@@ -12,11 +12,11 @@
       </div>
       <Combobox>
         <ComboboxInput @change="query = $event.target.value.toLowerCase()" placeholder="Search.."
-          class="px-2 py-1 rounded-lg grow" />
+          class="px-2 py-1 rounded-lg grow bg-white bg-opacity-10 text-white" />
         <ComboboxOptions>
           <ComboboxOption v-for="meal in filteredMeals" :key="meal.id" :value="meal">
             <div
-              class="cursor-pointer my-2 rounded-lg px-2 bg-white bg-opacity-10 text-white hover:text-accent-normal hover:bg-prime-normal"
+              class="cursor-pointer mb-1 rounded-lg px-2 py-1 bg-white bg-opacity-10 text-white hover:text-accent-normal hover:bg-prime-normal text-sm"
               @click="selectedMeal = meal, navigateTo('/show-meal')">
               {{ meal.title }}
             </div>

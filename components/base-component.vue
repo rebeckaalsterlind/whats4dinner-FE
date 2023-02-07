@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-start justify-between w-full rounded gap-2 drop-shadow-lg my-4">
+  <div class="rounded-lg bg-white bg-opacity-10 gap-4 p-4">
     <slot />
   </div>
 </template>

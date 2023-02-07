@@ -1,5 +1,5 @@
 <template>
-  <PageTitle v-if="selectedMeal!.title" :label="capitalize(selectedMeal!.title)" />
+  <PageTitle v-if="selectedMeal?.title" :label="capitalize(selectedMeal!.title)" />
   <article v-if="selectedMeal" class="p-4 bg-white rounded-lg bg-opacity-10">
 
     <section class="my-4" v-if="selectedMeal.picture">
@@ -15,7 +15,7 @@
     </section>
 
     <section class="flex flex-col gap-2">
-      <h5>Recipe: </h5>
+      <h3 class="font-bold text-center">Recipe</h3>
       <h4 v-if="selectedMeal.recipe.servings">Servings: {{ selectedMeal.recipe.servings }}</h4>
       <div>
         <h4>Ingredients:</h4>
@@ -27,11 +27,11 @@
       </div>
       <div>
         <h4>Instructions:</h4>
-        <p>{{ selectedMeal.recipe.instructions }}</p>
+        <p v-html="selectedMeal.recipe.instructions"></p>
       </div>
     </section>
     <NuxtLink v-if="(route.params.id)" :to="`/add-meal/${route.params.id}`" class="flex justify-center">
-      <ButtonSecondary label="Save meal?" />
+      <ButtonSecondary label="Save meal" />
     </NuxtLink>
 
   </article>
@@ -46,8 +46,7 @@ const { selectedMeal } = storeToRefs(store);
 const route = useRoute();
 
 onMounted(() => {
-  checkLogin();
-  if (route.params.id) {
-  }
+  checkLogin()
+  if (!selectedMeal.value) navigateTo("/");
 });
 </script>

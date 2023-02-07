@@ -1,19 +1,19 @@
 <template>
   <footer class="flex justify-between items-center p-3">
     <div @click="() => { navigateTo('/suggest-meals') }" class="cursor-pointer">
-      <HomeIcon class="h-6 w-6 text-pink-500" />
+      <LightBulbIcon class="h-8 w-8 text-accent-normal hover:text-white" />
     </div>
     <div @click="() => { navigateTo('/add-meal') }" class="cursor-pointer">
-      <PlusCircleIcon class="h-10 w-10 text-pink-500" />
+      <PlusCircleIcon class="h-8 w-8 text-accent-normal hover:text-white" />
     </div>
     <div @click="() => { navigateTo('/search') }" class="cursor-pointer">
-      <MagnifyingGlassIcon class="h-6 w-6 text-['rgb(199, 103, 0)']" />
+      <MagnifyingGlassIcon class="h-8 w-8 text-accent-normal hover:text-white" />
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
-import { MagnifyingGlassIcon, HomeIcon } from '@heroicons/vue/24/solid'
+import { MagnifyingGlassIcon, LightBulbIcon } from '@heroicons/vue/24/solid'
 import { PlusCircleIcon } from '@heroicons/vue/24/outline'
 
 </script>

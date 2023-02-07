@@ -20,7 +20,7 @@
 
           <div>
             <h4>Instructions: </h4>
-            <p>{{ recipe.instructions }}</p>
+            <p v-html="recipe.instructions"></p>
           </div>
           <div class="flex justify-center">
             <ButtonSecondary label="Add recipe" @click="emit('addExistingRecipe', recipe);" />
