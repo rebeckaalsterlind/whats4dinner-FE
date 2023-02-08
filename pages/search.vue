@@ -23,23 +23,17 @@
           </ComboboxOption>
         </ComboboxOptions>
       </Combobox>
-
     </section>
-
   </article>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import {
   Combobox,
   ComboboxInput,
   ComboboxOptions,
   ComboboxOption,
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
 } from '@headlessui/vue';
 import { checkLogin } from '~~/helpers.vue';
 import { userStore } from '~~/stores/userStore';
@@ -47,14 +41,13 @@ import { storeToRefs } from 'pinia';
 const store = userStore();
 const { userMeals, selectedMeal } = storeToRefs(store);
 
-const query = ref('')
-const filteredMeals = ref(userMeals)
-const searchIngredients = ref(true)
-const searchTitle = ref(true)
-const meals = ref(userMeals.value)
+const query = ref('');
+const filteredMeals = ref(userMeals);
+const searchIngredients = ref(true);
+const searchTitle = ref(true);
+const meals = ref(userMeals.value);
 
 const filterSearch = () => {
-
   const filtered = [];
   for (const meal of meals.value) {
     let isMatch = false;
@@ -71,9 +64,10 @@ const filterSearch = () => {
     if (isMatch) {
       filtered.push(meal)
     }
+
     filteredMeals.value = filtered;
   }
-}
+};
 
 watch(query, filterSearch);
 onMounted(() => checkLogin());

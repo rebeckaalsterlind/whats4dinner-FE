@@ -9,7 +9,7 @@
         <MenuButton class="text-right cursor-pointer">{{ capitalize(user.userName) }}</MenuButton>
         <MenuItems class="flex flex-col text-right gap-2">
           <MenuItem v-slot="{ close }">
-          <NuxtLink class="cursor-pointer hover:text-accent-normal text-sm text-white" to="/my-account" @click="close">
+          <NuxtLink class="cursor-pointer hover:text-accent-normal text-sm text-white" to="/my-account">
             My account
           </NuxtLink>
           </MenuItem>
@@ -33,6 +33,4 @@ import { userStore } from '~~/stores/userStore';
 import { capitalize, logout } from '~~/helpers.vue'
 const store = userStore();
 const { user } = storeToRefs(store);
-
-
 </script>

@@ -1,15 +1,3 @@
-// export interface IRecipes {
-//   title: string,
-//   id: number,
-//   keywords: string[],
-//   categories: ICategory[],
-//   picture: string,
-//   recipe: {
-//     ingredients:
-//       { name: string, amount: string }[],
-//     instructions: string;
-//   }
-// }
 
 export interface ICategory {
   categoryId: number, 
@@ -27,7 +15,7 @@ export interface IUser {
   password: string;
   categories: ICategory[];
   meals: IMeal[] | any[];
-  list?: IMeal[] | any[];
+  customLists: IMeal[] | any[];
 }
 
 export interface IIngredient {
@@ -51,5 +39,6 @@ export interface IMeal {
 
 export interface ICustomLists {
   name: string;
+  id: number;
   list: IMeal[];
 }

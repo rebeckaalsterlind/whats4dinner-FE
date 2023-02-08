@@ -17,7 +17,6 @@
               </li>
             </ul>
           </div>
-
           <div>
             <h4>Instructions: </h4>
             <p v-html="recipe.instructions"></p>

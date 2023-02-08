@@ -18,7 +18,6 @@
               </li>
             </ul>
           </div>
-
           <section class="flex flex-col gap-2">
             <div>
               <input type="number" placeholder="Servings.." v-model="servings"
@@ -32,9 +31,7 @@
               <button v-if="!savedRecipe" class="bg-white text-prime-normal px-2 min-w-[60px] h-8 rounded-full"
                 @click="addIngredient">Add</button>
             </div>
-
           </section>
-
           <section class="flex flex-col justify-evenly gap-2">
             <textarea v-if="!savedRecipe" :rows="4" placeholder="instructions.." v-model="instructions"
               class="rounded-lg p-2 bg-white text-white bg-opacity-10" />
@@ -54,15 +51,15 @@ import { ChevronUpIcon, XMarkIcon } from '@heroicons/vue/20/solid';
 import { Ref } from '@vue/runtime-core';
 import { IIngredient, IRecipe } from '~~/domain/types';
 
-const emit = defineEmits(['addOwnRecipe'])
-
 const ingredient = ref();
 const amount = ref();
-const servings: Ref<string | undefined> = ref()
+const servings: Ref<string | undefined> = ref();
 const ingredients = ref([] as IIngredient[]);
 const instructions = ref();
 const recipe = reactive([] as IRecipe[]);
-const savedRecipe = ref(false)
+const savedRecipe = ref(false);
+
+const emit = defineEmits(['addOwnRecipe']);
 
 const addIngredient = () => {
   ingredients.value.push({ name: ingredient.value, amount: amount.value })

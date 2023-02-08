@@ -11,6 +11,5 @@ interface IButton {
   label: string,
   disabled?: boolean
 }
-
 defineProps<IButton>()
 </script>

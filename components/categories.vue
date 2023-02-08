@@ -19,7 +19,7 @@
               {{ capitalize(category.name) }}
             </li>
           </ListboxOption>
-          <li @click="addCategoryToList"
+          <li @click="showAddCategory = true"
             class="bg-opacity-10 relative cursor-pointer select-none bg-white hover:text-accent-normal hover:bg-prime-normal active:text-white py-2 pl-10 pr-4 rounded-lg m-1">
             Add new category</li>
         </ListboxOptions>
@@ -38,19 +38,18 @@ import {
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { storeToRefs } from 'pinia';
 import { ICategory } from '~~/domain/types';
-import { generateId, capitalize, sort, checkLogin } from '~~/helpers.vue';
+import { capitalize, sort } from '~~/helpers.vue';
 import { userStore } from '~~/stores/userStore';
 const store = userStore();
-const { defaultCategories, user } = storeToRefs(store);
-
+const { userCategories } = storeToRefs(store);
+const emit = defineEmits(['update'])
 interface IHandleCategories {
   label: string,
   deleted: ICategory
 }
 
 const { deleted, label } = defineProps<IHandleCategories>()
-const emit = defineEmits(['update'])
-const allCategories = reactive(defaultCategories.value);
+const allCategories = reactive(userCategories.value);
 const showAddCategory = ref(false);
 const addCategory = ref();
 const componentKey = ref(0)
@@ -59,48 +58,22 @@ const updateSelected = (category: ICategory) => {
   const remainingCategories = allCategories.findIndex(item => item.categoryId === category.categoryId);
   allCategories.splice(remainingCategories, 1)
   emit('update', category);
-}
+};
 
 const deleteCategory = () => {
   const findDouble = allCategories.find(item => item.categoryId === deleted.categoryId);
   if (!findDouble) allCategories.push(deleted)
   componentKey.value += 1
-}
+};
 
-const addCategoryToList = async () => {
-  showAddCategory.value = true;
-
-  if (addCategory.value.length > 0) {
-    const newCategory = { categoryId: generateId(), name: addCategory.value };
-    allCategories.push(newCategory);
-    sort(allCategories);
-
-    //update categories in db
-    const userInLS = localStorage.getItem('user');
-    if (userInLS) {
-      const LSuser = JSON.parse(userInLS)
-      try {
-        const { data, error } = await useFetch('http://localhost:3030/meals/addCategory', {
-          headers: { "Content-type": "application/json" },
-          method: 'POST',
-          body: { id: LSuser._id, category: newCategory }
-        });
-        localStorage.setItem('user', JSON.stringify(data.value));
-        checkLogin();
-      } catch (error) {
-        console.log('error', error);
-      }
-    } else {
-      navigateTo('/my-account')
-    }
-  }
-}
+const addCategoryToList = () => {
+  showAddCategory.value = false;
+  allCategories.push(addCategory.value);
+  sort(allCategories);
+};
 
 watch(deleted, deleteCategory)
 watch(addCategory, addCategoryToList);
-onMounted(() => {
-  sort(allCategories);
-});
-
+onMounted(() => sort(allCategories));
 </script>
 
