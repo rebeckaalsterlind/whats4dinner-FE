@@ -1,5 +1,4 @@
 <template>
-
   <article v-if="filteredMeals.length > 0">
     <h4 v-if="category" class="ml-1 text-white font-semibold">{{ capitalize(category.name) }}</h4>
     <h4 v-if="customList" class="ml-1 text-white font-semibold">{{ capitalize(customList.name) }}</h4>

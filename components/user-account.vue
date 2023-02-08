@@ -31,12 +31,15 @@
                   'bg-white bg-opacity-10 text-white': !active,
                 }">
                 {{ capitalize(category.name) }}
-                <XMarkIcon v-show="active" @click="deleteCategory(category.categoryId)" class="w-4 h-4 inline" />
+                <XMarkIcon v-show="active" @click="deleteCategory(category.categoryId)"
+                  class="w-4 h-4 inline cursor-pointer" />
               </li>
             </ListboxOption>
             <li @click="showAddCategory = true"
               class="bg-white bg-opacity-10 h-8 my-1 p-2 rounded-lg text-sm flex items-center gap-2 hover:text-accent-normal hover:bg-prime-normal active:text-white">
-              Add new category</li>
+              Add new category
+              <PlusIcon class="w-4 h-4" />
+            </li>
           </ListboxOptions>
         </Listbox>
       </div>
@@ -52,13 +55,13 @@
             <ListboxOption v-for="meal in userMeals" :key="meal.id" :value="meal" as="template"
               v-slot="{ active, selected }">
               <li
-                class="bg-white bg-opacity-10 h-8 my-1 p-2 rounded-lg text-sm hover:text-accent-normal active:text-white flex items-center gap-2"
+                class="bg-white bg-opacity-10 h-8 my-1 p-2 rounded-lg text-sm cursor-pointer hover:text-accent-normal active:text-white flex items-center gap-2"
                 :class="{
                   'bg-prime-normal text-accent-normal': active,
                   'bg-white bg-opacity-10 text-white': !active,
                 }">
                 <span @click="goToMeal(meal)" class="cursor-pointer">{{ capitalize(meal.title) }}</span>
-                <XMarkIcon v-show="active" @click="deleteMeal(meal)" class="w-4 h-4 inline" />
+                <XMarkIcon v-show="active" @click="deleteMeal(meal)" class="w-4 h-4 inline cursor-pointer" />
               </li>
             </ListboxOption>
           </ListboxOptions>
@@ -101,8 +104,8 @@ import {
   ListboxOptions,
   ListboxOption,
 } from '@headlessui/vue';
-import { UserCircleIcon, XMarkIcon, ChevronDownIcon } from '@heroicons/vue/20/solid';
-import { checkLogin, capitalize, logout, generateId } from '~~/helpers.vue';
+import { UserCircleIcon, XMarkIcon, ChevronDownIcon, PlusIcon } from '@heroicons/vue/20/solid';
+import { checkLogin, capitalize, logout } from '~~/helpers.vue';
 import { IMeal } from '~~/domain/types';
 import { storeToRefs } from 'pinia';
 import { userStore } from '~~/stores/userStore';

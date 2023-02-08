@@ -38,10 +38,10 @@ import {
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { storeToRefs } from 'pinia';
 import { ICategory } from '~~/domain/types';
-import { generateId, capitalize, sort, checkLogin } from '~~/helpers.vue';
+import { capitalize, sort, checkLogin } from '~~/helpers.vue';
 import { userStore } from '~~/stores/userStore';
 const store = userStore();
-const { defaultCategories, user } = storeToRefs(store);
+const { userCategories, user } = storeToRefs(store);
 
 interface IHandleCategories {
   label: string,
@@ -50,7 +50,7 @@ interface IHandleCategories {
 
 const { deleted, label } = defineProps<IHandleCategories>()
 const emit = defineEmits(['update'])
-const allCategories = reactive(defaultCategories.value);
+const allCategories = reactive(userCategories.value);
 const showAddCategory = ref(false);
 const addCategory = ref();
 const componentKey = ref(0)
