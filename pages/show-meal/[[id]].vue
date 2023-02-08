@@ -1,7 +1,7 @@
 <template>
   <PageTitle v-if="selectedMeal?.title" :label="capitalize(selectedMeal!.title)" />
   <article v-if="selectedMeal" class="p-4 bg-white rounded-lg bg-opacity-10">
-    <section class="my-4" v-if="selectedMeal.picture">
+    <section v-if="selectedMeal.picture">
       <img :src="selectedMeal.picture" :alt="selectedMeal.title" class="rounded-lg object-cover w-full h-48">
     </section>
     <section v-if="selectedMeal.categories" class="my-4">
@@ -11,10 +11,10 @@
           :label="capitalize(category.name)" />
       </ul>
     </section>
-    <section class="flex flex-col gap-2 mb-4">
+    <section v-if="selectedMeal.recipe.ingredients[0].name" class="flex flex-col gap-2 mb-4">
       <h3 class="font-bold text-center">Recipe</h3>
       <h4 v-if="selectedMeal.recipe.servings">Servings: {{ selectedMeal.recipe.servings }}</h4>
-      <div>
+      <div v-if="selectedMeal.recipe.ingredients">
         <h4>Ingredients:</h4>
         <ul>
           <li v-for="(ingredient, key) in selectedMeal.recipe.ingredients" :key="key">
@@ -22,7 +22,7 @@
           </li>
         </ul>
       </div>
-      <div>
+      <div v-if="selectedMeal.recipe.instructions">
         <h4>Instructions:</h4>
         <p v-html="selectedMeal.recipe.instructions"></p>
       </div>

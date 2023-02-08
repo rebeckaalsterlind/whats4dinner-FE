@@ -1,7 +1,7 @@
 <template>
   <PageTitle label="Add meal" />
   <article class="flex grow flex-col justify-center">
-    <section class="flex flex-col gap-4">
+    <section class="flex flex-col gap-4 grow">
       <div v-if="showCarousel">
         <Carousel :items-to-scroll="1" :wrap-around="true" :items-to-show="3" snap-align="start"
           class="flex flex-col justify-items-stretch mb-8">
@@ -34,7 +34,7 @@
         <Input v-model="setTitle" @input="setTitle" type="text" :placeholder="addMeal.title" class="min-w-[60%]" />
         <ButtonSecondary @click="changeTitle" label="Ok" />
       </div>
-      <div class="overflow-hidden rounded-lg">
+      <div class="overflow-hidden rounded-lg border border-white">
         <img :src="addMeal.picture" :alt="addMeal.title" class="w-full object-cover h-auto" />
       </div>
       <section v-if="addMeal.categories.length > 0">
