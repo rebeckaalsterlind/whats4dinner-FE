@@ -9,6 +9,5 @@ import { userStore } from '~~/stores/userStore';
 import { checkLogin } from '~~/helpers.vue';
 const store = userStore();
 const { user } = storeToRefs(store);
-
 onMounted(() => checkLogin());
 </script>

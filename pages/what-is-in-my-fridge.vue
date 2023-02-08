@@ -14,7 +14,6 @@
         </Slide>
       </Carousel>
     </section>
-
     <BaseComponent class="flex flex-col gap-4 items-center">
       <div class="flex w-full">
         <Pill v-for="ingredient in fridgeIngredients" :label="ingredient" />
@@ -40,8 +39,8 @@ const store = userStore();
 const { selectedMeal } = storeToRefs(store);
 const appId = "2eb3cc88b15045b5b434805c117b656d";
 const fridgeIngredients = ref([] as string[]);
-const ingredient = ref('')
-const showCarousel = ref(false)
+const ingredient = ref('');
+const showCarousel = ref(false);
 const recipeOptions = ref();
 
 const settings = {
@@ -51,35 +50,32 @@ const settings = {
 
 const addIngredient = (e: Event) => {
   ingredient.value = (e.target as HTMLInputElement).value
-}
+};
 
 const pushIngredientToList = () => {
   fridgeIngredients.value.push(ingredient.value);
   ingredient.value = '';
-}
+};
 
 const searchFridgeMeal = () => {
-  console.log('first fridne ignres', fridgeIngredients.value);
   const query = fridgeIngredients.value.join(',+')
   const SERVICE_URL = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${query}&number=10`;
   const request_url = `${SERVICE_URL}&apiKey=${appId}`;
 
   axios.get(request_url)
     .then(({ data }) => {
-      console.log('data', data);
-      const arr = []
+      const suggestions = []
       for (const recipe of data) {
         console.log('recipe', recipe);
-        arr.push({ title: recipe.title, img: recipe.image, id: recipe.id })
+        suggestions.push({ title: recipe.title, img: recipe.image, id: recipe.id })
       }
-      recipeOptions.value = arr;
+      recipeOptions.value = suggestions;
       showCarousel.value = true;
     })
     .catch((error) => {
       console.log(error);
     });
-
-}
+};
 
 const selectFridgeMeal = (mealId: string) => {
   const SERVICE_URL = `https://api.spoonacular.com/recipes/${mealId}/information?includeNutrition=false`;
@@ -110,6 +106,5 @@ const selectFridgeMeal = (mealId: string) => {
     .catch((error) => {
       console.log(error);
     });
-}
-
+};
 </script>

@@ -7,10 +7,8 @@
 </template>
 
 <script setup lang="ts">
-
 interface IPill {
   label: string
 }
 defineProps<IPill>()
-
 </script>

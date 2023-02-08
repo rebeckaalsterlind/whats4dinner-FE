@@ -12,5 +12,5 @@ interface IButton {
   disabled?: boolean
 }
 
-defineProps<IButton>()
+defineProps<IButton>();
 </script>

@@ -9,12 +9,9 @@
         <h3 class="cursor-pointer hover:text-accent-normal active:text-white" @click="logout">Sign out?</h3>
       </div>
     </section>
-
     <section class="flex flex-col gap-4">
       <div>
-
         <AddCategory v-if="showAddCategory" v-model="addCategory" />
-
         <Listbox>
           <ListboxButton
             class="w-full justify-between bg-white bg-opacity-10 h-8 my-1 p-2 rounded-lg text-sm hover:text-accent-normal active:text-white flex items-center gap-2">
@@ -43,7 +40,6 @@
           </ListboxOptions>
         </Listbox>
       </div>
-
       <div>
         <Listbox>
           <ListboxButton
@@ -67,9 +63,7 @@
           </ListboxOptions>
         </Listbox>
       </div>
-
       <div>
-
         <Listbox>
           <ListboxButton
             class="w-full justify-between bg-white bg-opacity-10 h-8 my-1 p-2 rounded-lg text-sm hover:text-accent-normal active:text-white flex items-center gap-2">
@@ -96,7 +90,6 @@
   </article>
 </template>
 
-
 <script setup lang="ts">
 import {
   Listbox,
@@ -117,19 +110,16 @@ const addCategory = ref();
 const goToMeal = (meal: IMeal) => {
   selectedMeal.value = meal
   navigateTo("/show-meal")
-}
-
+};
 
 const addCategoryToList = () => {
-  console.log('in add vatevory');
   showAddCategory.value = false;
-}
+};
 
 const deleteMeal = async (meal: IMeal) => {
   const userInLS = localStorage.getItem('user');
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
-    console.log('LSuser._id', LSuser._id);
     try {
       const { data } = await useFetch('http://localhost:3030/meals/deleteMeal', {
         headers: { "Content-type": "application/json" },
@@ -137,7 +127,6 @@ const deleteMeal = async (meal: IMeal) => {
         body: { id: LSuser._id, meal: meal }
       });
       localStorage.setItem('user', JSON.stringify(data.value));
-
       checkLogin();
     } catch (error) {
       console.log('error', error);
@@ -150,11 +139,10 @@ const deleteMeal = async (meal: IMeal) => {
 const deleteCategory = async (categoryId: number) => {
   const updatedCategories = userCategories.value.filter((category: { categoryId: number; }) => category.categoryId !== categoryId)
   userCategories.value = updatedCategories;
-
   const userInLS = localStorage.getItem('user');
+
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
-    console.log('LSuser._id', LSuser._id);
     try {
       const { data } = await useFetch('http://localhost:3030/categories/deleteCategory', {
         headers: { "Content-type": "application/json" },
@@ -162,7 +150,6 @@ const deleteCategory = async (categoryId: number) => {
         body: { id: LSuser._id, categoryId: categoryId }
       });
       localStorage.setItem('user', JSON.stringify(data.value));
-
       checkLogin();
     } catch (error) {
       console.log('error', error);
@@ -174,7 +161,6 @@ const deleteCategory = async (categoryId: number) => {
 
 
 const deleteCustomList = async (listId: number) => {
-
   const userInLS = localStorage.getItem('user');
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
@@ -185,7 +171,6 @@ const deleteCustomList = async (listId: number) => {
         body: { id: LSuser._id, listId: listId }
       });
       localStorage.setItem('user', JSON.stringify(data.value));
-
       checkLogin();
     } catch (error) {
       console.log('error', error);
@@ -193,8 +178,7 @@ const deleteCustomList = async (listId: number) => {
   } else {
     navigateTo('/my-account')
   }
-
-}
+};
 
 onMounted(() => {
   checkLogin()

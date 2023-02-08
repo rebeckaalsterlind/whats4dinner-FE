@@ -38,18 +38,17 @@ import {
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { storeToRefs } from 'pinia';
 import { ICategory } from '~~/domain/types';
-import { capitalize, sort, checkLogin } from '~~/helpers.vue';
+import { capitalize, sort } from '~~/helpers.vue';
 import { userStore } from '~~/stores/userStore';
 const store = userStore();
-const { userCategories, user } = storeToRefs(store);
-
+const { userCategories } = storeToRefs(store);
+const emit = defineEmits(['update'])
 interface IHandleCategories {
   label: string,
   deleted: ICategory
 }
 
 const { deleted, label } = defineProps<IHandleCategories>()
-const emit = defineEmits(['update'])
 const allCategories = reactive(userCategories.value);
 const showAddCategory = ref(false);
 const addCategory = ref();
@@ -59,25 +58,22 @@ const updateSelected = (category: ICategory) => {
   const remainingCategories = allCategories.findIndex(item => item.categoryId === category.categoryId);
   allCategories.splice(remainingCategories, 1)
   emit('update', category);
-}
+};
 
 const deleteCategory = () => {
   const findDouble = allCategories.find(item => item.categoryId === deleted.categoryId);
   if (!findDouble) allCategories.push(deleted)
   componentKey.value += 1
-}
+};
 
 const addCategoryToList = () => {
   showAddCategory.value = false;
   allCategories.push(addCategory.value);
   sort(allCategories);
-}
+};
 
 watch(deleted, deleteCategory)
 watch(addCategory, addCategoryToList);
-onMounted(() => {
-  sort(allCategories);
-});
-
+onMounted(() => sort(allCategories));
 </script>
 

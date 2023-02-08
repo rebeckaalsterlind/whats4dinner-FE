@@ -33,6 +33,4 @@ import { userStore } from '~~/stores/userStore';
 import { capitalize, logout } from '~~/helpers.vue'
 const store = userStore();
 const { user } = storeToRefs(store);
-
-
 </script>

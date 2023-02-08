@@ -47,13 +47,12 @@ const handleInput = (e: Event): void => {
   if (userLogin.value.password === confirmPassword.value) isMatching.value = true;
 };
 
-//set user from fetch response
 const setUser = (response: IUser) => {
   errorMsg.value = '';
   localStorage.setItem('user', JSON.stringify(response));
   checkLogin();
   navigateTo('/');
-}
+};
 
 const logIn = async () => {
   loginFail.value = false;
@@ -68,10 +67,9 @@ const logIn = async () => {
     loginFail.value = true;
     errorMsg.value = getUser.body;
   }
-}
+};
 
 const register = async () => {
-
   loginFail.value = false;
   userTaken.value = false;
 

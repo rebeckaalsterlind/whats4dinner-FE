@@ -18,11 +18,4 @@
 <script setup lang="ts">
 import { MagnifyingGlassIcon, LightBulbIcon } from '@heroicons/vue/24/solid'
 import { PlusCircleIcon, ArrowPathIcon } from '@heroicons/vue/24/outline'
-
 </script>
-
-<style>
-footer {
-  color: rgb(199, 103, 0)
-}
-</style>

@@ -18,9 +18,5 @@ import { storeToRefs } from 'pinia';
 import { checkLogin } from '~~/helpers.vue';
 const store = userStore();
 const { userCategories, customLists, user } = storeToRefs(store);
-
-onMounted(() => {
-  checkLogin()
-  console.log('customList in index', customLists.value);
-});
+onMounted(() => checkLogin());
 </script>

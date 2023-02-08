@@ -2,9 +2,7 @@
   <PageTitle label="Meal suggestions" />
   <article class="flex flex-col grow justify-center">
     <p>Create list of selected number of meals from chosen categories</p>
-
-    <h3 v-if="showName">{{ capitalize(listName) }}</h3>
-
+    <h3 v-if="showName" class="text-accent-normal font-bold">{{ capitalize(listName) }}</h3>
     <section class="flex gap-4 flex-col justify-center">
       <section>
         <h5 v-if="tooFewMeals">There are no more meals to choose from in selected categories</h5>
@@ -14,7 +12,6 @@
           </Pill>
         </div>
       </section>
-
       <article class="p-4 bg-white rounded-lg bg-opacity-10 max-h-[60%]">
         <section>
           <ul :key="componentKey" v-if="savedCategories.length > 0 && !selectAll" class="overflow-scroll my-6">
@@ -28,14 +25,12 @@
             userCategories.length - 1 ? '| ' : ''}} </li>
           </ul>
         </section>
-
         <section class="flex flex-col grow">
           <div v-if="!showName" class="flex gap-2">
             <Input class="grow bg-opacity-10 placeholder-white" v-model="listName" @input="addName"
               placeholder="Name of list.." />
             <ButtonSecondary label="Ok" @click="showName = true" />
           </div>
-
           <Listbox v-model="selectedNumber">
             <ListboxButton
               class="text-start content-fit cursor-pointer h-10 bg-white bg-opacity-10 mt-4 mb-1 p-2 rounded-lg text-white hover:text-accent-normal flex justify-between items-center">
@@ -49,7 +44,6 @@
               </ListboxOption>
             </ListboxOptions>
           </Listbox>
-
           <Listbox v-model="selectedCategories" multiple>
             <ListboxButton
               class="text-start content-fit cursor-pointer h-10 bg-white bg-opacity-10 mt-4 mb-1 p-2 rounded-lg text-white hover:text-accent-normal">
@@ -77,7 +71,6 @@
           </Listbox>
         </section>
       </article>
-
       <section class="grow flex gap-4 items-end justify-between">
         <ButtonSecondary v-if="((selectedCategories.length > 0) || selectAll) && selectedNumber"
           :label="`Give me ${selectedNumber} ${selectedNumber > 1 ? 'meals' : 'meal'}`" @click="generateMeals" />
@@ -85,7 +78,6 @@
         <Button v-if="mealSuggestions.length > 0" label="Save" @click="saveMeals" />
       </section>
     </section>
-
   </article>
 </template>
 
@@ -99,7 +91,7 @@ import {
 import { XMarkIcon, ChevronDownIcon } from '@heroicons/vue/20/solid';
 import { storeToRefs } from 'pinia';
 import { ICategory, IMeal } from '~~/domain/types';
-import { capitalize, checkLogin, generateId } from '~~/helpers.vue'
+import { capitalize, checkLogin, generateId } from '~~/helpers.vue';
 import { userStore } from '~~/stores/userStore';
 const store = userStore();
 const { userMeals, userCategories, customLists } = storeToRefs(store);
@@ -107,15 +99,15 @@ const { userMeals, userCategories, customLists } = storeToRefs(store);
 const listName = ref('');
 const showName = ref(false);
 const numberOfMeals = [1, 2, 3, 4, 5, 6, 7];
-const selectedCategories = ref([] as ICategory[])
+const selectedCategories = ref([] as ICategory[]);
 const selectedNumber = ref();
 const savedCategories = ref([] as ICategory[]);
 const generatedMeals = reactive([] as IMeal[]);
 const mealSuggestions = reactive([] as IMeal[]);
 const tooFewMeals = ref(false);
-const selectAll = ref(false)
-const excludeMeals = ref([] as IMeal[] | any[])
-const componentKey = ref(1)
+const selectAll = ref(false);
+const excludeMeals = ref([] as IMeal[] | any[]);
+const componentKey = ref(1);
 
 //generate meal suggestions
 const generateMeals = () => {
@@ -123,6 +115,7 @@ const generateMeals = () => {
   if (selectAll) {
     selectedCategories.value = userCategories.value;
   }
+
   Object.assign(generatedMeals, [])
 
   for (const selectedCategory of selectedCategories.value) {
@@ -142,13 +135,14 @@ const generateMeals = () => {
   } else {
     Object.assign(mealSuggestions, generatedMeals);
   }
-}
+};
 
 //delete suggestion and generate new
 const deleteMeal = (meal: IMeal, replaceIndex: number) => {
   excludeMeals.value.push(...mealSuggestions, meal);
   let newMeal;
   let chosenCategories;
+
   if (selectAll.value) chosenCategories = userCategories.value;
   else chosenCategories = savedCategories.value;
 
@@ -158,11 +152,7 @@ const deleteMeal = (meal: IMeal, replaceIndex: number) => {
         let matchingCategory = userMeal.categories.find((category: { categoryId: number; }) => category.categoryId === selectedCategory.categoryId)
         if (matchingCategory) {
           const findDouble = excludeMeals.value.find(meal => meal.id === userMeal.id);
-          console.log('mealsuggestons', mealSuggestions);
-          if (!findDouble) {
-            console.log('findDouble', findDouble);
-            newMeal = userMeal;
-          }
+          if (!findDouble) newMeal = userMeal;
         }
       }
     }
@@ -173,8 +163,7 @@ const deleteMeal = (meal: IMeal, replaceIndex: number) => {
     mealSuggestions.splice(replaceIndex, 1)
     tooFewMeals.value = true;
   }
-
-}
+};
 
 //save selected categories
 const handleCategories = (category: ICategory) => {
@@ -182,7 +171,7 @@ const handleCategories = (category: ICategory) => {
   const pushOrSplice = savedCategories.value.findIndex(cat => cat.categoryId === category.categoryId)
   if (pushOrSplice !== -1) savedCategories.value.splice(pushOrSplice, 1)
   else savedCategories.value.push(category)
-}
+};
 
 const toggleSelectAll = () => {
   selectAll.value = !selectAll.value;
@@ -202,15 +191,14 @@ const reset = () => {
   while (generatedMeals.length > 0) {
     generatedMeals.splice(0, 1)
   }
-}
+};
 
 const addName = (e: Event) => {
   listName.value = (e.target as HTMLInputElement).value;
-}
+};
 
 const saveMeals = async () => {
   const newList = { name: listName.value, id: generateId(), list: mealSuggestions };
-  console.log('list with id?');
   const userInLS = localStorage.getItem('user');
 
   if (userInLS) {
@@ -230,8 +218,7 @@ const saveMeals = async () => {
   } else {
     navigateTo('/my-account')
   }
-}
-
+};
 </script>
 
 

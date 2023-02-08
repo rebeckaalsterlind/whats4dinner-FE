@@ -28,18 +28,18 @@ const props = defineProps({
     type: [String, Number],
     default: ''
   }
-})
+});
 
-const emit = defineEmits(['update:modelValue'])
-const isOpen = ref(true)
-const categoryName = ref()
+const emit = defineEmits(['update:modelValue']);
+const isOpen = ref(true);
+const categoryName = ref();
 
 const saveCategory = async (value: boolean) => {
   isOpen.value = value;
   if (categoryName.value.length > 0) {
     const newCategory = { categoryId: generateId(), name: categoryName.value };
-    //update categories in db
     const userInLS = localStorage.getItem('user');
+
     if (userInLS) {
       const LSuser = JSON.parse(userInLS)
       try {
@@ -56,6 +56,6 @@ const saveCategory = async (value: boolean) => {
       }
     }
   }
-}
+};
 
 </script>

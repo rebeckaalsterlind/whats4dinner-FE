@@ -15,7 +15,6 @@
       </Slide>
     </Carousel>
   </article>
-
 </template>
 
 <script setup lang="ts">
@@ -27,7 +26,7 @@ import { userStore } from '~~/stores/userStore';
 import { IMeal } from '~~/domain/types';
 import { capitalize } from '~~/helpers.vue';
 const store = userStore();
-const { userCategories, userMeals, selectedMeal } = storeToRefs(store);
+const { userMeals, selectedMeal } = storeToRefs(store);
 
 const settings = {
   itemsToShow: 3,
@@ -56,8 +55,6 @@ const goToMeal = (meal: IMeal) => {
 }
 
 const printRecipes = () => {
-  console.log('category', category);
-  console.log('customList', customList);
   if (category) {
     const mealsInCategory = [] as IMeal[]
     for (const userMeal of userMeals.value) {
@@ -67,11 +64,7 @@ const printRecipes = () => {
       }
     }
     Object.assign(filteredMeals, mealsInCategory);
-  } if (customList) {
-    console.log('customList in if', customList);
-    Object.assign(filteredMeals, customList.list);
-
-  }
+  } if (customList) Object.assign(filteredMeals, customList.list);
 }
 
 onMounted(() => {
