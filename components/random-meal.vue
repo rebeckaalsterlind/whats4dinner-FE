@@ -26,12 +26,11 @@ const findMeal = () => {
 
   axios.get(request_url)
     .then(({ data }) => {
-      console.log('data', data);
+      console.log('data in rendom meal', data);
       let recipes = data.recipes;
       const ingredients = [];
 
       for (const ingredient of recipes[0].extendedIngredients) {
-        console.log('ingredient', ingredient);
         ingredients.push({ name: ingredient.name, amount: ingredient.amount })
       }
       randomMeal.value = {

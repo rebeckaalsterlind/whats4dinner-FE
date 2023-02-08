@@ -80,7 +80,7 @@ const register = async () => {
     password: userLogin.value.password,
     categories: defaultCategories.value,
     meals: [],
-    cumstomLists: []
+    customLists: []
   };
 
   if (isMatching.value) {

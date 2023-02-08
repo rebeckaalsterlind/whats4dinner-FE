@@ -14,7 +14,7 @@
       </ul>
     </section>
 
-    <section class="flex flex-col gap-2">
+    <section class="flex flex-col gap-2 mb-4">
       <h3 class="font-bold text-center">Recipe</h3>
       <h4 v-if="selectedMeal.recipe.servings">Servings: {{ selectedMeal.recipe.servings }}</h4>
       <div>
@@ -30,10 +30,12 @@
         <p v-html="selectedMeal.recipe.instructions"></p>
       </div>
     </section>
-    <NuxtLink v-if="(route.params.id)" :to="`/add-meal/${route.params.id}`" class="flex justify-center">
+    <NuxtLink v-if="route.params.id" :to="`/add-meal/${route.params.id}`" class="flex justify-center">
       <ButtonSecondary label="Save meal" />
     </NuxtLink>
-
+    <div class="flex justify-center">
+      <ButtonSecondary v-if="!route.params.id" label="Delete meal" @click="deleteMeal" />
+    </div>
   </article>
 </template>
 
@@ -44,6 +46,29 @@ import { storeToRefs } from 'pinia';
 const store = userStore();
 const { selectedMeal } = storeToRefs(store);
 const route = useRoute();
+
+const deleteMeal = async () => {
+
+  const userInLS = localStorage.getItem('user');
+  if (userInLS) {
+    const LSuser = JSON.parse(userInLS)
+    try {
+      const { data } = await useFetch('http://localhost:3030/meals/deleteMeal', {
+        headers: { "Content-type": "application/json" },
+        method: 'POST',
+        body: { id: LSuser._id, meal: selectedMeal.value }
+      });
+      localStorage.setItem('user', JSON.stringify(data.value));
+
+      checkLogin();
+      navigateTo('/')
+    } catch (error) {
+      console.log('error', error);
+    }
+  } else {
+    navigateTo('/my-account')
+  }
+};
 
 onMounted(() => {
   checkLogin()

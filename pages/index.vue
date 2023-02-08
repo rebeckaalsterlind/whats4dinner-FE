@@ -2,8 +2,8 @@
   <PageTitle label="My meals" />
   <section v-if="user && user.meals.length < 1">
     <h4 class="text-center">You have no meals added yet!</h4>
-    <NuxtLink to="/add-meal">
-      <p class="text-center cursor-pointer">Add meal?</p>
+    <NuxtLink to="/add-meal" class="flex justify-center mt-6">
+      <ButtonSecondary label="Add meal?" />
     </NuxtLink>
   </section>
   <section v-else>

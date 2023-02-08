@@ -21,6 +21,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from '@headlessui/vue'
+import { checkLogin, generateId } from '~~/helpers.vue';
 
 const props = defineProps({
   modelValue: {
@@ -33,13 +34,28 @@ const emit = defineEmits(['update:modelValue'])
 const isOpen = ref(true)
 const categoryName = ref()
 
-const saveCategory = (value: boolean) => {
+const saveCategory = async (value: boolean) => {
   isOpen.value = value;
-  emit('update:modelValue', categoryName.value)
+  if (categoryName.value.length > 0) {
+    const newCategory = { categoryId: generateId(), name: categoryName.value };
+    //update categories in db
+    const userInLS = localStorage.getItem('user');
+    if (userInLS) {
+      const LSuser = JSON.parse(userInLS)
+      try {
+        const { data, error } = await useFetch('http://localhost:3030/categories/addCategory', {
+          headers: { "Content-type": "application/json" },
+          method: 'POST',
+          body: { id: LSuser._id, category: newCategory }
+        });
+        localStorage.setItem('user', JSON.stringify(data.value));
+        checkLogin();
+        emit('update:modelValue', newCategory)
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+  }
 }
 
-const check = () => {
-  console.log('category name in chenc', categoryName.value);
-}
-watch(categoryName, check)
 </script>

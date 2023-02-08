@@ -51,5 +51,6 @@ export interface IMeal {
 
 export interface ICustomLists {
   name: string;
+  id: number;
   list: IMeal[];
 }

@@ -9,6 +9,7 @@ export const userStore = defineStore('user', () => {
     const userCategories = ref([] as ICategory[])
     const userMeals = ref([] as IMeal[]);
     const customLists = ref([] as ICustomLists[] | any[]);
+    const selectedMeal:Ref<IMeal | undefined> = ref()
     const defaultCategories = ref([
       { categoryId: 1, name: 'vegetarian' },
       { categoryId: 2, name: 'vegan' },
@@ -21,9 +22,7 @@ export const userStore = defineStore('user', () => {
       { categoryId: 9, name: 'special' },
       { categoryId: 10, name: 'slow cook' },
       { categoryId: 11, name: 'favourites' }
-    ])
-
-    const selectedMeal:Ref<IMeal | undefined> = ref()
+    ]);
 
     return {
       isLoggedIn, 

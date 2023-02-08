@@ -13,6 +13,7 @@ export const generateId = (): number => {
 }
 
 export const sort = (arr: any[]) => {
+  console.log('arr', arr);
   return arr.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 0 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 1));
 }
 
@@ -23,7 +24,7 @@ export const checkLogin = () => {
     user.value = LSuser;
     userCategories.value = sort(LSuser.categories);
     userMeals.value = LSuser.meals;
-    customLists.value = [LSuser.customLists];
+    customLists.value = LSuser.customLists;
   }
   else {
     user.value = undefined;

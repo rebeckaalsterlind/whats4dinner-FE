@@ -99,7 +99,7 @@ import {
 import { XMarkIcon, ChevronDownIcon } from '@heroicons/vue/20/solid';
 import { storeToRefs } from 'pinia';
 import { ICategory, IMeal } from '~~/domain/types';
-import { capitalize, checkLogin } from '~~/helpers.vue'
+import { capitalize, checkLogin, generateId } from '~~/helpers.vue'
 import { userStore } from '~~/stores/userStore';
 const store = userStore();
 const { userMeals, userCategories, customLists } = storeToRefs(store);
@@ -209,7 +209,8 @@ const addName = (e: Event) => {
 }
 
 const saveMeals = async () => {
-  const newList = { name: listName.value, list: mealSuggestions };
+  const newList = { name: listName.value, id: generateId(), list: mealSuggestions };
+  console.log('list with id?');
   const userInLS = localStorage.getItem('user');
 
   if (userInLS) {

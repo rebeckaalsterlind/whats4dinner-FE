@@ -19,7 +19,7 @@
               {{ capitalize(category.name) }}
             </li>
           </ListboxOption>
-          <li @click="addCategoryToList"
+          <li @click="showAddCategory = true"
             class="bg-opacity-10 relative cursor-pointer select-none bg-white hover:text-accent-normal hover:bg-prime-normal active:text-white py-2 pl-10 pr-4 rounded-lg m-1">
             Add new category</li>
         </ListboxOptions>
@@ -67,33 +67,10 @@ const deleteCategory = () => {
   componentKey.value += 1
 }
 
-const addCategoryToList = async () => {
-  showAddCategory.value = true;
-
-  if (addCategory.value.length > 0) {
-    const newCategory = { categoryId: generateId(), name: addCategory.value };
-    allCategories.push(newCategory);
-    sort(allCategories);
-
-    //update categories in db
-    const userInLS = localStorage.getItem('user');
-    if (userInLS) {
-      const LSuser = JSON.parse(userInLS)
-      try {
-        const { data, error } = await useFetch('http://localhost:3030/meals/addCategory', {
-          headers: { "Content-type": "application/json" },
-          method: 'POST',
-          body: { id: LSuser._id, category: newCategory }
-        });
-        localStorage.setItem('user', JSON.stringify(data.value));
-        checkLogin();
-      } catch (error) {
-        console.log('error', error);
-      }
-    } else {
-      navigateTo('/my-account')
-    }
-  }
+const addCategoryToList = () => {
+  showAddCategory.value = false;
+  allCategories.push(addCategory.value);
+  sort(allCategories);
 }
 
 watch(deleted, deleteCategory)
