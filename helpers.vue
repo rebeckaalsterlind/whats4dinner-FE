@@ -41,4 +41,5 @@ export const logout = () => {
   navigateTo("/my-account")
 };
 
+
 </script>

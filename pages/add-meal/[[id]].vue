@@ -31,7 +31,7 @@
         <ButtonSecondary @click="editTitle = true" label="Change name?" class="text-xs" />
       </div>
       <div v-else class="flex flex-col items-center gap-4">
-        <Input v-model="setTitle" @input="setTitle" type="text" :placeholder="addMeal.title" class="min-w-[60%]" />
+        <Input v-model="newTitle" @input="setTitle" type="text" :placeholder="addMeal.title" class="min-w-[60%]" />
         <ButtonSecondary @click="changeTitle" label="Ok" />
       </div>
       <div class="overflow-hidden rounded-lg border border-white">
