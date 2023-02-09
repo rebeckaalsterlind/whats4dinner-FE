@@ -16,13 +16,17 @@ export const sort = (arr: any[]) => {
   return arr.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 0 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 1));
 };
 
+export const sortTitle = (arr: any[]) => {
+  return arr.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase()) ? 0 : ((b.title.toLowerCase() > a.title.toLowerCase()) ? -1 : 1));
+};
+
 export const checkLogin = () => {
   const userInLS = localStorage.getItem('user');
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
     user.value = LSuser;
     userCategories.value = sort(LSuser.categories);
-    userMeals.value = LSuser.meals;
+    userMeals.value = sortTitle(LSuser.meals);
     customLists.value = LSuser.customLists;
   }
   else {

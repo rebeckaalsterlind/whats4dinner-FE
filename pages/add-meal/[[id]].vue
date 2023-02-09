@@ -1,6 +1,6 @@
 <template>
   <PageTitle label="Add meal" />
-  <article class="flex grow flex-col justify-center">
+  <article v-if="!loading" class="flex grow flex-col justify-center">
     <section class="flex flex-col gap-4 grow">
       <div v-if="showCarousel">
         <Carousel :items-to-scroll="1" :wrap-around="true" :items-to-show="3" snap-align="start"
@@ -78,13 +78,16 @@
       <Button :disabled="addMeal.categories.length < 1" label="Save meal" @click="handleSave" />
     </section>
   </article>
+  <div v-if="loading" class="w-full h-full grow flex justify-center items-center text-accent-normal">
+    <ArrowPathIcon class="w-10 h-10" />
+  </div>
 </template>
 
 <script setup lang="ts">
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide } from 'vue3-carousel';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
-import { XMarkIcon, ChevronUpIcon } from '@heroicons/vue/20/solid';
+import { XMarkIcon, ChevronUpIcon, ArrowPathIcon } from '@heroicons/vue/20/solid';
 import { userStore } from '~~/stores/userStore';
 import { ICategory, IIngredient, IMeal, IRecipe } from '~~/domain/types';
 import { storeToRefs } from 'pinia';
@@ -105,7 +108,7 @@ const addMeal: Ref<IMeal | undefined> = ref()
 const deletedCategory = reactive({ name: '', categoryId: 0 });
 const recipeAdded = ref(false);
 const skip = ref(false);
-
+const loading = ref(false)
 //search query
 const setQuery = (e: Event) => {
   query.value = (e.target as HTMLInputElement).value;
@@ -113,7 +116,7 @@ const setQuery = (e: Event) => {
 
 //get meal suggestions
 const searchMeal = () => {
-  let SERVICE_URL = `https://api.spoonacular.com/recipes/complexSearch?query=${query.value}&number=15`;
+  let SERVICE_URL = `https://api.spoonacular.com/recipes/complexSearch?query=${query.value}&number=20`;
   const request_url = `${SERVICE_URL}&apiKey=${appId}`;
   axios.get(request_url)
     .then((response) => {
@@ -131,7 +134,7 @@ const searchMeal = () => {
 }
 
 //get meal
-const selectMeal = (id: number) => {
+const selectMeal = async (id: number) => {
   if (id === 0) {
     const id = generateId()
     const meal: IMeal = {
@@ -151,7 +154,8 @@ const selectMeal = (id: number) => {
     const SERVICE_URL = `https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false`;
     const request_url = `${SERVICE_URL}&apiKey=${appId}`;
 
-    axios.get(request_url)
+    loading.value = true;
+    await axios.get(request_url)
       .then((response) => {
         let data = response.data;
         const ingredients = [] as IIngredient[];
@@ -174,8 +178,9 @@ const selectMeal = (id: number) => {
       .catch((error) => {
         console.log(error);
       });
+    loading.value = false
   }
-  showCarousel.value = false
+  showCarousel.value = false;
 }
 
 //categories
