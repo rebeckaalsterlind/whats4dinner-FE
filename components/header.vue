@@ -20,7 +20,6 @@
           </MenuItem>
         </MenuItems>
       </Menu>
-
     </aside>
   </header>
 </template>
