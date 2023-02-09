@@ -7,7 +7,7 @@
         <ChevronUpIcon :class="open ? '' : 'rotate-180 transform'" class="h-5 w-5 text-white" />
       </DisclosureButton>
       <DisclosurePanel>
-        <section class="flex flex-col gap-2 p-2 bg-white bg-opacity-10 text-sm rounded-lg">
+        <section class="flex flex-col gap-2 p-4 bg-white bg-opacity-10 text-sm rounded-lg">
           <div>
             <h5 v-if="savedRecipe && ingredients.length > -1">Recipe:</h5>
             <ul class="list-none w-full text-white min-h-[40px]">
