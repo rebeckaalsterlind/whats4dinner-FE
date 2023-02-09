@@ -113,7 +113,7 @@ const setQuery = (e: Event) => {
 
 //get meal suggestions
 const searchMeal = () => {
-  let SERVICE_URL = `https://api.spoonacular.com/recipes/complexSearch?query=${query.value}&number=10`;
+  let SERVICE_URL = `https://api.spoonacular.com/recipes/complexSearch?query=${query.value}&number=15`;
   const request_url = `${SERVICE_URL}&apiKey=${appId}`;
   axios.get(request_url)
     .then((response) => {

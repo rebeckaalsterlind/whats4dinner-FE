@@ -32,4 +32,13 @@ Locally preview production build:
 npm run preview
 ```
 
+## Test user
+
+To test user with saved data:
+Username: bob
+Password: 123
+
+- or register new user to test without stored meals.
+
+
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
