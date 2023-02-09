@@ -3,11 +3,11 @@
   <Listbox class="w-full">
     <div>
       <ListboxButton
-        class="relative w-full cursor-default rounded-lg bg-white bg-opacity-10 text-white py-2 pl-3 pr-10 text-left">
+        class="relative w-full flex justify-between cursor-default rounded-lg bg-white bg-opacity-10 text-white py-2 px-4 text-left">
         <span class="block truncate">{{ label }}</span>
-        <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-          <ChevronDownIcon class="h-5 w-5 text-white" aria-hidden="true" />
-        </span>
+
+        <ChevronDownIcon class="h-5 w-5 text-white inline" aria-hidden="true" />
+
       </ListboxButton>
       <transition leave-active-class="transition duration-100 ease-in" leave-from-class="opacity-100"
         leave-to-class="opacity-0">
@@ -15,7 +15,7 @@
           drop-shadow-lg ">
           <ListboxOption v-for="category in allCategories || []" :key="componentKey" :value="category" as="template">
             <li @click="updateSelected(category)"
-              class="bg-opacity-10 relative cursor-pointer select-none bg-white hover:text-accent-normal hover:bg-prime-normal active:text-white py-2 pl-10 pr-4 rounded-lg m-1">
+              class="bg-opacity-10 relative cursor-pointer select-none bg-white hover:text-accent-normal hover:bg-prime-normal active:text-white py-2 px-4 rounded-lg m-1">
               {{ capitalize(category.name) }}
             </li>
           </ListboxOption>

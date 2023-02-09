@@ -10,9 +10,9 @@
     <section v-if="createUser" class="flex flex-col gap-4 items-center text-prime-normal">
       <p class="text-white">{{ errorMsg }}</p>
       <Input id="username" type="text" placeholder="Username.." @input="handleInput" />
-      <Input id="password" type="password" placeholder="Password" @input="handleInput"
+      <Input id="password" type="password" placeholder="Password.." @input="handleInput"
         :class="isMatching && 'border border-success-500'" />
-      <Input id="confirm" type="password" placeholder="Confirm password" @input="handleInput"
+      <Input id="confirm" type="password" placeholder="Confirm password.." @input="handleInput"
         :class="isMatching && 'border border-success-500'" />
       <Button label="Register" @click="register" />
       <p @click="createUser = false, loginFail = false" class="text-white">Or log in?</p>

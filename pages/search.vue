@@ -12,7 +12,7 @@
       </div>
       <Combobox>
         <ComboboxInput @change="query = $event.target.value.toLowerCase()" placeholder="Search.."
-          class="px-2 py-1 rounded-lg grow bg-white bg-opacity-10 text-white" />
+          class="focus:outline-none px-2 py-1 rounded-lg grow bg-white bg-opacity-10 text-white" />
         <ComboboxOptions>
           <ComboboxOption v-for="meal in filteredMeals" :key="meal.id" :value="meal">
             <div

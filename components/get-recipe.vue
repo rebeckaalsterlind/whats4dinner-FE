@@ -2,12 +2,12 @@
   <div class="w-full">
     <Disclosure v-slot="{ open }">
       <DisclosureButton
-        class="flex grow w-full items-center bg-white bg-opacity-10 justify-between rounded-lg px-4 py-2 mb-1 text-left text-white">
+        class="flex grow w-full items-center bg-white bg-opacity-10 justify-between rounded-lg px-4 py-2  text-left text-white">
         <span>Add existing recipe?</span>
         <ChevronUpIcon :class="open ? '' : 'rotate-180 transform'" class="h-5 w-5 text-white" />
       </DisclosureButton>
       <DisclosurePanel>
-        <section class="flex flex-col gap-2 p-4 bg-white bg-opacity-10 text-sm rounded-lg">
+        <section class="flex flex-col gap-2 p-4 mt-1 bg-white bg-opacity-10 text-sm rounded-lg">
           <h4 v-if="recipe.servings">Servings: {{ recipe.servings }}</h4>
           <div>
             <h4>Ingredients:</h4>

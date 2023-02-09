@@ -20,7 +20,7 @@
       </div>
       <div class="flex w-full gap-2">
         <input id="ingredientInput" @input="addIngredient" placeholder="Ingredient.." v-model="ingredient"
-          class="p-2 rounded-lg placeholder-white bg-white bg-opacity-10 text-white fit-content grow h-10" />
+          class="focus:outline-none p-2 rounded-lg placeholder-white bg-white bg-opacity-10 text-white fit-content grow h-10" />
         <ButtonSecondary label="Add" @click="pushIngredientToList" />
       </div>
       <Button label="Search" @click="searchFridgeMeal" />
