@@ -80,7 +80,7 @@
                   'bg-white bg-opacity-10 text-white': !active,
                 }">
                 {{ capitalize(list.name) }}
-                <XMarkIcon v-show="active" @click="deleteCustomList(list.id)" class="w-4 h-4 inline" />
+                <XMarkIcon v-show="active" @click="deleteCustomList(list.id)" class="w-4 h-4 inline cursor-pointer" />
               </li>
             </ListboxOption>
           </ListboxOptions>

@@ -200,11 +200,10 @@ const addName = (e: Event) => {
 const saveMeals = async () => {
   const newList = { name: listName.value, id: generateId(), list: mealSuggestions };
   const userInLS = localStorage.getItem('user');
-
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
     try {
-      const { data, error } = await useFetch('http://localhost:3030/meals/addCustomList', {
+      const { data, error } = await useFetch('http://localhost:3030/customLists/addCustomList', {
         headers: { "Content-type": "application/json" },
         method: 'POST',
         body: { id: LSuser._id, customList: newList }
