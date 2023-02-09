@@ -7,7 +7,7 @@
       <section>
         <h5 v-if="tooFewMeals">There are no more meals to choose from in selected categories</h5>
         <div v-if="mealSuggestions.length > 0" v-for="(meal, index) in mealSuggestions" :key="index">
-          <Pill :label="meal.title">
+          <Pill :label="capitalize(meal.title)">
             <XMarkIcon class="w-4 h-4 inline hover:text-white cursor-pointer" @click="deleteMeal(meal, index)" />
           </Pill>
         </div>
