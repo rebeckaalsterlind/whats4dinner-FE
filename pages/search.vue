@@ -35,7 +35,7 @@ import {
   ComboboxOptions,
   ComboboxOption,
 } from '@headlessui/vue';
-import { checkLogin } from '~~/helpers.vue';
+import { checkLogin } from '~~/helpers.ts';
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
 const store = userStore();
