@@ -221,7 +221,7 @@ const handleSave = async () => {
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
     try {
-      const { data, error } = await useFetch('https://whats4dinner-be.herokuapp.com/meals/addMeal', {
+      const { data, error } = await useFetch('http://localhost:3030/meals/addMeal', {
         headers: { "Content-type": "application/json" },
         method: 'POST',
         body: { id: LSuser._id, meal: addMeal.value }
