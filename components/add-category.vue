@@ -21,7 +21,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from '@headlessui/vue'
-import { checkLogin, generateId } from '~~/helpers.vue';
+import { checkLogin, generateId } from '~~/helpers.js';
 
 const props = defineProps({
   modelValue: {
