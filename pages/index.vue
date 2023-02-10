@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
-import { checkLogin } from '~~/helpers.vue';
+import { checkLogin } from '~~/helpers.js';
 const store = userStore();
 const { userCategories, customLists, user } = storeToRefs(store);
 onMounted(() => checkLogin());

@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { capitalize, checkLogin } from '@/helpers.vue';
+import { capitalize, checkLogin } from '~~/helpers.js';
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
 const store = userStore();

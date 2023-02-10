@@ -29,7 +29,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import Logo from '@/assets/img/logo.vue';
 import { storeToRefs } from 'pinia';
 import { userStore } from '~~/stores/userStore';
-import { capitalize, logout } from '~~/helpers.vue'
+import { capitalize, logout } from '~~/helpers.js'
 const store = userStore();
 const { user } = storeToRefs(store);
 </script>

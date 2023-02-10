@@ -38,7 +38,7 @@ import {
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { storeToRefs } from 'pinia';
 import { ICategory } from '~~/domain/types';
-import { capitalize, sort } from '~~/helpers.vue';
+import { capitalize, sort } from '~~/helpers.js';
 import { userStore } from '~~/stores/userStore';
 const store = userStore();
 const { userCategories } = storeToRefs(store);

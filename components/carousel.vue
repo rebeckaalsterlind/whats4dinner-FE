@@ -24,7 +24,7 @@ import { reactive } from '@vue/runtime-core';
 import { storeToRefs } from 'pinia';
 import { userStore } from '~~/stores/userStore';
 import { IMeal } from '~~/domain/types';
-import { capitalize } from '~~/helpers.vue';
+import { capitalize } from '~~/helpers.js';
 const store = userStore();
 const { userMeals, selectedMeal } = storeToRefs(store);
 

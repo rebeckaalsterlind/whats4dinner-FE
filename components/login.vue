@@ -24,7 +24,7 @@
 import { storeToRefs } from 'pinia';
 import { userStore } from '~~/stores/userStore';
 import { IResponse, IUser } from '~~/domain/types';
-import { checkLogin } from '~~/helpers.vue';
+import { checkLogin } from '~~/helpers.js';
 const store = userStore();
 const { user, defaultCategories } = storeToRefs(store);
 

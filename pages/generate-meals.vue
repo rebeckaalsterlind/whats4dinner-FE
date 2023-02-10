@@ -14,15 +14,17 @@
       </section>
       <article class="p-4 bg-white rounded-lg bg-opacity-10 max-h-[60%]">
         <section>
-          <ul :key="componentKey" v-if="savedCategories.length > 0 && !selectAll" class="overflow-scroll my-6">
+          <ul :key="componentKey" v-if="savedCategories.length > 0 && !selectAll" class=" my-6 bg-opacity-100">
             <li v-for="(category, index) in savedCategories" class="inline">
               {{ capitalize(category.name) }} {{ index !==
               savedCategories.length - 1 ? '| ' : '' }}
             </li>
           </ul>
-          <ul v-if="selectAll" class="overflow-scroll my-6">
-            <li v-for="(category, index) in userCategories" class="inline">{{ capitalize(category.name) }} {{ index !==
-            userCategories.length - 1 ? '| ' : ''}} </li>
+          <ul v-if="selectAll" class=" my-6">
+            <li v-for="(category, index) in userCategories" class="inline bg-opacity-100">{{
+              capitalize(category.name)
+            }} {{ index !==
+userCategories.length - 1 ? '| ' : ''}} </li>
           </ul>
         </section>
         <section class="flex flex-col grow">
@@ -91,7 +93,7 @@ import {
 import { XMarkIcon, ChevronDownIcon } from '@heroicons/vue/20/solid';
 import { storeToRefs } from 'pinia';
 import { ICategory, IMeal } from '~~/domain/types';
-import { capitalize, checkLogin, generateId } from '~~/helpers.vue';
+import { capitalize, checkLogin, generateId } from '~~/helpers.js';
 import { userStore } from '~~/stores/userStore';
 const store = userStore();
 const { userMeals, userCategories, customLists } = storeToRefs(store);
