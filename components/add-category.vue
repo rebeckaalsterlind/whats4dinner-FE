@@ -43,7 +43,7 @@ const saveCategory = async (value: boolean) => {
     if (userInLS) {
       const LSuser = JSON.parse(userInLS)
       try {
-        const { data, error } = await useFetch('https://whats4dinner-be.herokuapp.com/categories/addCategory', {
+        const { data, error } = await useFetch('http://localhost:3030/categories/addCategory', {
           headers: { "Content-type": "application/json" },
           method: 'POST',
           body: { id: LSuser._id, category: newCategory }

@@ -121,7 +121,7 @@ const deleteMeal = async (meal: IMeal) => {
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
     try {
-      const { data } = await useFetch('https://whats4dinner-be.herokuapp.com/meals/deleteMeal', {
+      const { data } = await useFetch('http://localhost:3030/meals/deleteMeal', {
         headers: { "Content-type": "application/json" },
         method: 'POST',
         body: { id: LSuser._id, meal: meal }
@@ -144,7 +144,7 @@ const deleteCategory = async (categoryId: number) => {
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
     try {
-      const { data } = await useFetch('https://whats4dinner-be.herokuapp.com/categories/deleteCategory', {
+      const { data } = await useFetch('http://localhost:3030/categories/deleteCategory', {
         headers: { "Content-type": "application/json" },
         method: 'POST',
         body: { id: LSuser._id, categoryId: categoryId }
@@ -165,7 +165,7 @@ const deleteCustomList = async (listId: number) => {
   if (userInLS) {
     const LSuser = JSON.parse(userInLS)
     try {
-      const { data } = await useFetch('https://whats4dinner-be.herokuapp.com/customLists/deleteCustomList', {
+      const { data } = await useFetch('http://localhost:3030/customLists/deleteCustomList', {
         headers: { "Content-type": "application/json" },
         method: 'POST',
         body: { id: LSuser._id, listId: listId }
