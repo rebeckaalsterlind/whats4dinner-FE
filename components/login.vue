@@ -57,7 +57,7 @@ const setUser = (response: IUser) => {
 const logIn = async () => {
   loginFail.value = false;
   errorMsg.value = '';
-  const getUser = await $fetch<IResponse>('http://localhost:3030/users/login/', {
+  const getUser = await $fetch<IResponse>('https://whats4dinner-be.herokuapp.com/users/login/', {
     method: 'POST',
     body: userLogin.value
   })
@@ -83,7 +83,7 @@ const register = async () => {
 
   if (isMatching.value) {
     errorMsg.value = '';
-    const registerUser = await $fetch<IResponse>('http://localhost:3030/users/registerUser', {
+    const registerUser = await $fetch<IResponse>('https://whats4dinner-be.herokuapp.com/users/registerUser', {
       method: 'POST',
       body: newUser
     });
