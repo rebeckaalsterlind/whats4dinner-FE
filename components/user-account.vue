@@ -98,7 +98,7 @@ import {
   ListboxOption,
 } from '@headlessui/vue';
 import { UserCircleIcon, XMarkIcon, ChevronDownIcon, PlusIcon } from '@heroicons/vue/20/solid';
-import { checkLogin, capitalize, logout } from '~~/helpers.vue';
+import { checkLogin, capitalize, logout } from '~~/helpers.js';
 import { IMeal } from '~~/domain/types';
 import { storeToRefs } from 'pinia';
 import { userStore } from '~~/stores/userStore';

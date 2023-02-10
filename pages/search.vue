@@ -1,5 +1,5 @@
 <template>
-  <PageTitle label="Search meal" />
+  <PageTitle label="Search through saved meals" />
   <article class="flex flex-col grow justify-center">
     <section class="p-4 flex flex-col justify-between gap-2 bg-white rounded-lg bg-opacity-10 text-prime-normal">
       <div class="flex justify-evenly">

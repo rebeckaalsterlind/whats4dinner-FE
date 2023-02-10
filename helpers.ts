@@ -1,4 +1,4 @@
-<script lang="ts">
+
 import { userStore } from '~~/stores/userStore';
 import { storeToRefs } from 'pinia';
 const store = userStore();
@@ -41,5 +41,3 @@ export const logout = () => {
   navigateTo("/my-account")
 };
 
-
-</script>

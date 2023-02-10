@@ -92,7 +92,7 @@ import { userStore } from '~~/stores/userStore';
 import { ICategory, IIngredient, IMeal, IRecipe } from '~~/domain/types';
 import { storeToRefs } from 'pinia';
 import axios from 'axios';
-import { capitalize, checkLogin, generateId } from '@/helpers.vue';
+import { capitalize, checkLogin, generateId } from '~~/helpers.js';
 import { Ref } from '@vue/runtime-core';
 const store = userStore();
 const { selectedMeal } = storeToRefs(store);

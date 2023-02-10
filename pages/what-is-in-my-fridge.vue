@@ -34,7 +34,7 @@ import { storeToRefs } from 'pinia';
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide } from 'vue3-carousel';
 import { IIngredient, IMeal } from '~~/domain/types';
-import { capitalize } from '~~/helpers.vue';
+import { capitalize } from '~~/helpers.js';
 const store = userStore();
 const { selectedMeal } = storeToRefs(store);
 const appId = "2eb3cc88b15045b5b434805c117b656d";
